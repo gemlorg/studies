@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "ratio": "c",
+        "string.h": "c",
+        "types.h": "c"
+    }
+}

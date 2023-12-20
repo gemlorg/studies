@@ -1,16 +1,17 @@
+#include "../mimpi.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include "../mimpi.h"
+#include <stdlib.h>
 
-int main(int argc, char **argv)
-{
-    MIMPI_Init(false);
+int main(int argc, char **argv) {
 
-    int const process_rank = MIMPI_World_rank();
-    int const size_of_cluster = MIMPI_World_size();
+  MIMPI_Init(false);
 
-    printf("Hello World from process %d of %d\n", process_rank, size_of_cluster);
+  int const process_rank = MIMPI_World_rank();
+  int const size_of_cluster = MIMPI_World_size();
 
-    MIMPI_Finalize();
-    return 0;
+  printf("Hello World from process %d of %d\n", process_rank, size_of_cluster);
+
+  MIMPI_Finalize();
+  return 0;
 }

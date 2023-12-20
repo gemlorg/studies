@@ -28,6 +28,8 @@ int main(int argc, char **argv)
         ASSERT_MIMPI_OK(MIMPI_Recv(data, sizeof(data), 0, tag));
         for (int i = 0; i < sizeof(data); i += 789) {
             assert(data[789] == 42);
+            if(data[789] != 42) {
+            }
         }
     }
 
