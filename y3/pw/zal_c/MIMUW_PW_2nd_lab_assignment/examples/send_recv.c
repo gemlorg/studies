@@ -1,7 +1,13 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include<unistd.h>
 #include "../mimpi.h"
 #include "mimpi_err.h"
+#include <assert.h>
+#include <stdbool.h>
+#include <stdnoreturn.h>
+#include "../mimpi_common.h"
 
 int main(int argc, char **argv)
 {
@@ -15,10 +21,12 @@ int main(int argc, char **argv)
     if (world_rank == 0)
     {
         number = 42;
+
         ASSERT_MIMPI_OK(MIMPI_Send(&number, 1, 1, tag));
     }
     else if (world_rank == 1)
     {
+
         ASSERT_MIMPI_OK(MIMPI_Recv(&number, 1, 0, tag));
         printf("Process 1 received number %d from process 0\n", number);
     }

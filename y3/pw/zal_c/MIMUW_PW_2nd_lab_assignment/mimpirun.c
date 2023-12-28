@@ -32,6 +32,9 @@ int child(char *prog, char **args, int n, int id) {
 
     // printf("child: MIMPI_TOTAL=%s\n", getenv(MIMPI_TOTAL));
   // printf("child: MIMPI_ID=%s\n", getenv(MIMPI_ID));
+  // printf("PATH IS %s\n", getenv("PATH"));
+  // execve("ls",  , environ);
+  // setenv("PATH", getenv("PATH"), 1);
   ASSERT_SYS_OK(execve(prog, args, environ));
   return 0;
 }
@@ -102,8 +105,12 @@ int main(int argc, char **argv) {
   prog = argv[2];
   args = argv + 2;
   ASSERT_TRUE(n >= MIN_TOTAL && n <= MAX_TOTAL, EINVAL);
+  
   // end check params
-
+  //close first 1024 fds 
+  // for (int i = 3; i < MAX_DESC; i++) {
+  //     close(i);
+  // }
     //open 20 file descriptors to make sure that channels have numbers >19 
     int fds[20];
     for (int i = 0; i < 20; i++) {
