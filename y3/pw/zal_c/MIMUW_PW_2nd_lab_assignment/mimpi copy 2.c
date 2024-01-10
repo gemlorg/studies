@@ -334,8 +334,10 @@ if(destination == info.id) {
     // message %d\n", sizeof(msg));
 
     //at this point we have checked that destination is active, so if we get EPIPE it's UB
-    if (chsend(info.write_fd[destination], &msg, sizeof(msg)) < 0) {
+    if(chsend(info.write_fd[destination], &msg, sizeof(msg) < 0)) {
+      ASSERT_ZERO(errno != EPIPE);
       return MIMPI_ERROR_REMOTE_FINISHED;
+
     }
 
   }

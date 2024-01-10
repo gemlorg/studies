@@ -78,26 +78,15 @@ bool equal_tags(int tag1, int tag2) {
   return tag1 == tag2;
 }
 bool ready_message(message *msg) {
+  ASSERT_TRUE(msg != NULL, EINVAL);
   return msg->fraction_count == msg->total_fractions;
 }
 
 message *get_message(int source, int tag, int count) {
   message_node *current = info.messages[source];
   message_node *temp;
-
-  if (info.messages[source] != NULL &&
-      equal_tags(info.messages[source]->msg->tag, tag) &&
-      info.messages[source]->msg->size == count &&
-      ready_message(info.messages[source]->msg)) {
-    message *elem = info.messages[source]->msg;
-    temp = info.messages[source];
-    info.messages[source] = info.messages[source]->next;
-    free(temp);
-    return elem;
-  }
-  
   while (current != NULL && current->next != NULL) {
-    assert(current->next->msg != NULL);
+    ASSERT_TRUE(current->next->msg != NULL, EINVAL);
     message *elem = current->next->msg;
     if ((equal_tags(elem->tag, tag)) && elem->size == count &&
         ready_message(elem)) {
@@ -108,7 +97,16 @@ message *get_message(int source, int tag, int count) {
     }
     current = current->next;
   }
-  
+  if (info.messages[source] != NULL &&
+      equal_tags(info.messages[source]->msg->tag, tag) &&
+      info.messages[source]->msg->size == count &&
+      ready_message(info.messages[source]->msg)) {
+    message *elem = info.messages[source]->msg;
+    temp = info.messages[source];
+    info.messages[source] = info.messages[source]->next;
+    free(temp);
+    return elem;
+  }
   return NULL;
 }
 
@@ -301,17 +299,14 @@ int MIMPI_World_rank() { return info.id; }
 MIMPI_Retcode MIMPI_Send(void const *data, int count, int destination,
                          int tag) {
   // checks
-  if(destination >= info.n) {
+  ASSERT_TRUE(count >= 0, EINVAL);
+  if(destination >= info.n || destination < 0) {
   return MIMPI_ERROR_NO_SUCH_RANK;
 }
 
 if(destination == info.id) {
   return MIMPI_ERROR_ATTEMPTED_SELF_OP;
 }
-// if(info.has_finished[destination]) { 
-//   return MIMPI_ERROR_REMOTE_FINISHED;
-// }
-
 
   int num_fractions = (count + MSG_SIZE - 1) / MSG_SIZE;
   fraction msg;
@@ -321,6 +316,7 @@ if(destination == info.id) {
   msg.id = info.next_mid++;
   msg.total_size = count;
   msg.total_fractions = num_fractions;
+
   for (int fraction_id = 0; fraction_id < num_fractions; fraction_id++) {
     msg.fraction_id = fraction_id;
     int msg_len = fraction_id == num_fractions - 1
@@ -328,24 +324,20 @@ if(destination == info.id) {
                       : MSG_SIZE;
     memset(msg.data, 0, MSG_SIZE);
     memcpy(msg.data, data + fraction_id * MSG_SIZE, msg_len);
-    // printf("sending fraction: id: %d, tag: %d, source: %d, total_size: %d,
-    // total_fractions: %d, fraction_id: %d\n", msg.id, msg.tag, msg.source,
-    // msg.total_size, msg.total_fractions, msg.fraction_id); printf("size of
-    // message %d\n", sizeof(msg));
 
-    //at this point we have checked that destination is active, so if we get EPIPE it's UB
-    if (chsend(info.write_fd[destination], &msg, sizeof(msg)) < 0) {
+
+    if(chsend(info.write_fd[destination], &msg, sizeof(msg)) <= 0) {
       return MIMPI_ERROR_REMOTE_FINISHED;
     }
-
+    // checks
   }
   return MIMPI_SUCCESS;
 }
 
 MIMPI_Retcode MIMPI_Recv(void *data, int count, int source, int tag) {
   message *msg;
-
-if(source >= info.n) {
+ASSERT_TRUE(count >= 0, EINVAL);
+if(source >= info.n || source < 0) {
   return MIMPI_ERROR_NO_SUCH_RANK;
 }
 
@@ -403,7 +395,21 @@ MIMPI_Retcode MIMPI_Bcast(void *data, int count, int root) {
   int s2 = son2(tree_id);
   int d = 0;
   int i;
+  if (tree_id != 1) {
+    if((i = MIMPI_Recv(data, count, realid(root, father(tree_id)), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  } 
+  if (s1 <= info.n) {
+    // printf("process %d sending to son\n", info.id);
 
+    if((i = MIMPI_Send(data, count, realid(root, s1), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  }
+  if (s2 <= info.n) {
+    if((i = MIMPI_Send(data, count, realid(root, s2), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  }
+  // printf("process %d first phase finished\n", info.id);
   if (s1 <= info.n) {
     if((i = MIMPI_Recv(&d, 1, realid(root, s1), MIMPI_SYNC_TAG2)) != MIMPI_SUCCESS) 
       return MIMPI_ERROR_REMOTE_FINISHED;
@@ -416,25 +422,8 @@ MIMPI_Retcode MIMPI_Bcast(void *data, int count, int root) {
     if((i = MIMPI_Send(&d, 1, realid(root, father(tree_id)), MIMPI_SYNC_TAG2)) != MIMPI_SUCCESS) 
       return MIMPI_ERROR_REMOTE_FINISHED;
   }
-
-  if (tree_id != 1) {
-    if((i = MIMPI_Recv(data, count, realid(root, father(tree_id)), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  } 
-  if (s1 <= info.n) {
-
-    if((i = MIMPI_Send(data, count, realid(root, s1), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  }
-  if (s2 <= info.n) {
-    if((i = MIMPI_Send(data, count, realid(root, s2), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  }
-  
-
   assert(tree_id == treeid(root, info.id) && s1 == son1(tree_id) &&
          s2 == son2(tree_id));
-  // printf("process %d with tree_id %d finished bcast\n", info.id, tree_id);
 
   return MIMPI_SUCCESS;
 }
