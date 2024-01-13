@@ -75,6 +75,8 @@ struct procinfo {
   int waited_tag;
   int waited_count;
   pthread_cond_t waiting_place;
+  pthread_cond_t waiting_place_feedback;
+  int waiting_place_feedback_count;
 
   bool deadlock_they_wait[MAX_TOTAL];
   bool deadlock_tag[MAX_TOTAL];
@@ -91,7 +93,6 @@ bool equal_tags(int tag1, int tag2) {
 bool ready_message(message *msg) {
   return msg->fraction_count == msg->total_fractions;
 }
-
 
 
 message *get_message(int source, int tag, int count) {
@@ -111,34 +112,6 @@ message *get_message(int source, int tag, int count) {
     current = &(*current)->next;
   }
   return NULL;
-  // message_node *current = info.messages[source];
-  // message_node *temp;
-
-  // if (info.messages[source] != NULL &&
-  //     equal_tags(info.messages[source]->msg->tag, tag) &&
-  //     info.messages[source]->msg->size == count &&
-  //     ready_message(info.messages[source]->msg)) {
-  //   message *elem = info.messages[source]->msg;
-  //   temp = info.messages[source];
-  //   info.messages[source] = info.messages[source]->next;
-  //   free(temp);
-  //   return elem;
-  // }
-  
-  // while (current != NULL && current->next != NULL) {
-  //   assert(current->next->msg != NULL);
-  //   message *elem = current->next->msg;
-  //   if ((equal_tags(elem->tag, tag)) && elem->size == count &&
-  //       ready_message(elem)) {
-  //     temp = current->next;
-  //     current->next = current->next->next;
-  //     free(temp);
-  //     return elem;
-  //   }
-  //   current = current->next;
-  // }
-  
-  // return NULL;
 }
 
 
@@ -173,43 +146,57 @@ void add_fraction_to_message(message *msg, fraction frac) {
 }
 
 bool add_fraction(fraction frac, int source) {
-  if (info.messages[source] == NULL) {
-    info.messages[source] = create_node(create_message(frac));
-    return frac.total_fractions == 1;
-  }
-  message_node *current = info.messages[source];
-
-  while (current != NULL) {
-    if (current->msg->id == frac.id) {
-      add_fraction_to_message(current->msg, frac);
-      return current->msg->fraction_count == current->msg->total_fractions;
+  message_node **current = &info.messages[source];
+  while(*current != NULL) {
+    if((*current)->msg->id == frac.id) {
+      add_fraction_to_message((*current)->msg, frac);
+      return ready_message((*current)->msg);
     }
-    if (current->next == NULL) {
-      break;
-    }
-    current = current->next;
+    current = &(*current)->next;
   }
-
-  current->next = create_node(create_message(frac));
-  return frac.total_fractions == 1;
+  *current = create_node(create_message(frac));
+  return ready_message((*current)->msg);
 }
 
-message_info_node *get_message_info_node(fraction frac, int source) {
+message_info_node *get_message_info_node(int tag, int count, int source) {
+  message_info_node **current = &info.deadlock_sent_queue[source];
+  while(*current != NULL) {
+    if( equal_tags((*current)->tag, tag) && (*current)->count == count) {
+      message_info_node *temp = *current;
+      *current = (*current)->next;
+      return temp;
+    }
+    current = &(*current)->next;
+  }
   return NULL;
 }
 
-void handle_deadlock_recv(fraction frac, int source) {
+void handle_deadlock_recv(fraction *frac, int source) {
   //they can't be already waiting can they 
+  // printf("process %d got deadlock message from %d waiting on %d %d mess\n", info.id, source, info.deadlock_tag[source], info.deadlock_count[source]);
   assert(!info.deadlock_they_wait[source]);
-  message_info_node* msg = get_message_info_node(frac, source);
+  message_info_node* msg = get_message_info_node((int)frac->data[0], (int)frac->data[sizeof(int)],  source);
   if(msg == NULL) {
+    // printf("process %d setting deadlock_they_wait to true\n", info.id);
     info.deadlock_they_wait[source] = true;
-    info.deadlock_tag[source] = frac.tag;
-    info.deadlock_count[source] = frac.total_size;
-    return;
+    info.deadlock_tag[source] = (int)frac->data[0];
+    info.deadlock_count[source] = (int)frac->data[sizeof(int)];
+    
+    if(info.waiting_for_recv[source]) {
+      // printf("process %d wake up recv\n", info.id);
+      info.waiting_for_recv[source] = false;
+      int counter_value = info.waiting_place_feedback_count;
+      ASSERT_ZERO(pthread_cond_signal(&info.waiting_place));
+      while(info.waiting_place_feedback_count == counter_value) {
+        ASSERT_ZERO(pthread_cond_wait(&info.waiting_place_feedback, &info.recv_mutex[source]));
+      }
+
+    }
+
   } else {
     free(msg);
   }
+
 }
 void *worker(void *data) {
   int id = *((int *)data);
@@ -228,18 +215,20 @@ void *worker(void *data) {
       info.has_finished[id] = true;
       if (info.waiting_for_recv[id]) {
         info.waiting_for_recv[id] = false;
-        pthread_cond_signal(&info.waiting_place);
+       ASSERT_ZERO(pthread_cond_signal(&info.waiting_place));
       }
       ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[id]));
       return NULL;
     }
 
     ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[id]));
-    if(msg.tag == MIMPI_SYNC_DEADLOCK_TAG) {
-      handle_deadlock_recv(msg, id);
-    } else {
-      bool end_of_message = add_fraction(
-          msg, id); // check if has all parts and if does put it to ready messages
+    // printf("worker on process %d got lock\n", info.id);
+
+     if(msg.tag == MIMPI_SYNC_DEADLOCK_TAG) {
+       handle_deadlock_recv(&msg, id);
+    
+    }else {
+      bool end_of_message = add_fraction(msg, id); // check if has all parts and if does put it to ready messages
       // if(end_of_message) printf("process %d got message from %d\n", info.id, id);
       if (end_of_message && info.waiting_for_recv[id] &&
           equal_tags(msg.tag, info.waited_tag) &&
@@ -247,10 +236,12 @@ void *worker(void *data) {
           
         info.waiting_for_recv[id] = false;
         // printf("added message process %d\n", info.id);
-
-        pthread_cond_signal(&info.waiting_place);
-      }
+        ASSERT_ZERO(pthread_cond_signal(&info.waiting_place));
+      } 
+      
+      
     }
+    
     // check if waiting for this message
     ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[id]));
   }
@@ -269,7 +260,8 @@ void MIMPI_Init(bool enable_deadlock_detection) {
   info.id = atoi(getenv(MIMPI_ID));
   info.n = atoi(getenv(MIMPI_TOTAL));
   pthread_cond_init(&info.waiting_place, NULL);
-
+  pthread_cond_init(&info.waiting_place_feedback, NULL);
+  info.waiting_place_feedback_count = 0;
   for (int i = 0; i < info.n; i++) {
     if (i == info.id)
       continue;
@@ -279,6 +271,7 @@ void MIMPI_Init(bool enable_deadlock_detection) {
     info.has_finished[i] = false;
     info.waiting_for_recv[i] = false;
   }
+  
 
   // init pipes
   char str1[ENOUGH_SPACE];
@@ -333,6 +326,8 @@ void MIMPI_Finalize() {
     ASSERT_SYS_OK(pthread_join(info.threads[i], NULL));
   }
   ASSERT_ZERO(pthread_attr_destroy(&info.attr));
+
+  //free queues if deadlock enabled
   channels_finalize();
 }
 
@@ -341,39 +336,45 @@ int MIMPI_World_size() { return info.n; }
 int MIMPI_World_rank() { return info.id; }
 
 void add_info_node(int destination, int tag, int count) {
+  if(info.deadlock_they_wait[destination] && equal_tags(tag, info.deadlock_tag[destination]) && count == info.deadlock_count[destination]) {
+    // printf("process %d setting deadlock_they_wait to false\n", info.id);
+    info.deadlock_they_wait[destination] = false;
+    info.deadlock_tag[destination] = 0;
+    info.deadlock_count[destination] = 0;
+    return;
+  }
   message_info_node *node = malloc(sizeof(message_info_node));
   node->tag = tag;
   node->count = count;
   node->next = NULL;
 
-  if (info.deadlock_sent_queue[destination] == NULL) {
-    info.deadlock_sent_queue[destination] = node;
-    return;
+  message_info_node **current = &info.deadlock_sent_queue[destination];
+  while ((*current) != NULL) {
+    current = &(*current)->next;
   }
-  message_info_node *current = info.deadlock_sent_queue[destination];
-  while (current->next != NULL) {
-    current = current->next;
-  }
-  current->next = node;
+  (*current)= node;
 }
 
 MIMPI_Retcode MIMPI_Send(void const *data, int count, int destination,
                          int tag) {
   // checks
-  if(destination >= info.n) {
+  if(destination >= info.n || destination < 0) {
   return MIMPI_ERROR_NO_SUCH_RANK;
-}
+  }
 
-if(destination == info.id) {
-  return MIMPI_ERROR_ATTEMPTED_SELF_OP;
-}
-// if(info.has_finished[destination]) { 
-//   return MIMPI_ERROR_REMOTE_FINISHED;
-// }
+  if(destination == info.id) {
+    return MIMPI_ERROR_ATTEMPTED_SELF_OP;
+  }
 
+  if(info.deadlock_detection && tag > 0) {
+    ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[destination]));
+    add_info_node(destination, tag, count);
+    ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[destination]));
+  }
 
   int num_fractions = (count + MSG_SIZE - 1) / MSG_SIZE;
   fraction msg;
+
   msg.tag = tag;
   msg.source = info.id;
   info.next_mid++;
@@ -387,27 +388,19 @@ if(destination == info.id) {
                       : MSG_SIZE;
     memset(msg.data, 0, MSG_SIZE);
     memcpy(msg.data, data + fraction_id * MSG_SIZE, msg_len);
-    // printf("sending fraction: id: %d, tag: %d, source: %d, total_size: %d,
-    // total_fractions: %d, fraction_id: %d\n", msg.id, msg.tag, msg.source,
-    // msg.total_size, msg.total_fractions, msg.fraction_id); printf("size of
-    // message %d\n", sizeof(msg));
     if (chsend(info.write_fd[destination], &msg, sizeof(msg)) < 0) {
       return MIMPI_ERROR_REMOTE_FINISHED;
     }
 
   }
-  if(info.deadlock_detection && tag > 0) {
-    ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[destination]));
-    add_info_node(destination, tag, count);
-    ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[destination]));
-  }
+  
   return MIMPI_SUCCESS;
 }
 
 MIMPI_Retcode MIMPI_Recv(void *data, int count, int source, int tag) {
   message *msg;
 
-if(source >= info.n) {
+if(source >= info.n || source < 0) {
   return MIMPI_ERROR_NO_SUCH_RANK;
 }
 
@@ -416,6 +409,10 @@ if(source == info.id) {
 }
 
   ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[source]));
+  if(info.deadlock_detection && tag > 0) {
+    int i[2] = {tag, count};
+    MIMPI_Send(i, sizeof(i), source, MIMPI_SYNC_DEADLOCK_TAG);
+  }
 
   if ((msg = get_message(source, tag, count)) != NULL) {
     memcpy(data, msg->data, count);
@@ -426,24 +423,44 @@ if(source == info.id) {
   } else if (info.has_finished[source]) {
     ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[source]));
     return MIMPI_ERROR_REMOTE_FINISHED;
+  } else if (info.deadlock_detection && info.deadlock_they_wait[source]) {
+    // printf("process %d setting deadlock_they_wait to false\n", info.id);
+    info.deadlock_they_wait[source] = false;
+    ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[source]));
+    return MIMPI_ERROR_DEADLOCK_DETECTED;
   }
-  // printf("waiting for message\n");
+
+  // printf("process %d waiting for message\n", info.id);
   info.waiting_for_recv[source] = true;
   info.waited_tag = tag;
   info.waited_count = count;
-  pthread_cond_wait(&info.waiting_place, &info.recv_mutex[source]);
-  // printf("wait ended\n");
+  // printf("process %d waiting on mutex %d\n", info.id, source);
+
+  while(info.waiting_for_recv[source]) 
+    ASSERT_ZERO(pthread_cond_wait(&info.waiting_place, &info.recv_mutex[source]));
+  
+  info.waiting_place_feedback_count++;
+  ASSERT_ZERO(pthread_cond_signal(&info.waiting_place_feedback));
+
+  // printf("process %d wait ended\n", info.id);
+
   if ((msg = get_message(source, tag, count)) != NULL) {
     memcpy(data, msg->data, count);
     free(msg->data);
     free(msg);
     ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[source]));
     return MIMPI_SUCCESS;
-  }
+  } else if (info.deadlock_detection && info.deadlock_they_wait[source]) {
+    // printf("process %d setting deadlock_they_wait to false\n", info.id);
+    info.deadlock_they_wait[source] = false;
+    ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[source]));
+    return MIMPI_ERROR_DEADLOCK_DETECTED;
+  } else {
   // printf("process %d didn't get message from %d\n", info.id, source);
 
   ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[source]));
   return MIMPI_ERROR_REMOTE_FINISHED;
+  }
 }
 
 

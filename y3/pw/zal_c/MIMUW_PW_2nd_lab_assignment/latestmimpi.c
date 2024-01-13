@@ -19,7 +19,7 @@
 #define byte_t uint8_t
 #define MSG_SIZE (512 - 7 * sizeof(int))
 
-typedef enum { MIMPI_SYNC_TAG1 = -1, MIMPI_SYNC_TAG2 = -2 } MIMPI_Tagcode;
+typedef enum { MIMPI_SYNC_TAG1 = -1, MIMPI_SYNC_TAG2 = -2, MIMPI_SYNC_DEADLOCK_TAG = -3 } MIMPI_Tagcode;
 
 struct message_fraction {
   int tag;
@@ -42,6 +42,13 @@ struct message {
   byte_t *data;
 };
 typedef struct message message;
+
+struct message_info_node {
+  int tag;
+  int count;
+  struct message_info_node *next;
+};
+typedef struct message_info_node message_info_node;
 
 struct message_node {
   message *msg;
@@ -69,55 +76,71 @@ struct procinfo {
   int waited_count;
   pthread_cond_t waiting_place;
 
+  bool deadlock_they_wait[MAX_TOTAL];
+  bool deadlock_tag[MAX_TOTAL];
+  bool deadlock_count[MAX_TOTAL];
+  message_info_node *deadlock_sent_queue[MAX_TOTAL];
+
 } info;
 
 bool equal_tags(int tag1, int tag2) {
-  // maybe only tag2
   if (tag1 >= 0 && tag2 >= 0)
     return tag1 == tag2 || tag1 == MIMPI_ANY_TAG || tag2 == MIMPI_ANY_TAG;
   return tag1 == tag2;
 }
 bool ready_message(message *msg) {
-  ASSERT_TRUE(msg != NULL, EINVAL);
   return msg->fraction_count == msg->total_fractions;
 }
 
+
+
 message *get_message(int source, int tag, int count) {
-  message_node *current = info.messages[source];
+  message_node **current = &info.messages[source];
   message_node *temp;
-  while (current != NULL && current->next != NULL) {
-    ASSERT_TRUE(current->next->msg != NULL, EINVAL);
-    message *elem = current->next->msg;
-    if ((equal_tags(elem->tag, tag)) && elem->size == count &&
-        ready_message(elem)) {
-      temp = current->next;
-      current->next = current->next->next;
+  message *msg;
+
+  while(*current != NULL) {
+    msg = (*current)->msg;
+    if(equal_tags(msg->tag, tag) && msg->size == count && ready_message(msg)) {
+      temp = *current;
+      *current = (*current)->next;
       free(temp);
-      return elem;
+      return msg;
     }
-    current = current->next;
-  }
-  if (info.messages[source] != NULL &&
-      equal_tags(info.messages[source]->msg->tag, tag) &&
-      info.messages[source]->msg->size == count &&
-      ready_message(info.messages[source]->msg)) {
-    message *elem = info.messages[source]->msg;
-    temp = info.messages[source];
-    info.messages[source] = info.messages[source]->next;
-    free(temp);
-    return elem;
+
+    current = &(*current)->next;
   }
   return NULL;
+  // message_node *current = info.messages[source];
+  // message_node *temp;
+
+  // if (info.messages[source] != NULL &&
+  //     equal_tags(info.messages[source]->msg->tag, tag) &&
+  //     info.messages[source]->msg->size == count &&
+  //     ready_message(info.messages[source]->msg)) {
+  //   message *elem = info.messages[source]->msg;
+  //   temp = info.messages[source];
+  //   info.messages[source] = info.messages[source]->next;
+  //   free(temp);
+  //   return elem;
+  // }
+  
+  // while (current != NULL && current->next != NULL) {
+  //   assert(current->next->msg != NULL);
+  //   message *elem = current->next->msg;
+  //   if ((equal_tags(elem->tag, tag)) && elem->size == count &&
+  //       ready_message(elem)) {
+  //     temp = current->next;
+  //     current->next = current->next->next;
+  //     free(temp);
+  //     return elem;
+  //   }
+  //   current = current->next;
+  // }
+  
+  // return NULL;
 }
 
-void print_messages(message_node *head, int source) {
-  message_node *current = head;
-  // printf("messages, source %d:\n", source);
-  while (current != NULL) {
-    // printf("tag: %d, size: %d\n", current->msg->tag, current->msg->size);
-    current = current->next;
-  }
-}
 
 message *create_message(fraction frac) {
   message *msg = malloc(sizeof(message));
@@ -171,6 +194,23 @@ bool add_fraction(fraction frac, int source) {
   return frac.total_fractions == 1;
 }
 
+message_info_node *get_message_info_node(fraction frac, int source) {
+  return NULL;
+}
+
+void handle_deadlock_recv(fraction frac, int source) {
+  //they can't be already waiting can they 
+  assert(!info.deadlock_they_wait[source]);
+  message_info_node* msg = get_message_info_node(frac, source);
+  if(msg == NULL) {
+    info.deadlock_they_wait[source] = true;
+    info.deadlock_tag[source] = frac.tag;
+    info.deadlock_count[source] = frac.total_size;
+    return;
+  } else {
+    free(msg);
+  }
+}
 void *worker(void *data) {
   int id = *((int *)data);
   assert(id != info.id);
@@ -195,17 +235,21 @@ void *worker(void *data) {
     }
 
     ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[id]));
-    bool end_of_message = add_fraction(
-        msg, id); // check if has all parts and if does put it to ready messages
-    // if(end_of_message) printf("process %d got message from %d\n", info.id, id);
-    if (end_of_message && info.waiting_for_recv[id] &&
-        equal_tags(msg.tag, info.waited_tag) &&
-        info.waited_count == msg.total_size) {
-        
-      info.waiting_for_recv[id] = false;
-      // printf("added message process %d\n", info.id);
+    if(msg.tag == MIMPI_SYNC_DEADLOCK_TAG) {
+      handle_deadlock_recv(msg, id);
+    } else {
+      bool end_of_message = add_fraction(
+          msg, id); // check if has all parts and if does put it to ready messages
+      // if(end_of_message) printf("process %d got message from %d\n", info.id, id);
+      if (end_of_message && info.waiting_for_recv[id] &&
+          equal_tags(msg.tag, info.waited_tag) &&
+          info.waited_count == msg.total_size) {
+          
+        info.waiting_for_recv[id] = false;
+        // printf("added message process %d\n", info.id);
 
-      pthread_cond_signal(&info.waiting_place);
+        pthread_cond_signal(&info.waiting_place);
+      }
     }
     // check if waiting for this message
     ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[id]));
@@ -296,17 +340,37 @@ int MIMPI_World_size() { return info.n; }
 
 int MIMPI_World_rank() { return info.id; }
 
+void add_info_node(int destination, int tag, int count) {
+  message_info_node *node = malloc(sizeof(message_info_node));
+  node->tag = tag;
+  node->count = count;
+  node->next = NULL;
+
+  if (info.deadlock_sent_queue[destination] == NULL) {
+    info.deadlock_sent_queue[destination] = node;
+    return;
+  }
+  message_info_node *current = info.deadlock_sent_queue[destination];
+  while (current->next != NULL) {
+    current = current->next;
+  }
+  current->next = node;
+}
+
 MIMPI_Retcode MIMPI_Send(void const *data, int count, int destination,
                          int tag) {
   // checks
-  ASSERT_TRUE(count >= 0, EINVAL);
-  if(destination >= info.n || destination < 0) {
+  if(destination >= info.n) {
   return MIMPI_ERROR_NO_SUCH_RANK;
 }
 
 if(destination == info.id) {
   return MIMPI_ERROR_ATTEMPTED_SELF_OP;
 }
+// if(info.has_finished[destination]) { 
+//   return MIMPI_ERROR_REMOTE_FINISHED;
+// }
+
 
   int num_fractions = (count + MSG_SIZE - 1) / MSG_SIZE;
   fraction msg;
@@ -316,7 +380,6 @@ if(destination == info.id) {
   msg.id = info.next_mid++;
   msg.total_size = count;
   msg.total_fractions = num_fractions;
-
   for (int fraction_id = 0; fraction_id < num_fractions; fraction_id++) {
     msg.fraction_id = fraction_id;
     int msg_len = fraction_id == num_fractions - 1
@@ -324,20 +387,27 @@ if(destination == info.id) {
                       : MSG_SIZE;
     memset(msg.data, 0, MSG_SIZE);
     memcpy(msg.data, data + fraction_id * MSG_SIZE, msg_len);
-
-
-    if(chsend(info.write_fd[destination], &msg, sizeof(msg)) <= 0) {
+    // printf("sending fraction: id: %d, tag: %d, source: %d, total_size: %d,
+    // total_fractions: %d, fraction_id: %d\n", msg.id, msg.tag, msg.source,
+    // msg.total_size, msg.total_fractions, msg.fraction_id); printf("size of
+    // message %d\n", sizeof(msg));
+    if (chsend(info.write_fd[destination], &msg, sizeof(msg)) < 0) {
       return MIMPI_ERROR_REMOTE_FINISHED;
     }
-    // checks
+
+  }
+  if(info.deadlock_detection && tag > 0) {
+    ASSERT_ZERO(pthread_mutex_lock(&info.recv_mutex[destination]));
+    add_info_node(destination, tag, count);
+    ASSERT_ZERO(pthread_mutex_unlock(&info.recv_mutex[destination]));
   }
   return MIMPI_SUCCESS;
 }
 
 MIMPI_Retcode MIMPI_Recv(void *data, int count, int source, int tag) {
   message *msg;
-ASSERT_TRUE(count >= 0, EINVAL);
-if(source >= info.n || source < 0) {
+
+if(source >= info.n) {
   return MIMPI_ERROR_NO_SUCH_RANK;
 }
 
@@ -395,21 +465,7 @@ MIMPI_Retcode MIMPI_Bcast(void *data, int count, int root) {
   int s2 = son2(tree_id);
   int d = 0;
   int i;
-  if (tree_id != 1) {
-    if((i = MIMPI_Recv(data, count, realid(root, father(tree_id)), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  } 
-  if (s1 <= info.n) {
-    // printf("process %d sending to son\n", info.id);
 
-    if((i = MIMPI_Send(data, count, realid(root, s1), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  }
-  if (s2 <= info.n) {
-    if((i = MIMPI_Send(data, count, realid(root, s2), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
-      return MIMPI_ERROR_REMOTE_FINISHED;
-  }
-  // printf("process %d first phase finished\n", info.id);
   if (s1 <= info.n) {
     if((i = MIMPI_Recv(&d, 1, realid(root, s1), MIMPI_SYNC_TAG2)) != MIMPI_SUCCESS) 
       return MIMPI_ERROR_REMOTE_FINISHED;
@@ -422,8 +478,25 @@ MIMPI_Retcode MIMPI_Bcast(void *data, int count, int root) {
     if((i = MIMPI_Send(&d, 1, realid(root, father(tree_id)), MIMPI_SYNC_TAG2)) != MIMPI_SUCCESS) 
       return MIMPI_ERROR_REMOTE_FINISHED;
   }
+
+  if (tree_id != 1) {
+    if((i = MIMPI_Recv(data, count, realid(root, father(tree_id)), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  } 
+  if (s1 <= info.n) {
+
+    if((i = MIMPI_Send(data, count, realid(root, s1), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  }
+  if (s2 <= info.n) {
+    if((i = MIMPI_Send(data, count, realid(root, s2), MIMPI_SYNC_TAG1)) != MIMPI_SUCCESS) 
+      return MIMPI_ERROR_REMOTE_FINISHED;
+  }
+  
+
   assert(tree_id == treeid(root, info.id) && s1 == son1(tree_id) &&
          s2 == son2(tree_id));
+  // printf("process %d with tree_id %d finished bcast\n", info.id, tree_id);
 
   return MIMPI_SUCCESS;
 }
