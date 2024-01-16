@@ -22,6 +22,8 @@
         "unordered_map": "c",
         "unordered_set": "c",
         "vector": "c",
-        "format": "c"
+        "format": "c",
+        "channel.h": "c",
+        "mimpi_common.h": "c"
     }
 }
