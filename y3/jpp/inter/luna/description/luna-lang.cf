@@ -4,7 +4,7 @@ entrypoints Program ;
 
 PProgram.   Program ::= [Stmt] ;
 
-FnDef.	   TopDef ::= "fn" Ident "(" [Arg] ")" ReturnTypeOpt  Block ;
+-- FnDef.	   TopDef ::= "fn" Ident "(" [Arg] ")" ReturnTypeOpt  Block ;
 
 YReturnType. ReturnTypeOpt ::=  "->" Type  ; 
 NReturnType. ReturnTypeOpt ::=  ;
@@ -12,7 +12,10 @@ NReturnType. ReturnTypeOpt ::=  ;
 YTypeOpt.    TypeOpt ::= ":" Type  ; 
 NTypeOpt.    TypeOpt ::=  ;
 
-separator nonempty TopDef "" ;
+YLocal.      LocalOpt ::= "local"  ;
+NLocal.      LocalOpt ::=  ;
+
+-- separator nonempty TopDef "" ;
 
 AArg. 	   Arg ::= Ident TypeOpt ;
 
@@ -30,17 +33,17 @@ Empty.     Stmt ::= ";" ;
 
 BStmt.     Stmt ::= Block ;
 
-Decl.      Stmt ::= "local" Ident TypeOpt Item ";" ;
+Decl.      Stmt ::= LocalOpt Ident TypeOpt Item ";" ;
 
-DeclFun.  Stmt ::= "local" "fn" Ident "(" [Arg] ")" ReturnTypeOpt Block ;
+DeclFun.  Stmt ::= LocalOpt "fn" Ident "(" [Arg] ")" ReturnTypeOpt Block ;
 
-Init.      Item ::= "=" Expr ;
+Init.      Item ::= "=" Expr  ;
 
 NoInit.    Item ::=  ; 
 
 separator nonempty Item "," ;
 
-Ass.       Stmt ::= Ident TypeOpt "=" Expr  ";" ;
+-- Ass.       Stmt ::= Ident TypeOpt "=" Expr  ";" ;
 
 Incr.      Stmt ::= Ident "++"  ";" ;
 
@@ -55,6 +58,7 @@ Cond.      Stmt ::= "if" "(" Expr ")" Stmt  ;
 CondElse.  Stmt ::= "if" "(" Expr ")" Stmt "else" Stmt  ;
 
 While.     Stmt ::= "while" "(" Expr ")" Stmt ;
+
 For.       Stmt ::= "for" "(" Ident "=" Expr "," Expr "," Expr ")" Block ;
 
 SExp.      Stmt ::= Expr  ";" ;
@@ -73,7 +77,7 @@ Table.     Type ::= "table" "[" Type "]" ;
 
 Any.       Type ::= "any" ;
 
-internal   Fun. Type ::= "(" [Type] ")" "->" Type ;
+Fun. Type ::= "fn" "(" [Type] ")" "->" Type ;
 
 separator  Type "," ;
 
@@ -95,7 +99,7 @@ EApp.      Expr6 ::= Ident "(" [Expr] ")" ;
 
 EString.   Expr6 ::= String ;
 
-Neg.       Expr5 ::= "-" Expr6 ; -- ?
+Neg.       Expr5 ::= "-" Expr6 ; 
 
 Not.       Expr5 ::= "not" Expr6 ;
 
