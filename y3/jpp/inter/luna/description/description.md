@@ -111,7 +111,7 @@ not  logical negaion
 
 ### Variables
 
-`````lua
+```lua
     j = 10;         -- global variable
     local i = 1;   -- local variable (to the block )
     local n: int;   -- local variable with type int, value assigned to 0
@@ -127,9 +127,11 @@ not  logical negaion
     local fn addOne(var a: int) -> nil {
       a = a + 1;
     }
+```
 
 ### Example
-````lua
+
+```lua
     local fn apply_to_range(f: fn(int) -> int, a: int, b: int) -> nil {
       for (i=a, b, 1) {
         print(f(i));
@@ -139,4 +141,4 @@ not  logical negaion
       return x * x;
     }
     apply_to_range(square, 1, 10);
-`````
+```
