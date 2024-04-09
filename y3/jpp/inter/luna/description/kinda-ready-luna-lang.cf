@@ -2,7 +2,7 @@
 
 entrypoints Program ;
 
-PProgram.   Program ::= [Stmt] ;
+PProgram.   Program ::= [TopDef] ;
 
 FnDef.	   TopDef ::= "fn" Ident "(" [Arg] ")" ReturnTypeOpt  Block ;
 

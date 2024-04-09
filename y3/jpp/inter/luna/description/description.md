@@ -2,7 +2,7 @@
 
 ## Description
 
-Luna is a Lua-like, imperative programming language that can be typed both statically and dynamically. Most of the syntax is taken from Lua, however there are some modifications, a.e. static typing.
+Luna is a Lua-like, imperative programming language that can be typed both statically and dynamically. Most of the syntax is taken from Lua, however there are some modifications, a.e. static typing, { to } blocks, ";" line ending and so on.
 
 ## Syntax and Semantics
 
@@ -15,7 +15,7 @@ Luna supports:
 - `int` - signed integers, default value is 0
 - `string` - arrays of characters, default value is an empty string.
 - `fn({type}) -> type` - functions. `{type}` represents zero or more argument types, and `type` represents the return type. By default, return value of a function is `any`. Has no default value.
-- `table\[type\]` - indexed arrays, used to store collections of values of the same `type`. type is any by default, and the default value is an empty table.
+- `table[type]` - indexed arrays, used to store collections of values of the same `type`. type is any by default, and the default value is an empty table.
 - `any` - union of all types above. Default value is `nil`.
 
 Examples:
@@ -27,16 +27,19 @@ greeting = "Hello, World!"
 
 ```lua
 -- add: fn(any, any) -> any
-local fn add(a, b)
-    return a
+local fn projection(a, b) {
+    return a;
+  }
 end
 ```
 
 ```lua
+-- note: I am not yet sure if the type of the function would be the same
+-- without the type annotation.
 -- add: fn(int, int) -> int
-local fn add(a: int, b: int) -> int
-    return a + b
-end
+local fn add(a: int, b: int) -> int {
+    return a + b;
+}
 ```
 
 ### Control Structures
@@ -44,23 +47,24 @@ end
 Luna includes a small set of control structures, such as `if`, `while` and `for`.
 
 ```lua
-if condition then
+if (condition) {
     ...
-else
+
+} else {
     ...
-end
+}
 ```
 
 ```lua
-while condition do
+while (condition) {
     ...
-end
+}
 ```
 
 ```lua
-for i = 1, 10,1 do
+for (i = 1, 10, 1) {
     ...
-end
+}
 ```
 
 ### Arithmetic Operators
@@ -94,9 +98,9 @@ Comparison operators compare two operands and yield a `bool` value.
 Logical operators apply to `bool` values and yield the result of the same type.
 
 ```
-and conditional and
-or  conditional or
-not logical negaion
+and  conditional and
+or   conditional or
+not  logical negaion
 ```
 
 ### Misc Operators
@@ -109,14 +113,19 @@ not logical negaion
 ### Variables
 
 ```lua
-    j = 10         -- global variable
-    local i = 1    -- local variable (to the chunk)
-    local n: int   -- local variable with type int, value assigned to 0
-    -- foo is a variable of type fn() -> (fn() -> int).
-    local fn foo() -> (fn() -> int)
-      local foo2 = fn() -> int
-        return 1
-      end
-      return foo2
-    end
+    j = 10;         -- global variable
+    local i = 1;   -- local variable (to the block )
+    local n: int;   -- local variable with type int, value assigned to 0
+
+    -- foo is a variable of type fn() -> fn() -> int.
+    local fn foo() -> fn() -> int {
+      local foo2 = fn() -> int {
+        return 1;
+      }
+      return foo2;
+    }
+    -- a here is passed by reference using the keyword var.
+    local fn addOne(var a: int) -> nil {
+      a = a + 1;
+    }
 ```
