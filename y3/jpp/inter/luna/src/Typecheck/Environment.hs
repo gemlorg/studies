@@ -30,6 +30,7 @@ data RawType
     | RTNil
     | RTAny
     | RTFun [RawType] RawType
+    deriving (Ord)
 
 instance Eq RawType where
   RTInt == RTInt = True

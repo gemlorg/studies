@@ -1,0 +1,3 @@
+fn getint()->int {
+    return "hi";
+}

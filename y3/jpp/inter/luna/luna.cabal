@@ -42,8 +42,6 @@ library
       Typecheck.Environment
       Typecheck.Exception
       Typecheck.Monad
-      Typecheck.TC
-      Typecheck.TG
       Typecheck.Typecheck
       Typecheck.Utils
   other-modules:

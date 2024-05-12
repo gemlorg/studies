@@ -70,7 +70,7 @@ showPos _ = "unknow"
 
 showArg :: Arg -> String
 showArg (AArg _ ident typ) = concat [showIdent ident, ": "]
-showArg (AArgVar _ ident typ) = concat ["var ", showIdent ident, ": "]
+showArg (AArgVar _ ident typ) = concat ["var ", showIdent ident, ": ", showType typ]
 
 showType :: Type -> String
 showType (Int _) = "Int"

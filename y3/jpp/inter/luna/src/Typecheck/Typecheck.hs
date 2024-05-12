@@ -2,30 +2,21 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
-module Typecheck.Typecheck where 
+module Typecheck.Typecheck where
 
 import Grammar.Abs
 
-import           Control.Lens hiding (Empty)
+
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.State
-import           Data.Maybe                   (isNothing)
 
 
 import          Typecheck.Environment
 import          Typecheck.Exception
 import          Typecheck.Monad
 import         Typecheck.Utils
-import           Control.Monad.Except
 import           Control.Monad.Reader
-import           Control.Monad.State
-
-
-import Common.Exception 
-import Common.Types
-import qualified Typecheck.TC as TCU
-import qualified Typecheck.TG  as TGU
 
 
 checkType :: Program -> Either TypecheckingException ()
@@ -45,7 +36,7 @@ instance Typechecker Block where
 
 instance Typechecker DeclKind where
   checkTypeM _ (FDecl position name arguments returnType block) = do
-    TCU.expectValidFunctionArgumentsOrThrowM position arguments
+    unless (areUniqueArgs arguments) (throwError $ NamesDuplicationException position)
 
     env <- get
     let functionType = fromFunction arguments returnType
@@ -57,24 +48,22 @@ instance Typechecker DeclKind where
     put $ updateTypes envWithFunction argumentsWithTypes
     checkTypeM (Just rawReturnType) block
     blockEnv <- get
-    TCU.assertOrThrowM (hasReturnStatementOccured blockEnv) (NoReturnStatementException position)
+    unless (hasReturnStatementOccured blockEnv) $ throwError (NoReturnStatementException position)
 
     put envWithFunction
 
--- ident typeOpt item
+
   checkTypeM _ (VDecl position name exprType item) = do
-    case item of 
-        (NoInit _) -> do 
-            env <- get
-            put $ updateType env name (fromType exprType)
-        (Init _ expr) -> do 
-            -- value <- eval expr
-            -- modify $ putValue name value
-            -- pure Dummy
-            let rawExprType = fromType exprType
-            env <- get
-            TCU.expectTypeOrThrowM position env rawExprType expr
-            put $ updateType env name rawExprType
+    env <- get
+    let rawExprType = fromType exprType
+    case item of
+        (Init _ expr) -> do
+            let res = runExpr env expr
+            case res of
+                Left exception -> throwError exception
+                Right etype -> assertTypeC position etype rawExprType
+        _ -> pure ()
+    put $ updateType env name rawExprType
 
 instance Typechecker Stmt where
 
@@ -89,30 +78,47 @@ instance Typechecker Stmt where
     checkTypeM ret declKind
 
   checkTypeM _ (Ass position name expr) = do
-    
     env <- get
-    case getType env name of
-      Just rawType -> TCU.expectTypeOrThrowM position env rawType expr
-      Nothing      -> throwError $ UndefinedSymbolException position name
+    let v = getType env name
+    let e = runExpr env expr
+    case (v, e) of
+      (Nothing, _) -> throwError $ UndefinedSymbolException position name
+      (_, Left exception) -> throwError exception
+      (Just vtype, Right etype) -> assertTypeC position etype vtype
 
-  checkTypeM _ (Incr position name) =
-    TCU.expectSymbolTypeOrThrowM position RTInt name
 
-  checkTypeM _ (Decr position name) =
-    TCU.expectSymbolTypeOrThrowM position RTInt name
+  checkTypeM _ (Incr position name) = do
+    env <- get
+    let v = getType env name
+    case v of
+      Nothing -> throwError $ UndefinedSymbolException position name
+      Just vtype -> assertTypeC position vtype RTInt
+
+  checkTypeM _ (Decr position name) = do
+    env <- get
+    let v = getType env name
+    case v of
+      Nothing -> throwError $ UndefinedSymbolException position name
+      Just vtype -> assertTypeC position vtype RTInt
 
   checkTypeM (Just expectedReturnType) (Ret position returnExpr) = do
     env <- get
-    let typecheckResult = TCU.expectTypeM position expectedReturnType returnExpr env
-    TCU.parseReturnTypecheckResultM position expectedReturnType typecheckResult
+
+    let actual = runExpr env returnExpr
+    case actual of
+      Right etype -> assertTypeC position etype expectedReturnType
+      Left exception -> throwError exception
+    -- let typecheckResult = TCU.expectTypeM position expectedReturnType returnExpr env
+    -- TCU.parseReturnTypecheckResultM position expectedReturnType typecheckResult
     put $ returnStatementOccured env
+
 
   checkTypeM Nothing (Ret position _) =
     throwError $ ReturnOutOfScopeException position
 
   checkTypeM (Just expectedReturnType) (VRet position) = do
     env <- get
-    TCU.assertOrThrowM (expectedReturnType == RTNil) (InvalidReturnTypeException position expectedReturnType)
+    unless (expectedReturnType == RTNil) $ throwError (InvalidReturnTypeException position expectedReturnType)
     put $ returnStatementOccured env
 
   checkTypeM Nothing (VRet position) =
@@ -120,23 +126,36 @@ instance Typechecker Stmt where
 
   checkTypeM expectedReturnType (Cond position cond trueBlock) = do
     env <- get
-    TCU.expectTypeOrThrowM position env RTBool cond
+    let ex = runExpr env cond
+    case ex of
+      Right etype -> assertTypeC position etype RTBool
+      Left exception -> throwError exception
+
     checkTypeM expectedReturnType trueBlock
 
   checkTypeM expectedReturnType (CondElse position cond trueBlock falseBlock) = do
     env <- get
-    TCU.expectTypeOrThrowM position env RTBool cond
+    let ex = runExpr env cond
+    case ex of
+      Right etype -> assertTypeC position etype RTBool
+      Left exception -> throwError exception
     checkTypeM expectedReturnType trueBlock
     checkTypeM expectedReturnType falseBlock
 
   checkTypeM expectedReturnType (While position cond block) = do
     env <- get
-    TCU.expectTypeOrThrowM position env RTBool cond
+    let ex = runExpr env cond
+    case ex of
+      Right etype -> assertTypeC position etype RTBool
+      Left exception -> throwError exception
     checkTypeM expectedReturnType block
 
   checkTypeM _ (SExp position expr) = do
     env <- get
-    TCU.expectTypeOrThrowM position env RTNil expr
+    let ex = runExpr env expr
+    case ex of
+      Right etype -> assertTypeC position etype RTNil
+      Left exception -> throwError exception
 
   checkTypeM _ _ = error "Not implemented"
 
@@ -152,96 +171,110 @@ instance Typegetter Expr where
   getTypeM (EString _ _) = pure RTString
 
   getTypeM (Neg position expr) = do
-    t <- getTypeM expr 
-    assertType position t RTInt
+    t <- getTypeM expr
+    assertTypeG position t RTInt
     pure RTInt
 
   getTypeM (Not position expr) = do
-    t <- getTypeM expr 
-    assertType position t RTBool
+    t <- getTypeM expr
+    assertTypeG position t RTBool
     pure RTBool
 
   getTypeM (EMul position expr1 _ expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    assertType position t1 RTInt
-    assertType position t2 RTInt
+    assertTypeG position t1 RTInt
+    assertTypeG position t2 RTInt
     pure RTInt
 
   getTypeM (EAdd position expr1 _ expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    assertType position t1 RTInt
-    assertType position t2 RTInt
+    assertTypeG position t1 RTInt
+    assertTypeG position t2 RTInt
     pure RTInt
 
   getTypeM (ERel position expr1 _ expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    assertType position t1 RTInt
-    assertType position t2 RTInt
+    assertTypeG position t1 RTInt
+    assertTypeG position t2 RTInt
     pure RTBool
 
   getTypeM (EAnd position expr1 expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    assertType position t1 RTBool
-    assertType position t2 RTBool
+    assertTypeG position t1 RTBool
+    assertTypeG position t2 RTBool
     pure RTBool
 
   getTypeM (EOr position expr1 expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    assertType position t1 RTBool
-    assertType position t2 RTBool
+    assertTypeG position t1 RTBool
+    assertTypeG position t2 RTBool
     pure RTBool
 
-  getTypeM (EVar position name) =
-    getVarType position name
+  getTypeM (EVar position name) = do
+    env <- ask
+    let v = getVarType position name env
+    case v of
+      Right t -> pure t
+      Left exception -> throwError exception
 
   getTypeM (EApp position name arguments) = do
-    fun <- getVarType position name
+    env <- ask
+    let fun = getVarType position name env
     args <- mapM getTypeM arguments
-    
+
     case fun of
-      RTFun argumentsTypes returnType -> do
+      Right (RTFun argumentsTypes returnType) -> do
         compareArgs position argumentsTypes args
         pure returnType
-      _ -> throwError $ ExpectedFunctionException position fun
-    where 
+      Right f-> throwError $ ExpectedFunctionException position f
+      Left exception -> throwError exception
+    where
       compareArgs :: BNFC'Position -> [RawType] -> [RawType] -> EmptyTypegetterM
       compareArgs pos expectedArgs actualArgs = do
         if expectedArgs == [RTAny] || expectedArgs == actualArgs
           then pure ()
           else throwError $ InvalidFunctionArgumentsTypesException pos expectedArgs actualArgs
 
-    
-  
+  -- getTypeM (EApp position name arguments) = do
+  --   TGU.getDefinedSymbolOrThrowM position name (TGU.getFunctionTypeOrThrowM position arguments)
+
+
 
   getTypeM (ELambda position arguments returnType block) = do
 
-      TGU.expectValidFunctionArgumentsOrThrowM position arguments
+      unless (areUniqueArgs arguments) (throwError $ NamesDuplicationException position)
       let argumentsWithTypes = getArgumentsWithTypes arguments
 
-      env <- ask
+      -- env <- ask
       local (`updateTypes` argumentsWithTypes) (runLocalCheckM arguments returnType block)
 
     where
       runLocalCheckM :: Typechecker a => [Arg] -> Type -> a -> TypegetterM
-      runLocalCheckM arguments returnType block = do
-        let rawReturnType = fromType returnType
-        let functionType = fromFunction arguments returnType
+      runLocalCheckM args ret blck = do
+        let rawReturnType = fromType ret
+        let functionType = fromFunction args ret
 
         env <- ask
-        TGU.checkTypeOrThrowM env (Just rawReturnType) block checkLambdaBodyM
+        let checkTypeResult = runExcept $ evalStateT (checkLambdaBodyM (Just rawReturnType) blck) env
+        case checkTypeResult of
+          Right _ -> pure ()
+          Left exception -> throwError exception
+
         pure functionType
 
       checkLambdaBodyM :: Typechecker a => Maybe RawType -> a -> TypecheckerM
-      checkLambdaBodyM expectedType block = do
-        checkTypeM expectedType block
+      checkLambdaBodyM expectedType blck = do
+        checkTypeM expectedType blck
         blockEnv <- get
-        TCU.assertOrThrowM (hasReturnStatementOccured blockEnv) (NoReturnStatementException position)
+        unless (hasReturnStatementOccured blockEnv) (throwError $ NoReturnStatementException position)
   getTypeM _ = pure RTNil
-   
 
 
+
+runExpr ::  Env -> Expr -> Either TypecheckingException RawType
+runExpr env expr = runExcept $ runReaderT (getTypeM expr) env
