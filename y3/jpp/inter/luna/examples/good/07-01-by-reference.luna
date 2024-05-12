@@ -1,0 +1,6 @@
+var x: int = 0;
+print("x is", x)
+fn empty(var x: int)-> nil {
+    x = 5;
+}
+print("x is", x)

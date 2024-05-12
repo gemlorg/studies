@@ -1,0 +1,15 @@
+var x: int = 1;
+print("glovbal x", x);
+fn empty() -> fn(int)->int {
+    var x: int = 10;
+    fn addToX(y:int)->int {
+        print("local x:", x)
+        return x + y;
+    }
+    x = 20;
+    return addToX;
+}
+var y :int= 1;
+var f: fn(int)->int = empty();
+var z :int = f(y);
+print("z", z)

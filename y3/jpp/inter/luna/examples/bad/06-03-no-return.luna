@@ -1,0 +1,3 @@
+fn add(a: int, b: int) -> int {
+    var c: int = a + b;
+}
