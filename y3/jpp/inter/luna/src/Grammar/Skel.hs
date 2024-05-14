@@ -45,7 +45,7 @@ transStmt x = case x of
   Grammar.Abs.Cond _ expr stmt -> failure x
   Grammar.Abs.CondElse _ expr stmt1 stmt2 -> failure x
   Grammar.Abs.While _ expr stmt -> failure x
-  Grammar.Abs.For _ stmt1 expr stmt2 block -> failure x
+  Grammar.Abs.For _ ident expr1 expr2 expr3 stmt -> failure x
   Grammar.Abs.SExp _ expr -> failure x
 
 transDeclKind :: Show a => Grammar.Abs.DeclKind' a -> Result
@@ -64,7 +64,6 @@ transType x = case x of
   Grammar.Abs.Bool _ -> failure x
   Grammar.Abs.Int _ -> failure x
   Grammar.Abs.Str _ -> failure x
-  Grammar.Abs.Any _ -> failure x
   Grammar.Abs.Fun _ types type_ -> failure x
 
 transExpr :: Show a => Grammar.Abs.Expr' a -> Result
@@ -73,10 +72,9 @@ transExpr x = case x of
   Grammar.Abs.ELitInt _ integer -> failure x
   Grammar.Abs.ELitTrue _ -> failure x
   Grammar.Abs.ELitFalse _ -> failure x
-  Grammar.Abs.ENil _ -> failure x
-  Grammar.Abs.EAny _ -> failure x
-  Grammar.Abs.EApp _ ident exprs -> failure x
   Grammar.Abs.EString _ string -> failure x
+  Grammar.Abs.EApp _ ident exprs -> failure x
+  Grammar.Abs.CApp _ expr exprs -> failure x
   Grammar.Abs.Neg _ expr -> failure x
   Grammar.Abs.Not _ expr -> failure x
   Grammar.Abs.EMul _ expr1 mulop expr2 -> failure x

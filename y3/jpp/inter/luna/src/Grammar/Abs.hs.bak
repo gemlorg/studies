@@ -22,17 +22,8 @@ type Program = Program' BNFC'Position
 data Program' a = PProgram a [Stmt' a]
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
-type ReturnTypeOpt = ReturnTypeOpt' BNFC'Position
-data ReturnTypeOpt' a = YReturnType a (Type' a) | NReturnType a
-  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
-
-type TypeOpt = TypeOpt' BNFC'Position
-data TypeOpt' a = YTypeOpt a (Type' a) | NTypeOpt a
-  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
-
 type Arg = Arg' BNFC'Position
-data Arg' a
-    = AArg a Ident (TypeOpt' a) | AArgVar a Ident (TypeOpt' a)
+data Arg' a = AArg a Ident (Type' a) | AArgVar a Ident (Type' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Block = Block' BNFC'Position
@@ -52,14 +43,14 @@ data Stmt' a
     | Cond a (Expr' a) (Stmt' a)
     | CondElse a (Expr' a) (Stmt' a) (Stmt' a)
     | While a (Expr' a) (Stmt' a)
-    | For a (Stmt' a) (Expr' a) (Stmt' a) (Block' a)
+    | For a Ident (Expr' a) (Expr' a) (Expr' a) (Stmt' a)
     | SExp a (Expr' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type DeclKind = DeclKind' BNFC'Position
 data DeclKind' a
-    = VDecl a Ident (TypeOpt' a) (Item' a)
-    | FDecl a Ident [Arg' a] (ReturnTypeOpt' a) (Block' a)
+    = VDecl a Ident (Type' a) (Item' a)
+    | FDecl a Ident [Arg' a] (Type' a) (Block' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Item = Item' BNFC'Position
@@ -68,13 +59,7 @@ data Item' a = Init a (Expr' a) | NoInit a
 
 type Type = Type' BNFC'Position
 data Type' a
-    = Nil a
-    | Bool a
-    | Int a
-    | Str a
-    | Table a (Type' a)
-    | Any a
-    | Fun a [Type' a] (Type' a)
+    = Nil a | Bool a | Int a | Str a | Fun a [Type' a] (Type' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Expr = Expr' BNFC'Position
@@ -83,34 +68,28 @@ data Expr' a
     | ELitInt a Integer
     | ELitTrue a
     | ELitFalse a
-    | ENil a
-    | EAny a
     | EApp a Ident [Expr' a]
     | EString a String
-    | Neg a (Expr' a)
-    | Not a (Expr' a)
+    | ENeg a (Expr' a)
+    | ENot a (Expr' a)
     | EMul a (Expr' a) (MulOp' a) (Expr' a)
     | EAdd a (Expr' a) (AddOp' a) (Expr' a)
     | ERel a (Expr' a) (RelOp' a) (Expr' a)
     | EAnd a (Expr' a) (Expr' a)
     | EOr a (Expr' a) (Expr' a)
-    | ELambda a [Arg' a] (ReturnTypeOpt' a) (Block' a)
+    | ELambda a [Arg' a] (Type' a) (Block' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type AddOp = AddOp' BNFC'Position
-data AddOp' a = Plus a | Minus a
+data AddOp' a = OPlus a | OMinus a
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type MulOp = MulOp' BNFC'Position
-data MulOp' a = Times a | Div a | Mod a
+data MulOp' a = OTimes a | ODiv a | OMod a
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type RelOp = RelOp' BNFC'Position
-data RelOp' a = LTH a | LE a | GTH a | GE a | EQU a | NE a
-  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
-
-type MiscOp = MiscOp' BNFC'Position
-data MiscOp' a = CC a | LEN a
+data RelOp' a = OLth a | OLE a | OGth a | OGE a | OEq a | ONe a
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 newtype Ident = Ident String
@@ -135,16 +114,6 @@ instance HasPosition Program where
   hasPosition = \case
     PProgram p _ -> p
 
-instance HasPosition ReturnTypeOpt where
-  hasPosition = \case
-    YReturnType p _ -> p
-    NReturnType p -> p
-
-instance HasPosition TypeOpt where
-  hasPosition = \case
-    YTypeOpt p _ -> p
-    NTypeOpt p -> p
-
 instance HasPosition Arg where
   hasPosition = \case
     AArg p _ _ -> p
@@ -167,7 +136,7 @@ instance HasPosition Stmt where
     Cond p _ _ -> p
     CondElse p _ _ _ -> p
     While p _ _ -> p
-    For p _ _ _ _ -> p
+    For p _ _ _ _ _ -> p
     SExp p _ -> p
 
 instance HasPosition DeclKind where
@@ -186,8 +155,6 @@ instance HasPosition Type where
     Bool p -> p
     Int p -> p
     Str p -> p
-    Table p _ -> p
-    Any p -> p
     Fun p _ _ -> p
 
 instance HasPosition Expr where
@@ -196,12 +163,10 @@ instance HasPosition Expr where
     ELitInt p _ -> p
     ELitTrue p -> p
     ELitFalse p -> p
-    ENil p -> p
-    EAny p -> p
     EApp p _ _ -> p
     EString p _ -> p
-    Neg p _ -> p
-    Not p _ -> p
+    ENeg p _ -> p
+    ENot p _ -> p
     EMul p _ _ _ -> p
     EAdd p _ _ _ -> p
     ERel p _ _ _ -> p
@@ -211,26 +176,21 @@ instance HasPosition Expr where
 
 instance HasPosition AddOp where
   hasPosition = \case
-    Plus p -> p
-    Minus p -> p
+    OPlus p -> p
+    OMinus p -> p
 
 instance HasPosition MulOp where
   hasPosition = \case
-    Times p -> p
-    Div p -> p
-    Mod p -> p
+    OTimes p -> p
+    ODiv p -> p
+    OMod p -> p
 
 instance HasPosition RelOp where
   hasPosition = \case
-    LTH p -> p
-    LE p -> p
-    GTH p -> p
-    GE p -> p
-    EQU p -> p
-    NE p -> p
-
-instance HasPosition MiscOp where
-  hasPosition = \case
-    CC p -> p
-    LEN p -> p
+    OLth p -> p
+    OLE p -> p
+    OGth p -> p
+    OGE p -> p
+    OEq p -> p
+    ONe p -> p
 

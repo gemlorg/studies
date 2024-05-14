@@ -26,12 +26,13 @@ source-repository head
 library
   exposed-modules:
       Common.Exception
-      Common.Types
+      Common.GrammarUtils
+      Common.RTypes
       Eval.Environment
       Eval.Eval
-      Eval.Exception
       Eval.Monad
       Eval.Utils
+      Eval.Values
       Grammar.Abs
       Grammar.ErrM
       Grammar.Lex
@@ -40,7 +41,6 @@ library
       Grammar.Skel
       Interpreter
       Typecheck.Environment
-      Typecheck.Exception
       Typecheck.Monad
       Typecheck.Typecheck
       Typecheck.Utils
@@ -50,7 +50,7 @@ library
       Paths_luna
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       array
     , base >=4.7 && <5
@@ -67,7 +67,7 @@ executable luna-exe
       Paths_luna
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       array
     , base >=4.7 && <5
@@ -86,7 +86,7 @@ test-suite luna-test
       Paths_luna
   hs-source-dirs:
       test
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       array
     , base >=4.7 && <5

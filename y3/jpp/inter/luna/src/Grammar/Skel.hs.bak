@@ -23,20 +23,10 @@ transProgram :: Show a => Grammar.Abs.Program' a -> Result
 transProgram x = case x of
   Grammar.Abs.PProgram _ stmts -> failure x
 
-transReturnTypeOpt :: Show a => Grammar.Abs.ReturnTypeOpt' a -> Result
-transReturnTypeOpt x = case x of
-  Grammar.Abs.YReturnType _ type_ -> failure x
-  Grammar.Abs.NReturnType _ -> failure x
-
-transTypeOpt :: Show a => Grammar.Abs.TypeOpt' a -> Result
-transTypeOpt x = case x of
-  Grammar.Abs.YTypeOpt _ type_ -> failure x
-  Grammar.Abs.NTypeOpt _ -> failure x
-
 transArg :: Show a => Grammar.Abs.Arg' a -> Result
 transArg x = case x of
-  Grammar.Abs.AArg _ ident typeopt -> failure x
-  Grammar.Abs.AArgVar _ ident typeopt -> failure x
+  Grammar.Abs.AArg _ ident type_ -> failure x
+  Grammar.Abs.AArgVar _ ident type_ -> failure x
 
 transBlock :: Show a => Grammar.Abs.Block' a -> Result
 transBlock x = case x of
@@ -55,13 +45,13 @@ transStmt x = case x of
   Grammar.Abs.Cond _ expr stmt -> failure x
   Grammar.Abs.CondElse _ expr stmt1 stmt2 -> failure x
   Grammar.Abs.While _ expr stmt -> failure x
-  Grammar.Abs.For _ stmt1 expr stmt2 block -> failure x
+  Grammar.Abs.For _ ident expr1 expr2 expr3 stmt -> failure x
   Grammar.Abs.SExp _ expr -> failure x
 
 transDeclKind :: Show a => Grammar.Abs.DeclKind' a -> Result
 transDeclKind x = case x of
-  Grammar.Abs.VDecl _ ident typeopt item -> failure x
-  Grammar.Abs.FDecl _ ident args returntypeopt block -> failure x
+  Grammar.Abs.VDecl _ ident type_ item -> failure x
+  Grammar.Abs.FDecl _ ident args type_ block -> failure x
 
 transItem :: Show a => Grammar.Abs.Item' a -> Result
 transItem x = case x of
@@ -74,8 +64,6 @@ transType x = case x of
   Grammar.Abs.Bool _ -> failure x
   Grammar.Abs.Int _ -> failure x
   Grammar.Abs.Str _ -> failure x
-  Grammar.Abs.Table _ type_ -> failure x
-  Grammar.Abs.Any _ -> failure x
   Grammar.Abs.Fun _ types type_ -> failure x
 
 transExpr :: Show a => Grammar.Abs.Expr' a -> Result
@@ -84,40 +72,33 @@ transExpr x = case x of
   Grammar.Abs.ELitInt _ integer -> failure x
   Grammar.Abs.ELitTrue _ -> failure x
   Grammar.Abs.ELitFalse _ -> failure x
-  Grammar.Abs.ENil _ -> failure x
-  Grammar.Abs.EAny _ -> failure x
   Grammar.Abs.EApp _ ident exprs -> failure x
   Grammar.Abs.EString _ string -> failure x
-  Grammar.Abs.Neg _ expr -> failure x
-  Grammar.Abs.Not _ expr -> failure x
+  Grammar.Abs.ENeg _ expr -> failure x
+  Grammar.Abs.ENot _ expr -> failure x
   Grammar.Abs.EMul _ expr1 mulop expr2 -> failure x
   Grammar.Abs.EAdd _ expr1 addop expr2 -> failure x
   Grammar.Abs.ERel _ expr1 relop expr2 -> failure x
   Grammar.Abs.EAnd _ expr1 expr2 -> failure x
   Grammar.Abs.EOr _ expr1 expr2 -> failure x
-  Grammar.Abs.ELambda _ args returntypeopt block -> failure x
+  Grammar.Abs.ELambda _ args type_ block -> failure x
 
 transAddOp :: Show a => Grammar.Abs.AddOp' a -> Result
 transAddOp x = case x of
-  Grammar.Abs.Plus _ -> failure x
-  Grammar.Abs.Minus _ -> failure x
+  Grammar.Abs.OPlus _ -> failure x
+  Grammar.Abs.OMinus _ -> failure x
 
 transMulOp :: Show a => Grammar.Abs.MulOp' a -> Result
 transMulOp x = case x of
-  Grammar.Abs.Times _ -> failure x
-  Grammar.Abs.Div _ -> failure x
-  Grammar.Abs.Mod _ -> failure x
+  Grammar.Abs.OTimes _ -> failure x
+  Grammar.Abs.ODiv _ -> failure x
+  Grammar.Abs.OMod _ -> failure x
 
 transRelOp :: Show a => Grammar.Abs.RelOp' a -> Result
 transRelOp x = case x of
-  Grammar.Abs.LTH _ -> failure x
-  Grammar.Abs.LE _ -> failure x
-  Grammar.Abs.GTH _ -> failure x
-  Grammar.Abs.GE _ -> failure x
-  Grammar.Abs.EQU _ -> failure x
-  Grammar.Abs.NE _ -> failure x
-
-transMiscOp :: Show a => Grammar.Abs.MiscOp' a -> Result
-transMiscOp x = case x of
-  Grammar.Abs.CC _ -> failure x
-  Grammar.Abs.LEN _ -> failure x
+  Grammar.Abs.OLth _ -> failure x
+  Grammar.Abs.OLE _ -> failure x
+  Grammar.Abs.OGth _ -> failure x
+  Grammar.Abs.OGE _ -> failure x
+  Grammar.Abs.OEq _ -> failure x
+  Grammar.Abs.ONe _ -> failure x

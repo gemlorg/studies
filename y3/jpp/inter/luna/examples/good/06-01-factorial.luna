@@ -3,4 +3,6 @@ fn factorial(n:int)-> int {
     else return n * factorial(n-1);
 }
 
-var x: int = factorial(10);
+var x: int = factorial(5);
+
+print("Factorial of 5 is:", x);

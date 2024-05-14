@@ -1,19 +1,1 @@
-var x: int = 1;
-x ++;
-var y: int = 19;
 
-x = y;
-fn square(var x:int) -> int {
-    x = x * x / y ;
-
-    return x;
-}
-fn double(x:int)-> int {
-
-    return x+x;
-}
-fn empty()-> int {
-    return 5;
-}
-
-y = square(double(x));

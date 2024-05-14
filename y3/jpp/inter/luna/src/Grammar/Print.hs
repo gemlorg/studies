@@ -174,7 +174,7 @@ instance Print (Grammar.Abs.Stmt' a) where
     Grammar.Abs.Cond _ expr stmt -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt])
     Grammar.Abs.CondElse _ expr stmt1 stmt2 -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt1, doc (showString "else"), prt 0 stmt2])
     Grammar.Abs.While _ expr stmt -> prPrec i 0 (concatD [doc (showString "while"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt])
-    Grammar.Abs.For _ stmt1 expr stmt2 block -> prPrec i 0 (concatD [doc (showString "for"), doc (showString "("), prt 0 stmt1, doc (showString ";"), prt 0 expr, doc (showString ";"), prt 0 stmt2, doc (showString ")"), prt 0 block])
+    Grammar.Abs.For _ id_ expr1 expr2 expr3 stmt -> prPrec i 0 (concatD [doc (showString "for"), doc (showString "("), prt 0 id_, doc (showString "="), prt 0 expr1, doc (showString ";"), prt 0 expr2, doc (showString ";"), prt 0 expr3, doc (showString ")"), prt 0 stmt])
     Grammar.Abs.SExp _ expr -> prPrec i 0 (concatD [prt 0 expr, doc (showString ";")])
 
 instance Print (Grammar.Abs.DeclKind' a) where
@@ -198,7 +198,6 @@ instance Print (Grammar.Abs.Type' a) where
     Grammar.Abs.Bool _ -> prPrec i 0 (concatD [doc (showString "bool")])
     Grammar.Abs.Int _ -> prPrec i 0 (concatD [doc (showString "int")])
     Grammar.Abs.Str _ -> prPrec i 0 (concatD [doc (showString "string")])
-    Grammar.Abs.Any _ -> prPrec i 0 (concatD [doc (showString "any")])
     Grammar.Abs.Fun _ types type_ -> prPrec i 0 (concatD [doc (showString "fn"), doc (showString "("), prt 0 types, doc (showString ")"), doc (showString "->"), prt 0 type_])
 
 instance Print [Grammar.Abs.Type' a] where
@@ -212,10 +211,9 @@ instance Print (Grammar.Abs.Expr' a) where
     Grammar.Abs.ELitInt _ n -> prPrec i 6 (concatD [prt 0 n])
     Grammar.Abs.ELitTrue _ -> prPrec i 6 (concatD [doc (showString "true")])
     Grammar.Abs.ELitFalse _ -> prPrec i 6 (concatD [doc (showString "false")])
-    Grammar.Abs.ENil _ -> prPrec i 6 (concatD [doc (showString "nil")])
-    Grammar.Abs.EAny _ -> prPrec i 6 (concatD [doc (showString "any")])
-    Grammar.Abs.EApp _ id_ exprs -> prPrec i 6 (concatD [prt 0 id_, doc (showString "("), prt 0 exprs, doc (showString ")")])
     Grammar.Abs.EString _ str -> prPrec i 6 (concatD [printString str])
+    Grammar.Abs.EApp _ id_ exprs -> prPrec i 6 (concatD [prt 0 id_, doc (showString "("), prt 0 exprs, doc (showString ")")])
+    Grammar.Abs.CApp _ expr exprs -> prPrec i 6 (concatD [doc (showString "["), prt 0 expr, doc (showString "]"), doc (showString "("), prt 0 exprs, doc (showString ")")])
     Grammar.Abs.Neg _ expr -> prPrec i 5 (concatD [doc (showString "-"), prt 6 expr])
     Grammar.Abs.Not _ expr -> prPrec i 5 (concatD [doc (showString "not"), prt 6 expr])
     Grammar.Abs.EMul _ expr1 mulop expr2 -> prPrec i 4 (concatD [prt 4 expr1, prt 0 mulop, prt 5 expr2])
@@ -223,7 +221,7 @@ instance Print (Grammar.Abs.Expr' a) where
     Grammar.Abs.ERel _ expr1 relop expr2 -> prPrec i 2 (concatD [prt 2 expr1, prt 0 relop, prt 3 expr2])
     Grammar.Abs.EAnd _ expr1 expr2 -> prPrec i 1 (concatD [prt 2 expr1, doc (showString "and"), prt 1 expr2])
     Grammar.Abs.EOr _ expr1 expr2 -> prPrec i 0 (concatD [prt 1 expr1, doc (showString "or"), prt 0 expr2])
-    Grammar.Abs.ELambda _ args type_ block -> prPrec i 0 (concatD [doc (showString "fn"), doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "=>"), prt 0 type_, prt 0 block])
+    Grammar.Abs.ELambda _ args type_ block -> prPrec i 0 (concatD [doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "=>"), prt 0 type_, prt 0 block])
 
 instance Print [Grammar.Abs.Expr' a] where
   prt _ [] = concatD []

@@ -1,3 +1,0 @@
-fn add(a: int, a: string)->int {
-    return a + b;
-}

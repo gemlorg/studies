@@ -43,7 +43,7 @@ data Stmt' a
     | Cond a (Expr' a) (Stmt' a)
     | CondElse a (Expr' a) (Stmt' a) (Stmt' a)
     | While a (Expr' a) (Stmt' a)
-    | For a (Stmt' a) (Expr' a) (Stmt' a) (Block' a)
+    | For a Ident (Expr' a) (Expr' a) (Expr' a) (Stmt' a)
     | SExp a (Expr' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
@@ -59,12 +59,7 @@ data Item' a = Init a (Expr' a) | NoInit a
 
 type Type = Type' BNFC'Position
 data Type' a
-    = Nil a
-    | Bool a
-    | Int a
-    | Str a
-    | Any a
-    | Fun a [Type' a] (Type' a)
+    = Nil a | Bool a | Int a | Str a | Fun a [Type' a] (Type' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Expr = Expr' BNFC'Position
@@ -73,10 +68,9 @@ data Expr' a
     | ELitInt a Integer
     | ELitTrue a
     | ELitFalse a
-    | ENil a
-    | EAny a
-    | EApp a Ident [Expr' a]
     | EString a String
+    | EApp a Ident [Expr' a]
+    | CApp a (Expr' a) [Expr' a]
     | Neg a (Expr' a)
     | Not a (Expr' a)
     | EMul a (Expr' a) (MulOp' a) (Expr' a)
@@ -143,7 +137,7 @@ instance HasPosition Stmt where
     Cond p _ _ -> p
     CondElse p _ _ _ -> p
     While p _ _ -> p
-    For p _ _ _ _ -> p
+    For p _ _ _ _ _ -> p
     SExp p _ -> p
 
 instance HasPosition DeclKind where
@@ -162,7 +156,6 @@ instance HasPosition Type where
     Bool p -> p
     Int p -> p
     Str p -> p
-    Any p -> p
     Fun p _ _ -> p
 
 instance HasPosition Expr where
@@ -171,10 +164,9 @@ instance HasPosition Expr where
     ELitInt p _ -> p
     ELitTrue p -> p
     ELitFalse p -> p
-    ENil p -> p
-    EAny p -> p
-    EApp p _ _ -> p
     EString p _ -> p
+    EApp p _ _ -> p
+    CApp p _ _ -> p
     Neg p _ -> p
     Not p _ -> p
     EMul p _ _ _ -> p

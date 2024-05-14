@@ -1,45 +1,34 @@
 module Interpreter
-    ( interpret
-    ) where
+  ( interpret
+  ) where
 
-import Grammar.Abs 
-import Grammar.Par (myLexer, pProgram)
-import Grammar.Lex  
+import           Grammar.Abs
+import           Grammar.Par         (myLexer, pProgram)
 
-
-import Data.Typeable
-import           System.Exit             (exitFailure, exitSuccess)
-import           System.IO               (hPrint, stderr)
-import Eval.Eval
-import Typecheck.Typecheck ( checkType )
-
+import           Eval.Eval
+import           System.Exit         (exitFailure, exitSuccess)
+import           System.IO           (hPrint, stderr)
+import           Typecheck.Typecheck (typeCheck)
 
 interpret :: String -> IO ()
-interpret s = do 
-    case parsed of 
-        Left err -> perror $ "BNFC Parse error: " ++ err
-        Right program -> interpretProgram program
-    where parsed = pProgram $ myLexer s
+interpret s = do
+  case parsed of
+    Left err      -> perror $ "BNFC Parse error: " ++ err
+    Right program -> interpretProgram program
+  where
+    parsed = pProgram $ myLexer s
 
- -- handle errors in typecheck/interpret
 interpretProgram :: Program -> IO ()
-interpretProgram program = case checkType program of 
-    Left e -> do 
-        hPrint stderr e
-        exitFailure
+interpretProgram program =
+  case typeCheck program of
+    Left e -> perror e
     Right _ -> do
-        res <- evalProgram program
-        case res of 
-            Left err -> do
-                hPrint stderr err
-                exitFailure
-            Right _ -> exitSuccess
+      res <- evalProgram program
+      case res of
+        Left err -> perror err
+        Right _  -> exitSuccess
 
-
-perror :: String -> IO ()
-perror s = do  
-    hPrint stderr s 
-    exitFailure
-
-
-
+perror :: Show a => a -> IO b
+perror s = do
+  hPrint stderr s
+  exitFailure

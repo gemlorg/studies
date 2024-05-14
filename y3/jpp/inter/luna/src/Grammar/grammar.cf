@@ -60,7 +60,7 @@ CondElse.  Stmt ::= "if" "(" Expr ")" Stmt "else" Stmt  ;
 
 While.     Stmt ::= "while" "(" Expr ")" Stmt ;
 
-For.       Stmt ::= "for" "(" Stmt ";" Expr ";" Stmt ")" Block ;
+For.       Stmt ::= "for" "("  Ident "=" Expr ";" Expr ";" Expr ")" Stmt ;
 
 SExp.      Stmt ::= Expr  ";" ;
 
@@ -88,13 +88,11 @@ ELitTrue.  Expr6 ::= "true" ;
 
 ELitFalse. Expr6 ::= "false" ;
 
-ENil.      Expr6 ::= "nil" ;
-
-EAny.      Expr6 ::= "any" ;
+EString.   Expr6 ::= String ;
 
 EApp.      Expr6 ::= Ident "(" [Expr] ")" ;
 
-EString.   Expr6 ::= String ;
+CApp.      Expr6 ::= "["Expr"]" "(" [Expr] ")" ;
 
 Neg.       Expr5 ::= "-" Expr6 ; 
 
@@ -110,7 +108,7 @@ EAnd.      Expr1 ::= Expr2 "and" Expr1 ;
 
 EOr.       Expr ::= Expr1 "or" Expr ;
 
-ELambda.   Expr ::= "fn" "(" [Arg] ")" "=>" Type  Block ;
+ELambda.   Expr ::=  "(" [Arg] ")" "=>" Type  Block ;
 
 coercions  Expr 6 ;
 

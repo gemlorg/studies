@@ -1,9 +1,0 @@
-fn apply_to_range(f: fn(int) -> int, a: int, b: int) -> nil {
-  for (i=a, b, 1) {
-    print(f(i));
-  }
-}
-fn square(x: int) -> int {
-  return x * x;
-}
-apply_to_range(square, 1, 10);

@@ -30,19 +30,19 @@ except ``"`` unless preceded by ``\``.
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in grammar are the following:
-  | ``and`` | ``any`` | ``bool`` | ``else``
-  | ``false`` | ``fn`` | ``for`` | ``if``
-  | ``int`` | ``nil`` | ``not`` | ``or``
-  | ``return`` | ``string`` | ``true`` | ``var``
-  | ``while`` |  |  |
+  | ``and`` | ``bool`` | ``else`` | ``false``
+  | ``fn`` | ``for`` | ``if`` | ``int``
+  | ``nil`` | ``not`` | ``or`` | ``return``
+  | ``string`` | ``true`` | ``var`` | ``while``
 
 The symbols used in grammar are the following:
   | : | , | { | }
   | ; | ( | ) | ->
-  | = | ++ | -- | -
-  | => | + | * | /
-  | % | < | <= | >
-  | >= | == | != |
+  | = | ++ | -- | [
+  | ] | - | => | +
+  | * | / | % | <
+  | <= | > | >= | ==
+  | != |  |  |
 
 ===Comments===
 Single-line comments begin with --.There are no multiple-line comments in the grammar.
@@ -73,7 +73,7 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Stmt//
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Stmt// ``else`` //Stmt//
   |  |  **|**  | ``while`` ``(`` //Expr// ``)`` //Stmt//
-  |  |  **|**  | ``for`` ``(`` //Stmt// ``;`` //Expr// ``;`` //Stmt// ``)`` //Block//
+  |  |  **|**  | ``for`` ``(`` //Ident// ``=`` //Expr// ``;`` //Expr// ``;`` //Expr// ``)`` //Stmt//
   |  |  **|**  | //Expr// ``;``
   | //DeclKind// | -> | ``var`` //Ident// ``:`` //Type// //Item// ``;``
   |  |  **|**  | ``fn`` //Ident// ``(`` //[Arg]// ``)`` ``->`` //Type// //Block//
@@ -85,7 +85,6 @@ All other symbols are terminals.
   |  |  **|**  | ``bool``
   |  |  **|**  | ``int``
   |  |  **|**  | ``string``
-  |  |  **|**  | ``any``
   |  |  **|**  | ``fn`` ``(`` //[Type]// ``)`` ``->`` //Type//
   | //[Type]// | -> | **eps**
   |  |  **|**  | //Type//
@@ -94,10 +93,9 @@ All other symbols are terminals.
   |  |  **|**  | //Integer//
   |  |  **|**  | ``true``
   |  |  **|**  | ``false``
-  |  |  **|**  | ``nil``
-  |  |  **|**  | ``any``
-  |  |  **|**  | //Ident// ``(`` //[Expr]// ``)``
   |  |  **|**  | //String//
+  |  |  **|**  | //Ident// ``(`` //[Expr]// ``)``
+  |  |  **|**  | ``[`` //Expr// ``]`` ``(`` //[Expr]// ``)``
   |  |  **|**  | ``(`` //Expr// ``)``
   | //Expr5// | -> | ``-`` //Expr6//
   |  |  **|**  | ``not`` //Expr6//
@@ -111,7 +109,7 @@ All other symbols are terminals.
   | //Expr1// | -> | //Expr2// ``and`` //Expr1//
   |  |  **|**  | //Expr2//
   | //Expr// | -> | //Expr1// ``or`` //Expr//
-  |  |  **|**  | ``fn`` ``(`` //[Arg]// ``)`` ``=>`` //Type// //Block//
+  |  |  **|**  | ``(`` //[Arg]// ``)`` ``=>`` //Type// //Block//
   |  |  **|**  | //Expr1//
   | //[Expr]// | -> | **eps**
   |  |  **|**  | //Expr//

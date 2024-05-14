@@ -1,7 +1,0 @@
-fn toint() -> int {
-    return 5;
-}
-
-var y: string = "hello";
-var y: int;
-y = toint();

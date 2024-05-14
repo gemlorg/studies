@@ -1,16 +1,17 @@
-module Main (main) where
+module Main
+  ( main
+  ) where
 
+import           Prelude
+import           System.Environment (getArgs)
 
-import Data.Array
-import Prelude
-import           System.Environment    (getArgs)
-
-import Interpreter
+import           Interpreter
 
 main :: IO ()
-main = do 
-    args <- getArgs
-    case args of
-        [] -> getContents >>= interpret 
-        [f] -> readFile f >>= interpret
-        _ -> putStrLn "Usage: ./interpreter [file] or ./interpreter < [file]"
+main = do
+  args <- getArgs
+  case args of
+    [] -> getContents >>= interpret
+    [f] -> readFile f >>= interpret
+    _ ->
+      putStrLn "Usage: ./interpreter [file] or echo 'progam' | ./interpreter "
