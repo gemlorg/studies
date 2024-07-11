@@ -1,5 +1,5 @@
 
-# Task Description
+# Assignment Description
 
 The tasks consist of three levels of difficulty and are designed to progressively become more challenging, building on each other. This means that in your solution, you only need to include the exploit for the hardest level you managed to solve. However, we recommend starting with exploiting the "easy" task, then moving to "medium" based on the script used in the previous task. If you are unable to complete the task, still submit the script (without the flag) and a brief comment. Partial solutions will also be evaluated.
 
