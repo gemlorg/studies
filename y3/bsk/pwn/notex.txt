@@ -1,2 +1,0 @@
-VBoxManage startvm bskvm_default_1704802808864_54874  --type headless
-ssh vagrant@localhost -p 2222 -i ~/bskvm/.../private_key
