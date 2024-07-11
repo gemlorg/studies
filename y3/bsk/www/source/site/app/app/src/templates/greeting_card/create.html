@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head_additional %}
+    <script>
+        window.onload = function() {
+            tinymce.init({
+                menubar: false,
+                statusbar: false,
+                selector: '#content'
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <h1>E-kartka na każdą uroczystość</h1>
+        <p>
+            Stwórz w mgieniu oka piękną i wzruszającą kartkę, którą prześlesz komu chcesz!
+        </p>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="recipient" class="form-control" placeholder="Odbiorca" required>
+            <small class="form-text">Kartka zostanie przesłana użytkownikowi o tej nazwie.</small>
+            <textarea name="content" class="form-control" placeholder="Treść" id="content"></textarea>
+            <label>Motyw</label>
+            <select name="template" class="form-control" aria-label="Szablon">
+              <option value="normal" selected>Zwykły</option>
+              <option value="coffee">Kawa</option>
+            </select>
+            <input type="submit" value="Utwórz" />
+        </form>
+    </div>
+{% endblock %}

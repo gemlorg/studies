@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main">
+        <div class="content">
+            {{ content | safe }}
+        </div>
+
+        <div class="mt-20">
+            <a href="{% url 'greeting-card:download-png' object.token %}">Pobierz jako PNG</a> /
+            <a href="/create">Stwórz inną kartkę</a>
+        </div>
+    </div>
+{% endblock %}

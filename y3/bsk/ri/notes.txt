@@ -1,0 +1,115 @@
+1. Zmodyfikuj grę, aby przy próbie wpisania hasła do dysku zamiast gwiazdek wyświetlały się znaki hasła. 
+After a bit of debugging it is not hard to discover that the starts are added inside pc_putch function.   
+pc_putch        proc near               ; CODE XREF: pc_keypress+63↓p
+...
+                mov     word ptr [rcx+rdx], 2Ah ; '*'
+...   
+pc_putch
+
+since the password char is stored in r9 register, it is sufficient to change 2Ah to r9w. 
+
+
+2. Gra weryfikuje poprawność wprowadzonego hasła do dysku. W sprawozdaniu opisz algorytm, za pomocą którego hasło jest weryfikowane. Na podstawie zebranych informacji, odnajdź poprawne hasło. 
+
+The password is checked inside "pc_check_luks_password" function. If the length of the password is not equal to 8, the functon returns 0, 
+otherwise it returns hash_password(0, 8, 8ui64) == 0x3E4C3F5BDF80E7D3i64. 
+Hence the algorith is the following:
+
+hash_password   proc near              
+                xor     eax, eax                                    ; rax = 0; 
+                mov     r9d, eax                                    ; r9 = 0;
+                test    r8, r8                                      ; assert(r8 != 0); // r8 - password length
+                jz      short locret_7FF7A17E2904
+                lea     r10, cs:7FF7A17E0000h                       ; r10 = offset_something;
+
+loc_7FF7A17E28E1:                                                   ; do { 
+                movzx   edx, byte ptr [r9+r10+11B48h]               ; rdx = password[r9]; 
+                inc     r9                                          ; r9++;
+                movzx   ecx, al                                     ; rcx = al;
+                xor     rdx, rcx                                    ; rdx = xor(rdx, rcx);
+                shr     rax, 8                                      ; rax = rax >> 8;
+                xor     rax, ds:rva qword_7FF7A17E9730[r10+rdx*8]   ; rax = xor(rax, hash_table[rdx]); // hash table is a 256 element array of 64 bit values
+                cmp     r9, r8                                      ; } while(r9, r8);
+                jb      short loc_7FF7A17E28E1
+
+locret_7FF7A17E2904:                    
+                retn                                                ; return rax;
+hash_password   endp
+
+To find the correct passwotd we would have to either bruteforce it, or reverse the hash function. Assuming that the hash function is intentionally weak, we can try to reverse it.  
+
+Inside each step of the loop, rax is obtained from it's previous value, so for now we shoudl focus on reversing the last step of the loop. 
+after the shift, first bit of rax was set to 0, hence whatever element of the table was used, it had it's first bit set to 3E, since that is what we got after the xor.  
+the only element that satisfies the condition is 3e 84 7f 9d c4 5f 37 c0 with index 136 (we have to remember that the table is in little endian).
+applying xor once again and shifting, we get the previous value of rax, which is c8 40 c6 1b df d0 13 ??.
+
+Now we repeat: 
+
+   3e 4c 3f 5b df 80 e7 d3 + 136, 3e 84 7f 9d c4 5f 37 c0  
+-> c8 40 c6 1b df d0 13 ?? + 55, c8 49 75 67 51 dd 9d 87 
+-> 09 b3 7c 8e 0d 8e ?? ?? + 88, 09 5a c9 32 9a c4 bc 9b 
+-> e9 b5 bc 97 4a ?? ?? ?? + 251, e9 8f 35 34 77 ad 31 a7 
+-> 3a 89 a3 3d ?? ?? ?? ?? + 36, 3a 29 1b 04 89 3d 69 8d 
+-> a0 b8 39 ?? ?? ?? ?? ?? + 134, a0 24 97 ca 54 61 6d c8 
+-> 9c ae ?? ?? ?? ?? ?? ?? + 216, 9c f6 5a 1b 36 8f 75 2e 
+-> 58 ?? ?? ?? ?? ?? ?? ?? + 112, 58 63 db f1 e3 ac 9d ec 
+-> ?? ?? ?? ?? ?? ?? ?? ??  
+ = 00 00 00 00 00 00 00 00 
+
+now we can calculate rax: 
+   00 00 00 00 00 00 00 00
+-> 58 63 db f1 e3 ac 9d ec
+-> 9c ae 39 c0 c7 6c d9 b3
+-> a0 b8 39 f3 94 a6 01 11
+-> 3a 89 a3 3d 7a a9 cf 8c
+-> e9 b5 bc 97 4a d7 98 68
+-> 09 b3 7c 8e 0d 8e 6b 03
+-> c8 40 c6 1b df d0 13 ec
+
+to obtain the password we now have to find xor of each table index with current al.
+we get: 112, 52, 53, 53, 119, 48, 52, 100 or p455w04d. 
+
+3. Zmodyfikuj grę w taki sposób, by jej początkowy stan był taki jak po próbie uruchomienia komputera z mamą. Opisz w jaki sposób ustalana jest aktualna "faza" gry. 
+Game state is stored in a global variable and is accessed using functions "mark", "clear" and "check". 
+after the phase with mom, the bits 0, 1 and 2 of the game state are set to 1, hence we can simply set them inside the main function. We also have to clear bit 3, since it tells the game
+whether the mom is on the bottom floor.
+
+so instead of having 
+
+mov ecx,3            
+call <retask_v3.mark>
+
+we have 
+mov ecx,2            
+call <retask_v3.mark>
+
+in main. 
+
+and inside "on_enter" instead of checking if the 0 bit is set we have: 
+xor ecx,ecx                                                                            
+call <retask_v3.mark>                                                                  
+mov ecx,1                                                                              
+call <retask_v3.mark>                                                                  
+nop x 40
+
+on_enter is called in the beginning of the game, so we can be sure that the state is set correctly.
+
+
+
+
+4. Zmodyfikuj grę w taki sposób, aby dało się wygrać walkę z Garym. Zbadaj na czym polega nieuczciwa przewaga przeciwnika i wyrównaj szanse, stosując odpowiednią modyfikację. 
+
+Garry's advantage is that whenever he is low on hp, he can heal himself. 
+It is not too hard to notice that whenever function "predict" returns 0, Gary will heal himself, and in all other cases he will attack.  
+Hence we can simply remove the function's return value, forcing Garry to always attack. 
+
+change 
+call <retastk_v1.predict>                                                              |
+test eax,eax                                                                           |
+jne retastk_v1.7FF650A36A60                                                            |
+
+to 
+call <retastk_v1.predict>                                                              |
+test eax,eax                                                                           |
+jmp retastk_v1.7FF650A36A60                                                            |
+

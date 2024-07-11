@@ -1,0 +1,11 @@
+<div class="coffee">
+    <img src="/static/coffee.png" class="coffee-bg">
+    <div class="coffee-content">
+        <br/>
+        <h2>Drogi/Droga [recipient]!</h2>
+        [content]
+        <div class="footer">
+            [footer]
+        </div>
+    </div>
+</div>

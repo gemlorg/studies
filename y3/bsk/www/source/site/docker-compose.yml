@@ -1,0 +1,30 @@
+# (...)
+services:
+  zad41-mimuw-finals-2023-app:
+    build: app/
+    env_file: ../zad41-mimuw-finals-2023.env
+    restart: always
+    networks:
+      - network41-ext
+  zad41-mimuw-finals-2023-db:
+    restart: always
+    networks:
+      - network41-ext
+    env_file: ../zad41-mimuw-finals-2023.env
+    image: postgres:latest
+  zad41-mimuw-finals-2023-super-secret-microservice:
+    volumes:
+        - ../zad41-mimuw-finals-2023.flag1:/static/index.html
+    build: super-secret-microservice/
+    restart: always
+    networks:
+      - network41-ext
+  zad41-mimuw-finals-2023-bot:
+    restart: always
+    networks:
+      - network41-ext
+    build: xss-bot
+networks:
+  network41-ext:
+    internal: false
+# (...)

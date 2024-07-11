@@ -1,0 +1,30 @@
+FLAGS:
+
+(1) FLAG{ToJestFlagaZeStopki}
+
+(2) FLAG{JeszczeJednaFlagaZaPunkty}
+
+(3) FLAG{71a4b4fd2214b808e4942dfb06c717878399a04c} //processed from image automatically, not sure if correct. orig: (./flag3.png)
+
+SOLUTION:
+
+To get the (1) flag we have to open the source code and notice that an admin user is checking their mailbox and reading every mail sent to them.
+We also need to realize that when a user recieves and opens a card, it's contents are being rendered as html code. Next we simply need to 
+send a card that forces the admin to send a card back to us, which is a similar task to what has been performed at the ex classes. 
+(scripts doing just that are supposed to be attached to the solution, of course)
+
+To get the (2) flag, we need to look through the souce code, and see that when a card is being rendered, 
+it's template is souced from a file under {os.path.dirname(os.path.realpath(__file__))}/card_templates/{card.template}. 
+Since card.template can be controlled by the sender of the card and it doesn't seem to be checked anywhere, it would be 
+sufficient to send a card to ourselves(or admin, similar to the previous one) with a template value "../ x 10 flag.txt" 
+
+Getting the (3) flag, was the hardest part of the assignment for me. By looking at the source files, it's easy to see that
+the server internally accepts http connections on /...-super-secret-microservice. Without much thought, it might seem a good idea to 
+try to force the admin user to view the page and send it's contents elsewhere. However (after some hours of trying), it turns out to be 
+either very very hard, or simply impossible(I'm not qualified enough to claim that). The problem is that the admin is viewing their cards 
+with https and we can't make a http get request due to SOP. Redirecting the admin to http://web.kazet.cc:42448/show/... also won't work 
+since the server only accepts https requests on .../show/... path. After trying countless times and almost losing the hope of solving the assignment
+we might try to find another way and look into the source code once again. To our surprise, the download-png view opens localhost with http which is 
+perhaps exactly what we need. Now we just need to send a card to ourselves that changes window.location.href to ...-super-secret-microservice/index.html, 
+and then open the card with download-png view. The server will open the file and provide us with a screenshot of it's contents.
+

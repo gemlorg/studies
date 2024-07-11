@@ -1,0 +1,7 @@
+putchar address: 0x555555555030
+0x7ffff7e36630
+0x7ffff7dd90d0 -- saved rip on main 
+0x85630 -- offset of putchar in libc 
+hence offset from base address of libc is 
+0x7ffff7dd90d0 - 0x7ffff7e366b2 - 0x85630 - 130 = 
+```

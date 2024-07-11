@@ -1,0 +1,6 @@
+1) numer indeksu
+456366
+2) nazwe  zadania
+hard
+3) flage  rozwiazanego zadania podchodzacz ze zdalnego serwera bsk.bonus.re:13
+bsk{b355461a8027aeb0ea8bcc909539cf6c}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main">
+        <h1>Rejestracja</h1>
+        <p>
+            Zarejestruj się
+        </p>
+
+        {% if form.errors %}
+            <p style="color: #ff0000">
+                {% for k,v in form.errors.items %}
+                    {{ v.as_text }}<br/>
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        <form class="form-horizontal" action="" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="Nazwa użytkownika" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password1" class="form-control" placeholder="Hasło" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password2" class="form-control" placeholder="Powtórz hasło" required>
+            </div>
+            <div class="form-group">
+                <textarea name="footer" class="form-control" placeholder="Stopka (podpis)"></textarea>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Rejestracja" />
+                </div>
+            </div>
+        </form>
+        Masz już konto? <a href="/accounts/login">Zaloguj się!</a>
+    </div>
+{% endblock %}

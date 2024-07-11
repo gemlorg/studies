@@ -1,0 +1,112 @@
+body {
+    background-image: url(/static/bg.jpg);
+    background-position: center center;
+    background-size: cover;
+    min-height: calc(100vh - 30px);
+}
+
+@media(min-width: 640px) {
+    .main {
+        width: 600px;
+        margin: 20px auto;
+    }
+}
+
+@media(max-width: 639px) {
+    .main {
+        margin: 20px;
+    }
+}
+
+.main {
+    background-color: rgba(230, 230, 230, 0.85);
+    border: 1px solid #eee;
+    border-radius: 10px;
+    color: #333;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #009bd6;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input, textarea, select {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+select {
+    background-color: white;
+}
+
+.form-text {
+    display: block;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+textarea {
+    height: 400px;
+}
+
+input[type="submit"] {
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #ddd;
+}
+
+.mt-20 {
+    display: block;
+    margin-top: 20px;
+}
+
+.content, marquee, .recipient {
+    font-family: 'Fasthand', cursive;
+    font-size: 30px;
+}
+
+.coffee {
+    overflow: hidden;
+    position: relative;
+    width: 480px;
+    min-height: 594px;
+}
+
+.coffee-bg {
+    opacity: 0.4;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
+
+.coffee-content {
+    position: relative
+}
+
+.footer {
+    border-top: 1px solid #555;
+    margin-top: 20px;
+    padding-top: 5px;
+}

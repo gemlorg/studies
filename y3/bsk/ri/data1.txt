@@ -1,0 +1,2048 @@
+
+
+
+
+
+
+
+
+.rdata:00007FF7A17E9738                 db  79h ; y
+.rdata:00007FF7A17E9739                 db  89h
+.rdata:00007FF7A17E973A                 db  35h ; 5
+.rdata:00007FF7A17E973B                 db  30h ; 0
+.rdata:00007FF7A17E973C                 db 0C8h
+.rdata:00007FF7A17E973D                 db  70h ; p
+.rdata:00007FF7A17E973E                 db 0D8h
+.rdata:00007FF7A17E973F                 db  7Ah ; z
+.rdata:00007FF7A17E9740                 db 0F2h
+.rdata:00007FF7A17E9741                 db  12h
+.rdata:00007FF7A17E9742                 db  6Bh ; k
+.rdata:00007FF7A17E9743                 db  60h ; `
+.rdata:00007FF7A17E9744                 db  90h
+.rdata:00007FF7A17E9745                 db 0E1h
+.rdata:00007FF7A17E9746                 db 0B0h
+.rdata:00007FF7A17E9747                 db 0F5h
+.rdata:00007FF7A17E9748                 db  8Bh
+.rdata:00007FF7A17E9749                 db  9Bh
+.rdata:00007FF7A17E974A                 db 5Eh
+.rdata:00007FF7A17E974B                 db  50h ; P
+.rdata:00007FF7A17E974C                 db  58h ; X
+.rdata:00007FF7A17E974D                 db  91h
+.rdata:00007FF7A17E974E                 db  68h ; h
+.rdata:00007FF7A17E974F                 db  8Fh
+.rdata:00007FF7A17E9750                 db  8Fh
+.rdata:00007FF7A17E9751                 db 0B6h
+.rdata:00007FF7A17E9752                 db  41h ; A
+.rdata:00007FF7A17E9753                 db  98h
+.rdata:00007FF7A17E9754                 db  73h ; s
+.rdata:00007FF7A17E9755                 db 0E5h
+.rdata:00007FF7A17E9756                 db  38h ; 8
+.rdata:00007FF7A17E9757                 db 0C0h
+.rdata:00007FF7A17E9758                 db 0F6h
+.rdata:00007FF7A17E9759                 db  3Fh ; ?
+.rdata:00007FF7A17E975A                 db  74h ; t
+.rdata:00007FF7A17E975B                 db 0A8h
+.rdata:00007FF7A17E975C                 db 0BBh
+.rdata:00007FF7A17E975D                 db  95h
+.rdata:00007FF7A17E975E                 db 0E0h
+.rdata:00007FF7A17E975F                 db 0BAh
+.rdata:00007FF7A17E9760                 db  7Dh ; }
+.rdata:00007FF7A17E9761                 db 0A4h
+.rdata:00007FF7A17E9762                 db  2Ah ; *
+.rdata:00007FF7A17E9763                 db 0F8h
+.rdata:00007FF7A17E9764                 db 0E3h
+.rdata:00007FF7A17E9765                 db    4
+.rdata:00007FF7A17E9766                 db  88h
+.rdata:00007FF7A17E9767                 db  35h ; 5
+.rdata:00007FF7A17E9768                 db    4
+.rdata:00007FF7A17E9769                 db  2Dh ; -
+.rdata:00007FF7A17E976A                 db  1Fh
+.rdata:00007FF7A17E976B                 db 0C8h
+.rdata:00007FF7A17E976C                 db  2Bh ; +
+.rdata:00007FF7A17E976D                 db  74h ; t
+.rdata:00007FF7A17E976E                 db  50h ; P
+.rdata:00007FF7A17E976F                 db  4Fh ; O
+.rdata:00007FF7A17E9770                 db  75h ; u
+.rdata:00007FF7A17E9771                 db 0FEh
+.rdata:00007FF7A17E9772                 db  14h
+.rdata:00007FF7A17E9773                 db  68h ; h
+.rdata:00007FF7A17E9774                 db 0B4h
+.rdata:00007FF7A17E9775                 db 0ECh
+.rdata:00007FF7A17E9776                 db  28h ; (
+.rdata:00007FF7A17E9777                 db 0ABh
+.rdata:00007FF7A17E9778                 db  0Ch
+.rdata:00007FF7A17E9779                 db  77h ; w
+.rdata:00007FF7A17E977A                 db  21h ; !
+.rdata:00007FF7A17E977B                 db  58h ; X
+.rdata:00007FF7A17E977C                 db  7Ch ; |
+.rdata:00007FF7A17E977D                 db  9Ch
+.rdata:00007FF7A17E977E                 db 0F0h
+.rdata:00007FF7A17E977F                 db 0D1h
+.rdata:00007FF7A17E9780                 db  87h
+.rdata:00007FF7A17E9781                 db 0ECh
+.rdata:00007FF7A17E9782                 db  7Fh ; 
+.rdata:00007FF7A17E9783                 db    8
+.rdata:00007FF7A17E9784                 db  24h ; $
+.rdata:00007FF7A17E9785                 db  0Dh
+.rdata:00007FF7A17E9786                 db  98h
+.rdata:00007FF7A17E9787                 db  5Eh ; ^
+.rdata:00007FF7A17E9788                 db 0FEh
+.rdata:00007FF7A17E9789                 db  65h ; e
+.rdata:00007FF7A17E978A                 db  4Ah ; J
+.rdata:00007FF7A17E978B                 db  38h ; 8
+.rdata:00007FF7A17E978C                 db 0ECh
+.rdata:00007FF7A17E978D                 db  7Dh ; }
+.rdata:00007FF7A17E978E                 db  40h ; @
+.rdata:00007FF7A17E978F                 db  24h ; $
+.rdata:00007FF7A17E9790                 db 0FAh
+.rdata:00007FF7A17E9791                 db  48h ; H
+.rdata:00007FF7A17E9792                 db  55h ; U
+.rdata:00007FF7A17E9793                 db 0F0h
+.rdata:00007FF7A17E9794                 db 0C7h
+.rdata:00007FF7A17E9795                 db    9
+.rdata:00007FF7A17E9796                 db  10h
+.rdata:00007FF7A17E9797                 db  6Bh ; k
+.rdata:00007FF7A17E9798                 db  83h
+.rdata:00007FF7A17E9799                 db 0C1h
+.rdata:00007FF7A17E979A                 db  60h ; `
+.rdata:00007FF7A17E979B                 db 0C0h
+.rdata:00007FF7A17E979C                 db  0Fh
+.rdata:00007FF7A17E979D                 db  79h ; y
+.rdata:00007FF7A17E979E                 db 0C8h
+.rdata:00007FF7A17E979F                 db  11h
+.rdata:00007FF7A17E97A0                 db    8
+.rdata:00007FF7A17E97A1                 db  5Ah ; Z
+.rdata:00007FF7A17E97A2                 db  3Eh ; >
+.rdata:00007FF7A17E97A3                 db  90h
+.rdata:00007FF7A17E97A4                 db  57h ; W
+.rdata:00007FF7A17E97A5                 db 0E8h
+.rdata:00007FF7A17E97A6                 db 0A0h
+.rdata:00007FF7A17E97A7                 db  9Eh
+.rdata:00007FF7A17E97A8                 db  71h ; q
+.rdata:00007FF7A17E97A9                 db 0D3h
+.rdata:00007FF7A17E97AA                 db  0Bh
+.rdata:00007FF7A17E97AB                 db 0A0h
+.rdata:00007FF7A17E97AC                 db  9Fh
+.rdata:00007FF7A17E97AD                 db  98h
+.rdata:00007FF7A17E97AE                 db  78h ; x
+.rdata:00007FF7A17E97AF                 db 0E4h
+.rdata:00007FF7A17E97B0                 db  81h
+.rdata:00007FF7A17E97B1                 db  6Fh ; o
+.rdata:00007FF7A17E97B2                 db 0BEh
+.rdata:00007FF7A17E97B3                 db  88h
+.rdata:00007FF7A17E97B4                 db  3Bh ; ;
+.rdata:00007FF7A17E97B5                 db 0FFh
+.rdata:00007FF7A17E97B6                 db    8
+.rdata:00007FF7A17E97B7                 db  7Dh ; }
+.rdata:00007FF7A17E97B8                 db 0F8h
+.rdata:00007FF7A17E97B9                 db 0E6h
+.rdata:00007FF7A17E97BA                 db  8Bh
+.rdata:00007FF7A17E97BB                 db 0B8h
+.rdata:00007FF7A17E97BC                 db 0F3h
+.rdata:00007FF7A17E97BD                 db  8Fh
+.rdata:00007FF7A17E97BE                 db 0D0h
+.rdata:00007FF7A17E97BF                 db    7
+.rdata:00007FF7A17E97C0                 db  73h ; s
+.rdata:00007FF7A17E97C1                 db  7Dh ; }
+.rdata:00007FF7A17E97C2                 db 0D5h
+.rdata:00007FF7A17E97C3                 db 0E8h
+.rdata:00007FF7A17E97C4                 db 0ABh
+.rdata:00007FF7A17E97C5                 db  1Eh
+.rdata:00007FF7A17E97C6                 db 0B8h
+.rdata:00007FF7A17E97C7                 db  88h
+.rdata:00007FF7A17E97C8                 db  0Ah
+.rdata:00007FF7A17E97C9                 db 0F4h
+.rdata:00007FF7A17E97CA                 db 0E0h
+.rdata:00007FF7A17E97CB                 db 0D8h
+.rdata:00007FF7A17E97CC                 db  63h ; c
+.rdata:00007FF7A17E97CD                 db  6Eh ; n
+.rdata:00007FF7A17E97CE                 db  60h ; `
+.rdata:00007FF7A17E97CF                 db 0F2h
+.rdata:00007FF7A17E97D0                 db  0Eh
+.rdata:00007FF7A17E97D1                 db 0D9h
+.rdata:00007FF7A17E97D2                 db 0FFh
+.rdata:00007FF7A17E97D3                 db  10h
+.rdata:00007FF7A17E97D4                 db  48h ; H
+.rdata:00007FF7A17E97D5                 db  1Ah
+.rdata:00007FF7A17E97D6                 db  30h ; 0
+.rdata:00007FF7A17E97D7                 db 0BDh
+.rdata:00007FF7A17E97D8                 db  77h ; w
+.rdata:00007FF7A17E97D9                 db  50h ; P
+.rdata:00007FF7A17E97DA                 db 0CAh
+.rdata:00007FF7A17E97DB                 db  20h
+.rdata:00007FF7A17E97DC                 db  80h
+.rdata:00007FF7A17E97DD                 db  6Ah ; j
+.rdata:00007FF7A17E97DE                 db 0E8h
+.rdata:00007FF7A17E97DF                 db 0C7h
+.rdata:00007FF7A17E97E0                 db 0FCh
+.rdata:00007FF7A17E97E1                 db 0CBh
+.rdata:00007FF7A17E97E2                 db  94h
+.rdata:00007FF7A17E97E3                 db  70h ; p
+.rdata:00007FF7A17E97E4                 db 0D8h
+.rdata:00007FF7A17E97E5                 db 0FBh
+.rdata:00007FF7A17E97E6                 db  80h
+.rdata:00007FF7A17E97E7                 db  48h ; H
+.rdata:00007FF7A17E97E8                 db  85h
+.rdata:00007FF7A17E97E9                 db  42h ; B
+.rdata:00007FF7A17E97EA                 db 0A1h
+.rdata:00007FF7A17E97EB                 db  40h ; @
+.rdata:00007FF7A17E97EC                 db  10h
+.rdata:00007FF7A17E97ED                 db  8Bh
+.rdata:00007FF7A17E97EE                 db  58h ; X
+.rdata:00007FF7A17E97EF                 db  32h ; 2
+.rdata:00007FF7A17E97F0                 db 0F4h
+.rdata:00007FF7A17E97F1                 db  91h
+.rdata:00007FF7A17E97F2                 db 0AAh
+.rdata:00007FF7A17E97F3                 db 0E0h
+.rdata:00007FF7A17E97F4                 db  8Fh
+.rdata:00007FF7A17E97F5                 db  13h
+.rdata:00007FF7A17E97F6                 db  20h
+.rdata:00007FF7A17E97F7                 db 0D6h
+.rdata:00007FF7A17E97F8                 db  8Dh
+.rdata:00007FF7A17E97F9                 db  18h
+.rdata:00007FF7A17E97FA                 db  9Fh
+.rdata:00007FF7A17E97FB                 db 0D0h
+.rdata:00007FF7A17E97FC                 db  47h ; G
+.rdata:00007FF7A17E97FD                 db  63h ; c
+.rdata:00007FF7A17E97FE                 db 0F8h
+.rdata:00007FF7A17E97FF                 db 0ACh
+.rdata:00007FF7A17E9800                 db    6
+.rdata:00007FF7A17E9801                 db  83h
+.rdata:00007FF7A17E9802                 db 0C1h
+.rdata:00007FF7A17E9803                 db  80h
+.rdata:00007FF7A17E9804                 db  1Fh
+.rdata:00007FF7A17E9805                 db 0F2h
+.rdata:00007FF7A17E9806                 db  90h
+.rdata:00007FF7A17E9807                 db  23h ; #
+.rdata:00007FF7A17E9808                 db  7Fh ; 
+.rdata:00007FF7A17E9809                 db  0Ah
+.rdata:00007FF7A17E980A                 db 0F4h
+.rdata:00007FF7A17E980B                 db 0B0h
+.rdata:00007FF7A17E980C                 db 0D7h
+.rdata:00007FF7A17E980D                 db  82h
+.rdata:00007FF7A17E980E                 db  48h ; H
+.rdata:00007FF7A17E980F                 db  59h ; Y
+.rdata:00007FF7A17E9810                 db  7Bh ; {
+.rdata:00007FF7A17E9811                 db  27h ; '
+.rdata:00007FF7A17E9812                 db 0EBh
+.rdata:00007FF7A17E9813                 db  78h ; x
+.rdata:00007FF7A17E9814                 db 0FCh
+.rdata:00007FF7A17E9815                 db 0F6h
+.rdata:00007FF7A17E9816                 db  18h
+.rdata:00007FF7A17E9817                 db  16h
+.rdata:00007FF7A17E9818                 db    2
+.rdata:00007FF7A17E9819                 db 0AEh
+.rdata:00007FF7A17E981A                 db 0DEh
+.rdata:00007FF7A17E981B                 db  48h ; H
+.rdata:00007FF7A17E981C                 db  34h ; 4
+.rdata:00007FF7A17E981D                 db  86h
+.rdata:00007FF7A17E981E                 db 0C0h
+.rdata:00007FF7A17E981F                 db  6Ch ; l
+.rdata:00007FF7A17E9820                 db  89h
+.rdata:00007FF7A17E9821                 db  35h ; 5
+.rdata:00007FF7A17E9822                 db  80h
+.rdata:00007FF7A17E9823                 db  18h
+.rdata:00007FF7A17E9824                 db  6Ch ; l
+.rdata:00007FF7A17E9825                 db  17h
+.rdata:00007FF7A17E9826                 db 0A8h
+.rdata:00007FF7A17E9827                 db 0E3h
+.rdata:00007FF7A17E9828                 db 0F0h
+.rdata:00007FF7A17E9829                 db 0BCh
+.rdata:00007FF7A17E982A                 db 0B5h
+.rdata:00007FF7A17E982B                 db  28h ; (
+.rdata:00007FF7A17E982C                 db 0A4h
+.rdata:00007FF7A17E982D                 db  67h ; g
+.rdata:00007FF7A17E982E                 db  70h ; p
+.rdata:00007FF7A17E982F                 db  99h
+.rdata:00007FF7A17E9830                 db    2
+.rdata:00007FF7A17E9831                 db 0DFh
+.rdata:00007FF7A17E9832                 db  7Ch ; |
+.rdata:00007FF7A17E9833                 db  11h
+.rdata:00007FF7A17E9834                 db  77h ; w
+.rdata:00007FF7A17E9835                 db 0FEh
+.rdata:00007FF7A17E9836                 db  11h
+.rdata:00007FF7A17E9837                 db 0FAh
+.rdata:00007FF7A17E9838                 db  7Bh ; {
+.rdata:00007FF7A17E9839                 db  56h ; V
+.rdata:00007FF7A17E983A                 db  49h ; I
+.rdata:00007FF7A17E983B                 db  21h ; !
+.rdata:00007FF7A17E983C                 db 0BFh
+.rdata:00007FF7A17E983D                 db  8Eh
+.rdata:00007FF7A17E983E                 db 0C9h
+.rdata:00007FF7A17E983F                 db  80h
+.rdata:00007FF7A17E9840                 db 0F0h
+.rdata:00007FF7A17E9841                 db 0CDh
+.rdata:00007FF7A17E9842                 db  17h
+.rdata:00007FF7A17E9843                 db  71h ; q
+.rdata:00007FF7A17E9844                 db 0E7h
+.rdata:00007FF7A17E9845                 db  1Fh
+.rdata:00007FF7A17E9846                 db 0A1h
+.rdata:00007FF7A17E9847                 db  0Fh
+.rdata:00007FF7A17E9848                 db  89h
+.rdata:00007FF7A17E9849                 db  44h ; D
+.rdata:00007FF7A17E984A                 db  22h ; "
+.rdata:00007FF7A17E984B                 db  41h ; A
+.rdata:00007FF7A17E984C                 db  2Fh ; /
+.rdata:00007FF7A17E984D                 db  6Fh ; o
+.rdata:00007FF7A17E984E                 db  79h ; y
+.rdata:00007FF7A17E984F                 db  75h ; u
+.rdata:00007FF7A17E9850                 db  8Dh
+.rdata:00007FF7A17E9851                 db  69h ; i
+.rdata:00007FF7A17E9852                 db  3Dh ; =
+.rdata:00007FF7A17E9853                 db  89h
+.rdata:00007FF7A17E9854                 db    4
+.rdata:00007FF7A17E9855                 db  1Bh
+.rdata:00007FF7A17E9856                 db  29h ; )
+.rdata:00007FF7A17E9857                 db  3Ah ; :
+.rdata:00007FF7A17E9858                 db 0F4h
+.rdata:00007FF7A17E9859                 db 0E0h
+.rdata:00007FF7A17E985A                 db    8
+.rdata:00007FF7A17E985B                 db 0B9h
+.rdata:00007FF7A17E985C                 db 0CCh
+.rdata:00007FF7A17E985D                 db  6Bh ; k
+.rdata:00007FF7A17E985E                 db 0F1h
+.rdata:00007FF7A17E985F                 db  40h ; @
+.rdata:00007FF7A17E9860                 db  7Fh ; 
+.rdata:00007FF7A17E9861                 db  7Bh ; {
+.rdata:00007FF7A17E9862                 db  56h ; V
+.rdata:00007FF7A17E9863                 db 0E9h
+.rdata:00007FF7A17E9864                 db  94h
+.rdata:00007FF7A17E9865                 db 0FAh
+.rdata:00007FF7A17E9866                 db  99h
+.rdata:00007FF7A17E9867                 db 0CFh
+.rdata:00007FF7A17E9868                 db    6
+.rdata:00007FF7A17E9869                 db 0F2h
+.rdata:00007FF7A17E986A                 db  63h ; c
+.rdata:00007FF7A17E986B                 db 0D9h
+.rdata:00007FF7A17E986C                 db  5Ch ; \
+.rdata:00007FF7A17E986D                 db  8Ah
+.rdata:00007FF7A17E986E                 db  41h ; A
+.rdata:00007FF7A17E986F                 db 0B5h
+.rdata:00007FF7A17E9870                 db  77h ; w
+.rdata:00007FF7A17E9871                 db  21h ; !
+.rdata:00007FF7A17E9872                 db  68h ; h
+.rdata:00007FF7A17E9873                 db  79h ; y
+.rdata:00007FF7A17E9874                 db 0C3h
+.rdata:00007FF7A17E9875                 db  12h
+.rdata:00007FF7A17E9876                 db  39h ; 9
+.rdata:00007FF7A17E9877                 db  51h ; Q
+.rdata:00007FF7A17E9878                 db  0Eh
+.rdata:00007FF7A17E9879                 db 0A8h
+.rdata:00007FF7A17E987A                 db  5Dh ; ]
+.rdata:00007FF7A17E987B                 db  49h ; I
+.rdata:00007FF7A17E987C                 db  0Bh
+.rdata:00007FF7A17E987D                 db  62h ; b
+.rdata:00007FF7A17E987E                 db 0E1h
+.rdata:00007FF7A17E987F                 db  2Bh ; +
+.rdata:00007FF7A17E9880                 db  85h
+.rdata:00007FF7A17E9881                 db  33h ; 3
+.rdata:00007FF7A17E9882                 db    3
+.rdata:00007FF7A17E9883                 db  19h
+.rdata:00007FF7A17E9884                 db  53h ; S
+.rdata:00007FF7A17E9885                 db 0F3h
+.rdata:00007FF7A17E9886                 db  89h
+.rdata:00007FF7A17E9887                 db 0A4h
+.rdata:00007FF7A17E9888                 db 0FCh
+.rdata:00007FF7A17E9889                 db 0BAh
+.rdata:00007FF7A17E988A                 db  36h ; 6
+.rdata:00007FF7A17E988B                 db  29h ; )
+.rdata:00007FF7A17E988C                 db  9Bh
+.rdata:00007FF7A17E988D                 db  83h
+.rdata:00007FF7A17E988E                 db  51h ; Q
+.rdata:00007FF7A17E988F                 db 0DEh
+.rdata:00007FF7A17E9890                 db 0F8h
+.rdata:00007FF7A17E9891                 db  97h
+.rdata:00007FF7A17E9892                 db  29h ; )
+.rdata:00007FF7A17E9893                 db 0E1h
+.rdata:00007FF7A17E9894                 db 0B0h
+.rdata:00007FF7A17E9895                 db 0F7h
+.rdata:00007FF7A17E9896                 db    1
+.rdata:00007FF7A17E9897                 db  91h
+.rdata:00007FF7A17E9898                 db  81h
+.rdata:00007FF7A17E9899                 db  1Eh
+.rdata:00007FF7A17E989A                 db  1Ch
+.rdata:00007FF7A17E989B                 db 0D1h
+.rdata:00007FF7A17E989C                 db  78h ; x
+.rdata:00007FF7A17E989D                 db  87h
+.rdata:00007FF7A17E989E                 db 0D9h
+.rdata:00007FF7A17E989F                 db 0EBh
+.rdata:00007FF7A17E98A0                 db  0Ah
+.rdata:00007FF7A17E98A1                 db  85h
+.rdata:00007FF7A17E98A2                 db  42h ; B
+.rdata:00007FF7A17E98A3                 db  81h
+.rdata:00007FF7A17E98A4                 db  20h
+.rdata:00007FF7A17E98A5                 db  16h
+.rdata:00007FF7A17E98A6                 db 0B1h
+.rdata:00007FF7A17E98A7                 db  64h ; d
+.rdata:00007FF7A17E98A8                 db  73h ; s
+.rdata:00007FF7A17E98A9                 db  0Ch
+.rdata:00007FF7A17E98AA                 db  77h ; w
+.rdata:00007FF7A17E98AB                 db 0B1h
+.rdata:00007FF7A17E98AC                 db 0E8h
+.rdata:00007FF7A17E98AD                 db  66h ; f
+.rdata:00007FF7A17E98AE                 db  69h ; i
+.rdata:00007FF7A17E98AF                 db  1Eh
+.rdata:00007FF7A17E98B0                 db  83h
+.rdata:00007FF7A17E98B1                 db 0B0h
+.rdata:00007FF7A17E98B2                 db 0C2h
+.rdata:00007FF7A17E98B3                 db  99h
+.rdata:00007FF7A17E98B4                 db  4Ch ; L
+.rdata:00007FF7A17E98B5                 db    1
+.rdata:00007FF7A17E98B6                 db  19h
+.rdata:00007FF7A17E98B7                 db  87h
+.rdata:00007FF7A17E98B8                 db 0FAh
+.rdata:00007FF7A17E98B9                 db  39h ; 9
+.rdata:00007FF7A17E98BA                 db 0F7h
+.rdata:00007FF7A17E98BB                 db 0A9h
+.rdata:00007FF7A17E98BC                 db  84h
+.rdata:00007FF7A17E98BD                 db  71h ; q
+.rdata:00007FF7A17E98BE                 db 0C1h
+.rdata:00007FF7A17E98BF                 db 0FDh
+.rdata:00007FF7A17E98C0                 db  71h ; q
+.rdata:00007FF7A17E98C1                 db 0A2h
+.rdata:00007FF7A17E98C2                 db 0A9h
+.rdata:00007FF7A17E98C3                 db 0F9h
+.rdata:00007FF7A17E98C4                 db 0DCh
+.rdata:00007FF7A17E98C5                 db 0E0h
+.rdata:00007FF7A17E98C6                 db 0A9h
+.rdata:00007FF7A17E98C7                 db  72h ; r
+.rdata:00007FF7A17E98C8                 db    8
+.rdata:00007FF7A17E98C9                 db  2Bh ; +
+.rdata:00007FF7A17E98CA                 db  9Ch
+.rdata:00007FF7A17E98CB                 db 0C9h
+.rdata:00007FF7A17E98CC                 db  14h
+.rdata:00007FF7A17E98CD                 db  90h
+.rdata:00007FF7A17E98CE                 db  71h ; q
+.rdata:00007FF7A17E98CF                 db    8
+.rdata:00007FF7A17E98D0                 db  0Ch
+.rdata:00007FF7A17E98D1                 db    6
+.rdata:00007FF7A17E98D2                 db  83h
+.rdata:00007FF7A17E98D3                 db    1
+.rdata:00007FF7A17E98D4                 db  3Fh ; ?
+.rdata:00007FF7A17E98D5                 db 0E4h
+.rdata:00007FF7A17E98D6                 db  21h ; !
+.rdata:00007FF7A17E98D7                 db  47h ; G
+.rdata:00007FF7A17E98D8                 db  75h ; u
+.rdata:00007FF7A17E98D9                 db  8Fh
+.rdata:00007FF7A17E98DA                 db 0B6h
+.rdata:00007FF7A17E98DB                 db  31h ; 1
+.rdata:00007FF7A17E98DC                 db 0F7h
+.rdata:00007FF7A17E98DD                 db  94h
+.rdata:00007FF7A17E98DE                 db 0F9h
+.rdata:00007FF7A17E98DF                 db  3Dh ; =
+.rdata:00007FF7A17E98E0                 db 0FEh
+.rdata:00007FF7A17E98E1                 db  14h
+.rdata:00007FF7A17E98E2                 db 0E8h
+.rdata:00007FF7A17E98E3                 db  61h ; a
+.rdata:00007FF7A17E98E4                 db 0AFh
+.rdata:00007FF7A17E98E5                 db    5
+.rdata:00007FF7A17E98E6                 db  91h
+.rdata:00007FF7A17E98E7                 db 0B2h
+.rdata:00007FF7A17E98E8                 db  87h
+.rdata:00007FF7A17E98E9                 db  9Dh
+.rdata:00007FF7A17E98EA                 db 0DDh
+.rdata:00007FF7A17E98EB                 db  51h ; Q
+.rdata:00007FF7A17E98EC                 db  67h ; g
+.rdata:00007FF7A17E98ED                 db  75h ; u
+.rdata:00007FF7A17E98EE                 db  49h ; I
+.rdata:00007FF7A17E98EF                 db 0C8h
+.rdata:00007FF7A17E98F0                 db 0F6h
+.rdata:00007FF7A17E98F1                 db  4Eh ; N
+.rdata:00007FF7A17E98F2                 db 0D6h
+.rdata:00007FF7A17E98F3                 db 0F1h
+.rdata:00007FF7A17E98F4                 db 0F8h
+.rdata:00007FF7A17E98F5                 db 0EDh
+.rdata:00007FF7A17E98F6                 db  31h ; 1
+.rdata:00007FF7A17E98F7                 db  2Ch ; ,
+.rdata:00007FF7A17E98F8                 db  8Fh
+.rdata:00007FF7A17E98F9                 db 0C7h
+.rdata:00007FF7A17E98FA                 db 0E3h
+.rdata:00007FF7A17E98FB                 db 0C1h
+.rdata:00007FF7A17E98FC                 db  30h ; 0
+.rdata:00007FF7A17E98FD                 db  9Dh
+.rdata:00007FF7A17E98FE                 db 0E9h
+.rdata:00007FF7A17E98FF                 db  56h ; V
+.rdata:00007FF7A17E9900                 db    4
+.rdata:00007FF7A17E9901                 db  5Ch ; \
+.rdata:00007FF7A17E9902                 db 0BDh
+.rdata:00007FF7A17E9903                 db  91h
+.rdata:00007FF7A17E9904                 db  68h ; h
+.rdata:00007FF7A17E9905                 db  0Ch
+.rdata:00007FF7A17E9906                 db  81h
+.rdata:00007FF7A17E9907                 db 0D9h
+.rdata:00007FF7A17E9908                 db  7Dh ; }
+.rdata:00007FF7A17E9909                 db 0D5h
+.rdata:00007FF7A17E990A                 db  88h
+.rdata:00007FF7A17E990B                 db 0A1h
+.rdata:00007FF7A17E990C                 db 0A0h
+.rdata:00007FF7A17E990D                 db  7Ch ; |
+.rdata:00007FF7A17E990E                 db  59h ; Y
+.rdata:00007FF7A17E990F                 db 0A3h
+.rdata:00007FF7A17E9910                 db  79h ; y
+.rdata:00007FF7A17E9911                 db 0F8h
+.rdata:00007FF7A17E9912                 db  97h
+.rdata:00007FF7A17E9913                 db  69h ; i
+.rdata:00007FF7A17E9914                 db  8Bh
+.rdata:00007FF7A17E9915                 db    8
+.rdata:00007FF7A17E9916                 db    9
+.rdata:00007FF7A17E9917                 db 0ECh
+.rdata:00007FF7A17E9918                 db    0
+.rdata:00007FF7A17E9919                 db  71h ; q
+.rdata:00007FF7A17E991A                 db 0A2h
+.rdata:00007FF7A17E991B                 db  59h ; Y
+.rdata:00007FF7A17E991C                 db  43h ; C
+.rdata:00007FF7A17E991D                 db  78h ; x
+.rdata:00007FF7A17E991E                 db 0D1h
+.rdata:00007FF7A17E991F                 db  96h
+.rdata:00007FF7A17E9920                 db  8Bh
+.rdata:00007FF7A17E9921                 db 0EAh
+.rdata:00007FF7A17E9922                 db 0FCh
+.rdata:00007FF7A17E9923                 db    9
+.rdata:00007FF7A17E9924                 db  1Bh
+.rdata:00007FF7A17E9925                 db 0E9h
+.rdata:00007FF7A17E9926                 db 0B9h
+.rdata:00007FF7A17E9927                 db  19h
+.rdata:00007FF7A17E9928                 db 0F2h
+.rdata:00007FF7A17E9929                 db  63h ; c
+.rdata:00007FF7A17E992A                 db 0C9h
+.rdata:00007FF7A17E992B                 db  39h ; 9
+.rdata:00007FF7A17E992C                 db 0D3h
+.rdata:00007FF7A17E992D                 db  99h
+.rdata:00007FF7A17E992E                 db  61h ; a
+.rdata:00007FF7A17E992F                 db  63h ; c
+.rdata:00007FF7A17E9930                 db  6Fh ; o
+.rdata:00007FF7A17E9931                 db  2Dh ; -
+.rdata:00007FF7A17E9932                 db  6Eh ; n
+.rdata:00007FF7A17E9933                 db  7Ah ; z
+.rdata:00007FF7A17E9934                 db 0BDh
+.rdata:00007FF7A17E9935                 db 0DAh
+.rdata:00007FF7A17E9936                 db  7Ah ; z
+.rdata:00007FF7A17E9937                 db 0DFh
+.rdata:00007FF7A17E9938                 db  16h
+.rdata:00007FF7A17E9939                 db 0A4h
+.rdata:00007FF7A17E993A                 db  5Bh ; [
+.rdata:00007FF7A17E993B                 db  4Ah ; J
+.rdata:00007FF7A17E993C                 db  75h ; u
+.rdata:00007FF7A17E993D                 db 0AAh
+.rdata:00007FF7A17E993E                 db 0A2h
+.rdata:00007FF7A17E993F                 db 0A5h
+.rdata:00007FF7A17E9940                 db  9Dh
+.rdata:00007FF7A17E9941                 db  3Fh ; ?
+.rdata:00007FF7A17E9942                 db    5
+.rdata:00007FF7A17E9943                 db  1Ah
+.rdata:00007FF7A17E9944                 db  2Dh ; -
+.rdata:00007FF7A17E9945                 db  3Bh ; ;
+.rdata:00007FF7A17E9946                 db 0CAh
+.rdata:00007FF7A17E9947                 db  2Ah ; *
+.rdata:00007FF7A17E9948                 db 0E4h
+.rdata:00007FF7A17E9949                 db 0B6h
+.rdata:00007FF7A17E994A                 db  30h ; 0
+.rdata:00007FF7A17E994B                 db  2Ah ; *
+.rdata:00007FF7A17E994C                 db 0E5h
+.rdata:00007FF7A17E994D                 db  4Bh ; K
+.rdata:00007FF7A17E994E                 db  12h
+.rdata:00007FF7A17E994F                 db  50h ; P
+.rdata:00007FF7A17E9950                 db 0E0h
+.rdata:00007FF7A17E9951                 db  9Bh
+.rdata:00007FF7A17E9952                 db  2Fh ; /
+.rdata:00007FF7A17E9953                 db 0E2h
+.rdata:00007FF7A17E9954                 db 0CEh
+.rdata:00007FF7A17E9955                 db  3Fh ; ?
+.rdata:00007FF7A17E9956                 db  42h ; B
+.rdata:00007FF7A17E9957                 db  1Fh
+.rdata:00007FF7A17E9958                 db  99h
+.rdata:00007FF7A17E9959                 db  12h
+.rdata:00007FF7A17E995A                 db  1Ah
+.rdata:00007FF7A17E995B                 db 0D2h
+.rdata:00007FF7A17E995C                 db    6
+.rdata:00007FF7A17E995D                 db  4Fh ; O
+.rdata:00007FF7A17E995E                 db  9Ah
+.rdata:00007FF7A17E995F                 db  65h ; e
+.rdata:00007FF7A17E9960                 db  12h
+.rdata:00007FF7A17E9961                 db  89h
+.rdata:00007FF7A17E9962                 db  44h ; D
+.rdata:00007FF7A17E9963                 db  82h
+.rdata:00007FF7A17E9964                 db  5Eh ; ^
+.rdata:00007FF7A17E9965                 db 0DEh
+.rdata:00007FF7A17E9966                 db 0F2h
+.rdata:00007FF7A17E9967                 db 0EAh
+.rdata:00007FF7A17E9968                 db  6Bh ; k
+.rdata:00007FF7A17E9969                 db    0
+.rdata:00007FF7A17E996A                 db  71h ; q
+.rdata:00007FF7A17E996B                 db 0B2h
+.rdata:00007FF7A17E996C                 db  96h
+.rdata:00007FF7A17E996D                 db 0AEh
+.rdata:00007FF7A17E996E                 db  2Ah ; *
+.rdata:00007FF7A17E996F                 db  90h
+.rdata:00007FF7A17E9970                 db  1Ah
+.rdata:00007FF7A17E9971                 db 0D3h
+.rdata:00007FF7A17E9972                 db  7Ah ; z
+.rdata:00007FF7A17E9973                 db  12h
+.rdata:00007FF7A17E9974                 db    9
+.rdata:00007FF7A17E9975                 db  36h ; 6
+.rdata:00007FF7A17E9976                 db  52h ; R
+.rdata:00007FF7A17E9977                 db  74h ; t
+.rdata:00007FF7A17E9978                 db  63h ; c
+.rdata:00007FF7A17E9979                 db  5Ah ; Z
+.rdata:00007FF7A17E997A                 db  4Fh ; O
+.rdata:00007FF7A17E997B                 db  22h ; "
+.rdata:00007FF7A17E997C                 db 0C1h
+.rdata:00007FF7A17E997D                 db  46h ; F
+.rdata:00007FF7A17E997E                 db  8Ah
+.rdata:00007FF7A17E997F                 db  0Eh
+.rdata:00007FF7A17E9980                 db 0E8h
+.rdata:00007FF7A17E9981                 db 0C1h
+.rdata:00007FF7A17E9982                 db  11h
+.rdata:00007FF7A17E9983                 db  72h ; r
+.rdata:00007FF7A17E9984                 db  99h
+.rdata:00007FF7A17E9985                 db 0D7h
+.rdata:00007FF7A17E9986                 db 0E2h
+.rdata:00007FF7A17E9987                 db  81h
+.rdata:00007FF7A17E9988                 db  91h
+.rdata:00007FF7A17E9989                 db  48h ; H
+.rdata:00007FF7A17E998A                 db  24h ; $
+.rdata:00007FF7A17E998B                 db  42h ; B
+.rdata:00007FF7A17E998C                 db  51h ; Q
+.rdata:00007FF7A17E998D                 db 0A7h
+.rdata:00007FF7A17E998E                 db  3Ah ; :
+.rdata:00007FF7A17E998F                 db 0FBh
+.rdata:00007FF7A17E9990                 db  95h
+.rdata:00007FF7A17E9991                 db  65h ; e
+.rdata:00007FF7A17E9992                 db  3Bh ; ;
+.rdata:00007FF7A17E9993                 db  8Ah
+.rdata:00007FF7A17E9994                 db  7Ah ; z
+.rdata:00007FF7A17E9995                 db 0D3h
+.rdata:00007FF7A17E9996                 db  6Ah ; j
+.rdata:00007FF7A17E9997                 db 0B4h
+.rdata:00007FF7A17E9998                 db 0ECh
+.rdata:00007FF7A17E9999                 db 0ECh
+.rdata:00007FF7A17E999A                 db  0Eh
+.rdata:00007FF7A17E999B                 db 0BAh
+.rdata:00007FF7A17E999C                 db 0B2h
+.rdata:00007FF7A17E999D                 db 0A3h
+.rdata:00007FF7A17E999E                 db 0B2h
+.rdata:00007FF7A17E999F                 db 0CEh
+.rdata:00007FF7A17E99A0                 db  67h ; g
+.rdata:00007FF7A17E99A1                 db  77h ; w
+.rdata:00007FF7A17E99A2                 db  50h ; P
+.rdata:00007FF7A17E99A3                 db 0EAh
+.rdata:00007FF7A17E99A4                 db 0EAh
+.rdata:00007FF7A17E99A5                 db  32h ; 2
+.rdata:00007FF7A17E99A6                 db 0DAh
+.rdata:00007FF7A17E99A7                 db  41h ; A
+.rdata:00007FF7A17E99A8                 db  1Eh
+.rdata:00007FF7A17E99A9                 db 0FEh
+.rdata:00007FF7A17E99AA                 db  65h ; e
+.rdata:00007FF7A17E99AB                 db 0DAh
+.rdata:00007FF7A17E99AC                 db  22h ; "
+.rdata:00007FF7A17E99AD                 db  42h ; B
+.rdata:00007FF7A17E99AE                 db    2
+.rdata:00007FF7A17E99AF                 db  3Bh ; ;
+.rdata:00007FF7A17E99B0                 db 0EEh
+.rdata:00007FF7A17E99B1                 db  42h ; B
+.rdata:00007FF7A17E99B2                 db 0D0h
+.rdata:00007FF7A17E99B3                 db 0F2h
+.rdata:00007FF7A17E99B4                 db  86h
+.rdata:00007FF7A17E99B5                 db  25h ; %
+.rdata:00007FF7A17E99B6                 db  72h ; r
+.rdata:00007FF7A17E99B7                 db 0A2h
+.rdata:00007FF7A17E99B8                 db  97h
+.rdata:00007FF7A17E99B9                 db 0CBh
+.rdata:00007FF7A17E99BA                 db 0E5h
+.rdata:00007FF7A17E99BB                 db 0C2h
+.rdata:00007FF7A17E99BC                 db  4Eh ; N
+.rdata:00007FF7A17E99BD                 db  55h ; U
+.rdata:00007FF7A17E99BE                 db 0AAh
+.rdata:00007FF7A17E99BF                 db 0D8h
+.rdata:00007FF7A17E99C0                 db  1Ch
+.rdata:00007FF7A17E99C1                 db  50h ; P
+.rdata:00007FF7A17E99C2                 db 0BBh
+.rdata:00007FF7A17E99C3                 db  92h
+.rdata:00007FF7A17E99C4                 db  16h
+.rdata:00007FF7A17E99C5                 db 0C4h
+.rdata:00007FF7A17E99C6                 db 0C2h
+.rdata:00007FF7A17E99C7                 db  57h ; W
+.rdata:00007FF7A17E99C8                 db  65h ; e
+.rdata:00007FF7A17E99C9                 db 0D9h
+.rdata:00007FF7A17E99CA                 db  8Eh
+.rdata:00007FF7A17E99CB                 db 0A2h
+.rdata:00007FF7A17E99CC                 db 0DEh
+.rdata:00007FF7A17E99CD                 db 0B4h
+.rdata:00007FF7A17E99CE                 db  1Ah
+.rdata:00007FF7A17E99CF                 db  2Dh ; -
+.rdata:00007FF7A17E99D0                 db  61h ; a
+.rdata:00007FF7A17E99D1                 db 0F4h
+.rdata:00007FF7A17E99D2                 db  91h
+.rdata:00007FF7A17E99D3                 db  6Ah ; j
+.rdata:00007FF7A17E99D4                 db 0F5h
+.rdata:00007FF7A17E99D5                 db 0C0h
+.rdata:00007FF7A17E99D6                 db  4Ah ; J
+.rdata:00007FF7A17E99D7                 db  62h ; b
+.rdata:00007FF7A17E99D8                 db  18h
+.rdata:00007FF7A17E99D9                 db  7Dh ; }
+.rdata:00007FF7A17E99DA                 db 0A4h
+.rdata:00007FF7A17E99DB                 db  5Ah ; Z
+.rdata:00007FF7A17E99DC                 db  3Dh ; =
+.rdata:00007FF7A17E99DD                 db 0B0h
+.rdata:00007FF7A17E99DE                 db  92h
+.rdata:00007FF7A17E99DF                 db  18h
+.rdata:00007FF7A17E99E0                 db  93h
+.rdata:00007FF7A17E99E1                 db 0E6h
+.rdata:00007FF7A17E99E2                 db 0FAh
+.rdata:00007FF7A17E99E3                 db  0Ah
+.rdata:00007FF7A17E99E4                 db  65h ; e
+.rdata:00007FF7A17E99E5                 db  21h ; !
+.rdata:00007FF7A17E99E6                 db 0FAh
+.rdata:00007FF7A17E99E7                 db  97h
+.rdata:00007FF7A17E99E8                 db 0EAh
+.rdata:00007FF7A17E99E9                 db  6Fh ; o
+.rdata:00007FF7A17E99EA                 db 0CFh
+.rdata:00007FF7A17E99EB                 db  3Ah ; :
+.rdata:00007FF7A17E99EC                 db 0ADh
+.rdata:00007FF7A17E99ED                 db  51h ; Q
+.rdata:00007FF7A17E99EE                 db  22h ; "
+.rdata:00007FF7A17E99EF                 db 0EDh
+.rdata:00007FF7A17E99F0                 db  9Bh
+.rdata:00007FF7A17E99F1                 db 0BCh
+.rdata:00007FF7A17E99F2                 db 0C4h
+.rdata:00007FF7A17E99F3                 db  9Ah
+.rdata:00007FF7A17E99F4                 db  32h ; 2
+.rdata:00007FF7A17E99F5                 db 0C9h
+.rdata:00007FF7A17E99F6                 db  5Ah ; Z
+.rdata:00007FF7A17E99F7                 db    9
+.rdata:00007FF7A17E99F8                 db 0E2h
+.rdata:00007FF7A17E99F9                 db  35h ; 5
+.rdata:00007FF7A17E99FA                 db 0F1h
+.rdata:00007FF7A17E99FB                 db 0AAh
+.rdata:00007FF7A17E99FC                 db 0FAh
+.rdata:00007FF7A17E99FD                 db 0B9h
+.rdata:00007FF7A17E99FE                 db  82h
+.rdata:00007FF7A17E99FF                 db  73h ; s
+.rdata:00007FF7A17E9A00                 db  69h ; i
+.rdata:00007FF7A17E9A01                 db 0AEh
+.rdata:00007FF7A17E9A02                 db 0AFh
+.rdata:00007FF7A17E9A03                 db 0FAh
+.rdata:00007FF7A17E9A04                 db 0A2h
+.rdata:00007FF7A17E9A05                 db  28h ; (
+.rdata:00007FF7A17E9A06                 db 0EAh
+.rdata:00007FF7A17E9A07                 db 0FCh
+.rdata:00007FF7A17E9A08                 db  10h
+.rdata:00007FF7A17E9A09                 db  27h ; '
+.rdata:00007FF7A17E9A0A                 db  9Ah
+.rdata:00007FF7A17E9A0B                 db 0CAh
+.rdata:00007FF7A17E9A0C                 db  6Ah ; j
+.rdata:00007FF7A17E9A0D                 db  58h ; X
+.rdata:00007FF7A17E9A0E                 db  32h ; 2
+.rdata:00007FF7A17E9A0F                 db  86h
+.rdata:00007FF7A17E9A10                 db  14h
+.rdata:00007FF7A17E9A11                 db  0Ah
+.rdata:00007FF7A17E9A12                 db  85h
+.rdata:00007FF7A17E9A13                 db    2
+.rdata:00007FF7A17E9A14                 db  41h ; A
+.rdata:00007FF7A17E9A15                 db  2Ch ; ,
+.rdata:00007FF7A17E9A16                 db  62h ; b
+.rdata:00007FF7A17E9A17                 db 0C9h
+.rdata:00007FF7A17E9A18                 db  6Dh ; m
+.rdata:00007FF7A17E9A19                 db  83h
+.rdata:00007FF7A17E9A1A                 db 0B0h
+.rdata:00007FF7A17E9A1B                 db  32h ; 2
+.rdata:00007FF7A17E9A1C                 db  89h
+.rdata:00007FF7A17E9A1D                 db  5Ch ; \
+.rdata:00007FF7A17E9A1E                 db 0BAh
+.rdata:00007FF7A17E9A1F                 db 0B3h
+.rdata:00007FF7A17E9A20                 db 0E6h
+.rdata:00007FF7A17E9A21                 db  18h
+.rdata:00007FF7A17E9A22                 db 0EEh
+.rdata:00007FF7A17E9A23                 db  62h ; b
+.rdata:00007FF7A17E9A24                 db 0D1h
+.rdata:00007FF7A17E9A25                 db 0CDh
+.rdata:00007FF7A17E9A26                 db 0D2h
+.rdata:00007FF7A17E9A27                 db  3Ch ; <
+.rdata:00007FF7A17E9A28                 db  9Fh
+.rdata:00007FF7A17E9A29                 db  91h
+.rdata:00007FF7A17E9A2A                 db 0DBh
+.rdata:00007FF7A17E9A2B                 db  52h ; R
+.rdata:00007FF7A17E9A2C                 db  19h
+.rdata:00007FF7A17E9A2D                 db 0BDh
+.rdata:00007FF7A17E9A2E                 db  0Ah
+.rdata:00007FF7A17E9A2F                 db  46h ; F
+.rdata:00007FF7A17E9A30                 db  6Dh ; m
+.rdata:00007FF7A17E9A31                 db 0F2h
+.rdata:00007FF7A17E9A32                 db  12h
+.rdata:00007FF7A17E9A33                 db  6Bh ; k
+.rdata:00007FF7A17E9A34                 db 0CAh
+.rdata:00007FF7A17E9A35                 db  24h ; $
+.rdata:00007FF7A17E9A36                 db  6Bh ; k
+.rdata:00007FF7A17E9A37                 db  25h ; %
+.rdata:00007FF7A17E9A38                 db  14h
+.rdata:00007FF7A17E9A39                 db  7Bh ; {
+.rdata:00007FF7A17E9A3A                 db  27h ; '
+.rdata:00007FF7A17E9A3B                 db  5Bh ; [
+.rdata:00007FF7A17E9A3C                 db    2
+.rdata:00007FF7A17E9A3D                 db  54h ; T
+.rdata:00007FF7A17E9A3E                 db 0B3h
+.rdata:00007FF7A17E9A3F                 db  5Fh ; _
+.rdata:00007FF7A17E9A40                 db  9Fh
+.rdata:00007FF7A17E9A41                 db 0E0h
+.rdata:00007FF7A17E9A42                 db  79h ; y
+.rdata:00007FF7A17E9A43                 db  0Bh
+.rdata:00007FF7A17E9A44                 db  5Ah ; Z
+.rdata:00007FF7A17E9A45                 db 0C5h
+.rdata:00007FF7A17E9A46                 db 0DBh
+.rdata:00007FF7A17E9A47                 db 0D0h
+.rdata:00007FF7A17E9A48                 db 0E6h
+.rdata:00007FF7A17E9A49                 db  69h ; i
+.rdata:00007FF7A17E9A4A                 db  4Ch ; L
+.rdata:00007FF7A17E9A4B                 db  3Bh ; ;
+.rdata:00007FF7A17E9A4C                 db  92h
+.rdata:00007FF7A17E9A4D                 db 0B5h
+.rdata:00007FF7A17E9A4E                 db    3
+.rdata:00007FF7A17E9A4F                 db 0AAh
+.rdata:00007FF7A17E9A50                 db 0E2h
+.rdata:00007FF7A17E9A51                 db  44h ; D
+.rdata:00007FF7A17E9A52                 db  53h ; S
+.rdata:00007FF7A17E9A53                 db 0F3h
+.rdata:00007FF7A17E9A54                 db 0B9h
+.rdata:00007FF7A17E9A55                 db 0C1h
+.rdata:00007FF7A17E9A56                 db  53h ; S
+.rdata:00007FF7A17E9A57                 db 0E5h
+.rdata:00007FF7A17E9A58                 db  9Bh
+.rdata:00007FF7A17E9A59                 db 0CDh
+.rdata:00007FF7A17E9A5A                 db  66h ; f
+.rdata:00007FF7A17E9A5B                 db 0C3h
+.rdata:00007FF7A17E9A5C                 db  71h ; q
+.rdata:00007FF7A17E9A5D                 db 0B1h
+.rdata:00007FF7A17E9A5E                 db  8Bh
+.rdata:00007FF7A17E9A5F                 db  9Fh
+.rdata:00007FF7A17E9A60                 db  10h
+.rdata:00007FF7A17E9A61                 db  56h ; V
+.rdata:00007FF7A17E9A62                 db  38h ; 8
+.rdata:00007FF7A17E9A63                 db  93h
+.rdata:00007FF7A17E9A64                 db  29h ; )
+.rdata:00007FF7A17E9A65                 db  20h
+.rdata:00007FF7A17E9A66                 db 0E3h
+.rdata:00007FF7A17E9A67                 db  10h
+.rdata:00007FF7A17E9A68                 db  69h ; i
+.rdata:00007FF7A17E9A69                 db 0DFh
+.rdata:00007FF7A17E9A6A                 db  0Dh
+.rdata:00007FF7A17E9A6B                 db 0A3h
+.rdata:00007FF7A17E9A6C                 db 0E1h
+.rdata:00007FF7A17E9A6D                 db  50h ; P
+.rdata:00007FF7A17E9A6E                 db  3Bh ; ;
+.rdata:00007FF7A17E9A6F                 db  6Ah ; j
+.rdata:00007FF7A17E9A70                 db  18h
+.rdata:00007FF7A17E9A71                 db  0Ch
+.rdata:00007FF7A17E9A72                 db    6
+.rdata:00007FF7A17E9A73                 db    3
+.rdata:00007FF7A17E9A74                 db  7Eh ; ~
+.rdata:00007FF7A17E9A75                 db 0C8h
+.rdata:00007FF7A17E9A76                 db  43h ; C
+.rdata:00007FF7A17E9A77                 db  8Eh
+.rdata:00007FF7A17E9A78                 db  61h ; a
+.rdata:00007FF7A17E9A79                 db  85h
+.rdata:00007FF7A17E9A7A                 db  33h ; 3
+.rdata:00007FF7A17E9A7B                 db  33h ; 3
+.rdata:00007FF7A17E9A7C                 db 0B6h
+.rdata:00007FF7A17E9A7D                 db 0B8h
+.rdata:00007FF7A17E9A7E                 db  9Bh
+.rdata:00007FF7A17E9A7F                 db 0F4h
+.rdata:00007FF7A17E9A80                 db 0EAh
+.rdata:00007FF7A17E9A81                 db  1Eh
+.rdata:00007FF7A17E9A82                 db  6Dh ; m
+.rdata:00007FF7A17E9A83                 db  63h ; c
+.rdata:00007FF7A17E9A84                 db 0EEh
+.rdata:00007FF7A17E9A85                 db  29h ; )
+.rdata:00007FF7A17E9A86                 db 0F3h
+.rdata:00007FF7A17E9A87                 db  7Bh ; {
+.rdata:00007FF7A17E9A88                 db  93h
+.rdata:00007FF7A17E9A89                 db  97h
+.rdata:00007FF7A17E9A8A                 db  58h ; X
+.rdata:00007FF7A17E9A8B                 db  53h ; S
+.rdata:00007FF7A17E9A8C                 db  26h ; &
+.rdata:00007FF7A17E9A8D                 db  59h ; Y
+.rdata:00007FF7A17E9A8E                 db  2Bh ; +
+.rdata:00007FF7A17E9A8F                 db    1
+.rdata:00007FF7A17E9A90                 db  97h
+.rdata:00007FF7A17E9A91                 db 0BAh
+.rdata:00007FF7A17E9A92                 db  47h ; G
+.rdata:00007FF7A17E9A93                 db  9Bh
+.rdata:00007FF7A17E9A94                 db  0Dh
+.rdata:00007FF7A17E9A95                 db  2Dh ; -
+.rdata:00007FF7A17E9A96                 db  7Bh ; {
+.rdata:00007FF7A17E9A97                 db  4Eh ; N
+.rdata:00007FF7A17E9A98                 db 0EEh
+.rdata:00007FF7A17E9A99                 db  33h ; 3
+.rdata:00007FF7A17E9A9A                 db  72h ; r
+.rdata:00007FF7A17E9A9B                 db 0ABh
+.rdata:00007FF7A17E9A9C                 db 0C5h
+.rdata:00007FF7A17E9A9D                 db  5Dh ; ]
+.rdata:00007FF7A17E9A9E                 db 0A3h
+.rdata:00007FF7A17E9A9F                 db  34h ; 4
+.rdata:00007FF7A17E9AA0                 db  65h ; e
+.rdata:00007FF7A17E9AA1                 db 0A8h
+.rdata:00007FF7A17E9AA2                 db  2Ch ; ,
+.rdata:00007FF7A17E9AA3                 db 0FBh
+.rdata:00007FF7A17E9AA4                 db  9Dh
+.rdata:00007FF7A17E9AA5                 db 0CCh
+.rdata:00007FF7A17E9AA6                 db 0CBh
+.rdata:00007FF7A17E9AA7                 db 0BBh
+.rdata:00007FF7A17E9AA8                 db  1Ch
+.rdata:00007FF7A17E9AA9                 db  21h ; !
+.rdata:00007FF7A17E9AAA                 db  19h
+.rdata:00007FF7A17E9AAB                 db 0CBh
+.rdata:00007FF7A17E9AAC                 db  55h ; U
+.rdata:00007FF7A17E9AAD                 db 0BCh
+.rdata:00007FF7A17E9AAE                 db  13h
+.rdata:00007FF7A17E9AAF                 db 0C1h
+.rdata:00007FF7A17E9AB0                 db 0ECh
+.rdata:00007FF7A17E9AB1                 db  9Dh
+.rdata:00007FF7A17E9AB2                 db 0ACh
+.rdata:00007FF7A17E9AB3                 db 0E3h
+.rdata:00007FF7A17E9AB4                 db 0F1h
+.rdata:00007FF7A17E9AB5                 db 0DBh
+.rdata:00007FF7A17E9AB6                 db  63h ; c
+.rdata:00007FF7A17E9AB7                 db  58h ; X
+.rdata:00007FF7A17E9AB8                 db  95h
+.rdata:00007FF7A17E9AB9                 db  14h
+.rdata:00007FF7A17E9ABA                 db  99h
+.rdata:00007FF7A17E9ABB                 db 0D3h
+.rdata:00007FF7A17E9ABC                 db  39h ; 9
+.rdata:00007FF7A17E9ABD                 db 0ABh
+.rdata:00007FF7A17E9ABE                 db 0BBh
+.rdata:00007FF7A17E9ABF                 db  22h ; "
+.rdata:00007FF7A17E9AC0                 db  1Eh
+.rdata:00007FF7A17E9AC1                 db  8Fh
+.rdata:00007FF7A17E9AC2                 db 0C7h
+.rdata:00007FF7A17E9AC3                 db  83h
+.rdata:00007FF7A17E9AC4                 db  61h ; a
+.rdata:00007FF7A17E9AC5                 db  3Ah ; :
+.rdata:00007FF7A17E9AC6                 db 0D3h
+.rdata:00007FF7A17E9AC7                 db 0ADh
+.rdata:00007FF7A17E9AC8                 db  67h ; g
+.rdata:00007FF7A17E9AC9                 db    6
+.rdata:00007FF7A17E9ACA                 db 0F2h
+.rdata:00007FF7A17E9ACB                 db 0B3h
+.rdata:00007FF7A17E9ACC                 db 0A9h
+.rdata:00007FF7A17E9ACD                 db  4Ah ; J
+.rdata:00007FF7A17E9ACE                 db  0Bh
+.rdata:00007FF7A17E9ACF                 db 0D7h
+.rdata:00007FF7A17E9AD0                 db  63h ; c
+.rdata:00007FF7A17E9AD1                 db  2Bh ; +
+.rdata:00007FF7A17E9AD2                 db 0EDh
+.rdata:00007FF7A17E9AD3                 db  7Bh ; {
+.rdata:00007FF7A17E9AD4                 db  82h
+.rdata:00007FF7A17E9AD5                 db  3Eh ; >
+.rdata:00007FF7A17E9AD6                 db  5Bh ; [
+.rdata:00007FF7A17E9AD7                 db  98h
+.rdata:00007FF7A17E9AD8                 db  1Ah
+.rdata:00007FF7A17E9AD9                 db 0A2h
+.rdata:00007FF7A17E9ADA                 db 0D8h
+.rdata:00007FF7A17E9ADB                 db  4Bh ; K
+.rdata:00007FF7A17E9ADC                 db  4Ah ; J
+.rdata:00007FF7A17E9ADD                 db  4Eh ; N
+.rdata:00007FF7A17E9ADE                 db  83h
+.rdata:00007FF7A17E9ADF                 db 0E2h
+.rdata:00007FF7A17E9AE0                 db  91h
+.rdata:00007FF7A17E9AE1                 db  39h ; 9
+.rdata:00007FF7A17E9AE2                 db  86h
+.rdata:00007FF7A17E9AE3                 db  1Bh
+.rdata:00007FF7A17E9AE4                 db  12h
+.rdata:00007FF7A17E9AE5                 db 0DFh
+.rdata:00007FF7A17E9AE6                 db 0EBh
+.rdata:00007FF7A17E9AE7                 db  6Dh ; m
+.rdata:00007FF7A17E9AE8                 db 0E8h
+.rdata:00007FF7A17E9AE9                 db 0B0h
+.rdata:00007FF7A17E9AEA                 db 0B3h
+.rdata:00007FF7A17E9AEB                 db  2Bh ; +
+.rdata:00007FF7A17E9AEC                 db 0DAh
+.rdata:00007FF7A17E9AED                 db 0AFh
+.rdata:00007FF7A17E9AEE                 db  33h ; 3
+.rdata:00007FF7A17E9AEF                 db  17h
+.rdata:00007FF7A17E9AF0                 db  99h
+.rdata:00007FF7A17E9AF1                 db  63h ; c
+.rdata:00007FF7A17E9AF2                 db 0B8h
+.rdata:00007FF7A17E9AF3                 db  8Bh
+.rdata:00007FF7A17E9AF4                 db  45h ; E
+.rdata:00007FF7A17E9AF5                 db  37h ; 7
+.rdata:00007FF7A17E9AF6                 db  4Bh ; K
+.rdata:00007FF7A17E9AF7                 db 0F3h
+.rdata:00007FF7A17E9AF8                 db 0E0h
+.rdata:00007FF7A17E9AF9                 db 0EAh
+.rdata:00007FF7A17E9AFA                 db  8Dh
+.rdata:00007FF7A17E9AFB                 db 0BBh
+.rdata:00007FF7A17E9AFC                 db  8Dh
+.rdata:00007FF7A17E9AFD                 db  47h ; G
+.rdata:00007FF7A17E9AFE                 db  93h
+.rdata:00007FF7A17E9AFF                 db  89h
+.rdata:00007FF7A17E9B00                 db  6Bh ; k
+.rdata:00007FF7A17E9B01                 db  71h ; q
+.rdata:00007FF7A17E9B02                 db 0D3h
+.rdata:00007FF7A17E9B03                 db 0EBh
+.rdata:00007FF7A17E9B04                 db 0D5h
+.rdata:00007FF7A17E9B05                 db 0D6h
+.rdata:00007FF7A17E9B06                 db 0FBh
+.rdata:00007FF7A17E9B07                 db    6
+.rdata:00007FF7A17E9B08                 db  12h
+.rdata:00007FF7A17E9B09                 db 0F8h
+.rdata:00007FF7A17E9B0A                 db 0E6h
+.rdata:00007FF7A17E9B0B                 db 0DBh
+.rdata:00007FF7A17E9B0C                 db  1Dh
+.rdata:00007FF7A17E9B0D                 db 0A6h
+.rdata:00007FF7A17E9B0E                 db  23h ; #
+.rdata:00007FF7A17E9B0F                 db  7Ch ; |
+.rdata:00007FF7A17E9B10                 db  16h
+.rdata:00007FF7A17E9B11                 db 0D5h
+.rdata:00007FF7A17E9B12                 db 0F9h
+.rdata:00007FF7A17E9B13                 db  13h
+.rdata:00007FF7A17E9B14                 db  36h ; 6
+.rdata:00007FF7A17E9B15                 db 0D2h
+.rdata:00007FF7A17E9B16                 db  73h ; s
+.rdata:00007FF7A17E9B17                 db  33h ; 3
+.rdata:00007FF7A17E9B18                 db  6Fh ; o
+.rdata:00007FF7A17E9B19                 db  5Ch ; \
+.rdata:00007FF7A17E9B1A                 db 0CCh
+.rdata:00007FF7A17E9B1B                 db  23h ; #
+.rdata:00007FF7A17E9B1C                 db 0FEh
+.rdata:00007FF7A17E9B1D                 db 0A2h
+.rdata:00007FF7A17E9B1E                 db 0ABh
+.rdata:00007FF7A17E9B1F                 db  49h ; I
+.rdata:00007FF7A17E9B20                 db 0E4h
+.rdata:00007FF7A17E9B21                 db 0C7h
+.rdata:00007FF7A17E9B22                 db  92h
+.rdata:00007FF7A17E9B23                 db  73h ; s
+.rdata:00007FF7A17E9B24                 db 0A6h
+.rdata:00007FF7A17E9B25                 db  33h ; 3
+.rdata:00007FF7A17E9B26                 db 0C3h
+.rdata:00007FF7A17E9B27                 db 0C6h
+.rdata:00007FF7A17E9B28                 db  9Dh
+.rdata:00007FF7A17E9B29                 db  4Eh ; N
+.rdata:00007FF7A17E9B2A                 db 0A7h
+.rdata:00007FF7A17E9B2B                 db  43h ; C
+.rdata:00007FF7A17E9B2C                 db  6Eh ; n
+.rdata:00007FF7A17E9B2D                 db  43h ; C
+.rdata:00007FF7A17E9B2E                 db  1Bh
+.rdata:00007FF7A17E9B2F                 db 0BCh
+.rdata:00007FF7A17E9B30                 db 0B5h
+.rdata:00007FF7A17E9B31                 db 0C9h
+.rdata:00007FF7A17E9B32                 db  4Bh ; K
+.rdata:00007FF7A17E9B33                 db 0ACh
+.rdata:00007FF7A17E9B34                 db  29h ; )
+.rdata:00007FF7A17E9B35                 db  93h
+.rdata:00007FF7A17E9B36                 db 0ACh
+.rdata:00007FF7A17E9B37                 db  95h
+.rdata:00007FF7A17E9B38                 db 0CCh
+.rdata:00007FF7A17E9B39                 db  40h ; @
+.rdata:00007FF7A17E9B3A                 db  7Eh ; ~
+.rdata:00007FF7A17E9B3B                 db  9Ch
+.rdata:00007FF7A17E9B3C                 db 0E1h
+.rdata:00007FF7A17E9B3D                 db 0E3h
+.rdata:00007FF7A17E9B3E                 db  74h ; t
+.rdata:00007FF7A17E9B3F                 db 0EFh
+.rdata:00007FF7A17E9B40                 db  47h ; G
+.rdata:00007FF7A17E9B41                 db 0DBh
+.rdata:00007FF7A17E9B42                 db  20h
+.rdata:00007FF7A17E9B43                 db 0CCh
+.rdata:00007FF7A17E9B44                 db 0B9h
+.rdata:00007FF7A17E9B45                 db  72h ; r
+.rdata:00007FF7A17E9B46                 db  1Ch
+.rdata:00007FF7A17E9B47                 db  60h ; `
+.rdata:00007FF7A17E9B48                 db  3Eh ; >
+.rdata:00007FF7A17E9B49                 db  52h ; R
+.rdata:00007FF7A17E9B4A                 db  15h
+.rdata:00007FF7A17E9B4B                 db 0FCh
+.rdata:00007FF7A17E9B4C                 db  71h ; q
+.rdata:00007FF7A17E9B4D                 db    2
+.rdata:00007FF7A17E9B4E                 db 0C4h
+.rdata:00007FF7A17E9B4F                 db  1Ah
+.rdata:00007FF7A17E9B50                 db  3Ah ; :
+.rdata:00007FF7A17E9B51                 db  7Fh ; 
+.rdata:00007FF7A17E9B52                 db  0Ah
+.rdata:00007FF7A17E9B53                 db  34h ; 4
+.rdata:00007FF7A17E9B54                 db  5Ah ; Z
+.rdata:00007FF7A17E9B55                 db  76h ; v
+.rdata:00007FF7A17E9B56                 db  94h
+.rdata:00007FF7A17E9B57                 db  55h ; U
+.rdata:00007FF7A17E9B58                 db  43h ; C
+.rdata:00007FF7A17E9B59                 db 0F6h
+.rdata:00007FF7A17E9B5A                 db  3Fh ; ?
+.rdata:00007FF7A17E9B5B                 db    4
+.rdata:00007FF7A17E9B5C                 db  92h
+.rdata:00007FF7A17E9B5D                 db    6
+.rdata:00007FF7A17E9B5E                 db  4Ch ; L
+.rdata:00007FF7A17E9B5F                 db  2Fh ; /
+.rdata:00007FF7A17E9B60                 db 0C8h
+.rdata:00007FF7A17E9B61                 db  6Dh ; m
+.rdata:00007FF7A17E9B62                 db  61h ; a
+.rdata:00007FF7A17E9B63                 db  54h ; T
+.rdata:00007FF7A17E9B64                 db 0CAh
+.rdata:00007FF7A17E9B65                 db  97h
+.rdata:00007FF7A17E9B66                 db  24h ; $
+.rdata:00007FF7A17E9B67                 db 0A0h
+.rdata:00007FF7A17E9B68                 db 0B1h
+.rdata:00007FF7A17E9B69                 db 0E4h
+.rdata:00007FF7A17E9B6A                 db  54h ; T
+.rdata:00007FF7A17E9B6B                 db  64h ; d
+.rdata:00007FF7A17E9B6C                 db    2
+.rdata:00007FF7A17E9B6D                 db 0E7h
+.rdata:00007FF7A17E9B6E                 db 0FCh
+.rdata:00007FF7A17E9B6F                 db 0DAh
+.rdata:00007FF7A17E9B70                 db 0C0h
+.rdata:00007FF7A17E9B71                 db  37h ; 7
+.rdata:00007FF7A17E9B72                 db  5Fh ; _
+.rdata:00007FF7A17E9B73                 db 0C4h
+.rdata:00007FF7A17E9B74                 db  9Dh
+.rdata:00007FF7A17E9B75                 db  7Fh ; 
+.rdata:00007FF7A17E9B76                 db  84h
+.rdata:00007FF7A17E9B77                 db  3Eh ; >
+.rdata:00007FF7A17E9B78                 db 0B9h
+.rdata:00007FF7A17E9B79                 db 0BEh
+.rdata:00007FF7A17E9B7A                 db  6Ah ; j
+.rdata:00007FF7A17E9B7B                 db 0F4h
+.rdata:00007FF7A17E9B7C                 db  55h ; U
+.rdata:00007FF7A17E9B7D                 db  0Fh
+.rdata:00007FF7A17E9B7E                 db  5Ch ; \
+.rdata:00007FF7A17E9B7F                 db  44h ; D
+.rdata:00007FF7A17E9B80                 db  32h ; 2
+.rdata:00007FF7A17E9B81                 db  25h ; %
+.rdata:00007FF7A17E9B82                 db  34h ; 4
+.rdata:00007FF7A17E9B83                 db 0A4h
+.rdata:00007FF7A17E9B84                 db  0Dh
+.rdata:00007FF7A17E9B85                 db  9Eh
+.rdata:00007FF7A17E9B86                 db  34h ; 4
+.rdata:00007FF7A17E9B87                 db 0CBh
+.rdata:00007FF7A17E9B88                 db  4Bh ; K
+.rdata:00007FF7A17E9B89                 db 0ACh
+.rdata:00007FF7A17E9B8A                 db    1
+.rdata:00007FF7A17E9B8B                 db  94h
+.rdata:00007FF7A17E9B8C                 db 0C5h
+.rdata:00007FF7A17E9B8D                 db 0EEh
+.rdata:00007FF7A17E9B8E                 db 0ECh
+.rdata:00007FF7A17E9B8F                 db 0B1h
+.rdata:00007FF7A17E9B90                 db  4Fh ; O
+.rdata:00007FF7A17E9B91                 db  81h
+.rdata:00007FF7A17E9B92                 db  1Eh
+.rdata:00007FF7A17E9B93                 db  5Ch ; \
+.rdata:00007FF7A17E9B94                 db 0EEh
+.rdata:00007FF7A17E9B95                 db  9Ah
+.rdata:00007FF7A17E9B96                 db 0BCh
+.rdata:00007FF7A17E9B97                 db 0FEh
+.rdata:00007FF7A17E9B98                 db  36h ; 6
+.rdata:00007FF7A17E9B99                 db    8
+.rdata:00007FF7A17E9B9A                 db  2Bh ; +
+.rdata:00007FF7A17E9B9B                 db  6Ch ; l
+.rdata:00007FF7A17E9B9C                 db  26h ; &
+.rdata:00007FF7A17E9B9D                 db 0EAh
+.rdata:00007FF7A17E9B9E                 db  64h ; d
+.rdata:00007FF7A17E9B9F                 db  84h
+.rdata:00007FF7A17E9BA0                 db 0BDh
+.rdata:00007FF7A17E9BA1                 db  93h
+.rdata:00007FF7A17E9BA2                 db  75h ; u
+.rdata:00007FF7A17E9BA3                 db  3Ch ; <
+.rdata:00007FF7A17E9BA4                 db  7Eh ; ~
+.rdata:00007FF7A17E9BA5                 db  7Bh ; {
+.rdata:00007FF7A17E9BA6                 db  0Ch
+.rdata:00007FF7A17E9BA7                 db  0Bh
+.rdata:00007FF7A17E9BA8                 db 0C4h
+.rdata:00007FF7A17E9BA9                 db  1Ah
+.rdata:00007FF7A17E9BAA                 db  40h ; @
+.rdata:00007FF7A17E9BAB                 db  0Ch
+.rdata:00007FF7A17E9BAC                 db 0B6h
+.rdata:00007FF7A17E9BAD                 db  0Bh
+.rdata:00007FF7A17E9BAE                 db 0D4h
+.rdata:00007FF7A17E9BAF                 db  71h ; q
+.rdata:00007FF7A17E9BB0                 db  34h ; 4
+.rdata:00007FF7A17E9BB1                 db 0A6h
+.rdata:00007FF7A17E9BB2                 db 0F5h
+.rdata:00007FF7A17E9BB3                 db  24h ; $
+.rdata:00007FF7A17E9BB4                 db  12h
+.rdata:00007FF7A17E9BB5                 db  6Ch ; l
+.rdata:00007FF7A17E9BB6                 db 0A4h
+.rdata:00007FF7A17E9BB7                 db 0E8h
+.rdata:00007FF7A17E9BB8                 db  4Dh ; M
+.rdata:00007FF7A17E9BB9                 db  2Fh ; /
+.rdata:00007FF7A17E9BBA                 db 0C0h
+.rdata:00007FF7A17E9BBB                 db  14h
+.rdata:00007FF7A17E9BBC                 db 0DAh
+.rdata:00007FF7A17E9BBD                 db  1Ch
+.rdata:00007FF7A17E9BBE                 db  7Ch ; |
+.rdata:00007FF7A17E9BBF                 db  92h
+.rdata:00007FF7A17E9BC0                 db 0C6h
+.rdata:00007FF7A17E9BC1                 db 0B4h
+.rdata:00007FF7A17E9BC2                 db  9Eh
+.rdata:00007FF7A17E9BC3                 db  44h ; D
+.rdata:00007FF7A17E9BC4                 db  82h
+.rdata:00007FF7A17E9BC5                 db  8Dh
+.rdata:00007FF7A17E9BC6                 db  14h
+.rdata:00007FF7A17E9BC7                 db  1Dh
+.rdata:00007FF7A17E9BC8                 db 0BFh
+.rdata:00007FF7A17E9BC9                 db  3Dh ; =
+.rdata:00007FF7A17E9BCA                 db 0ABh
+.rdata:00007FF7A17E9BCB                 db  74h ; t
+.rdata:00007FF7A17E9BCC                 db  4Ah ; J
+.rdata:00007FF7A17E9BCD                 db 0FDh
+.rdata:00007FF7A17E9BCE                 db 0CCh
+.rdata:00007FF7A17E9BCF                 db  67h ; g
+.rdata:00007FF7A17E9BD0                 db 0BBh
+.rdata:00007FF7A17E9BD1                 db  10h
+.rdata:00007FF7A17E9BD2                 db 0B4h
+.rdata:00007FF7A17E9BD3                 db 0BCh
+.rdata:00007FF7A17E9BD4                 db  61h ; a
+.rdata:00007FF7A17E9BD5                 db  89h
+.rdata:00007FF7A17E9BD6                 db  9Ch
+.rdata:00007FF7A17E9BD7                 db  28h ; (
+.rdata:00007FF7A17E9BD8                 db 0C2h
+.rdata:00007FF7A17E9BD9                 db  99h
+.rdata:00007FF7A17E9BDA                 db  81h
+.rdata:00007FF7A17E9BDB                 db  8Ch
+.rdata:00007FF7A17E9BDC                 db 0A9h
+.rdata:00007FF7A17E9BDD                 db 0F9h
+.rdata:00007FF7A17E9BDE                 db  44h ; D
+.rdata:00007FF7A17E9BDF                 db  52h ; R
+.rdata:00007FF7A17E9BE0                 db  49h ; I
+.rdata:00007FF7A17E9BE1                 db    2
+.rdata:00007FF7A17E9BE2                 db 0DFh
+.rdata:00007FF7A17E9BE3                 db 0DCh
+.rdata:00007FF7A17E9BE4                 db 0F1h
+.rdata:00007FF7A17E9BE5                 db  68h ; h
+.rdata:00007FF7A17E9BE6                 db  2Ch ; ,
+.rdata:00007FF7A17E9BE7                 db 0DDh
+.rdata:00007FF7A17E9BE8                 db  30h ; 0
+.rdata:00007FF7A17E9BE9                 db  8Bh
+.rdata:00007FF7A17E9BEA                 db 0EAh
+.rdata:00007FF7A17E9BEB                 db 0ECh
+.rdata:00007FF7A17E9BEC                 db  39h ; 9
+.rdata:00007FF7A17E9BED                 db  18h
+.rdata:00007FF7A17E9BEE                 db 0F4h
+.rdata:00007FF7A17E9BEF                 db 0A7h
+.rdata:00007FF7A17E9BF0                 db  41h ; A
+.rdata:00007FF7A17E9BF1                 db  58h ; X
+.rdata:00007FF7A17E9BF2                 db 0E1h
+.rdata:00007FF7A17E9BF3                 db  4Ch ; L
+.rdata:00007FF7A17E9BF4                 db 0A6h
+.rdata:00007FF7A17E9BF5                 db  80h
+.rdata:00007FF7A17E9BF6                 db  8Ch
+.rdata:00007FF7A17E9BF7                 db  43h ; C
+.rdata:00007FF7A17E9BF8                 db  38h ; 8
+.rdata:00007FF7A17E9BF9                 db 0D1h
+.rdata:00007FF7A17E9BFA                 db 0D4h
+.rdata:00007FF7A17E9BFB                 db  7Ch ; |
+.rdata:00007FF7A17E9BFC                 db  6Eh ; n
+.rdata:00007FF7A17E9BFD                 db 0F0h
+.rdata:00007FF7A17E9BFE                 db  54h ; T
+.rdata:00007FF7A17E9BFF                 db  39h ; 9
+.rdata:00007FF7A17E9C00                 db 0B3h
+.rdata:00007FF7A17E9C01                 db  4Ah ; J
+.rdata:00007FF7A17E9C02                 db  8Ah
+.rdata:00007FF7A17E9C03                 db  2Ch ; ,
+.rdata:00007FF7A17E9C04                 db  36h ; 6
+.rdata:00007FF7A17E9C05                 db  61h ; a
+.rdata:00007FF7A17E9C06                 db  3Ch ; <
+.rdata:00007FF7A17E9C07                 db 0B6h
+.rdata:00007FF7A17E9C08                 db 0CAh
+.rdata:00007FF7A17E9C09                 db 0C3h
+.rdata:00007FF7A17E9C0A                 db 0BFh
+.rdata:00007FF7A17E9C0B                 db  1Ch
+.rdata:00007FF7A17E9C0C                 db 0FEh
+.rdata:00007FF7A17E9C0D                 db  11h
+.rdata:00007FF7A17E9C0E                 db 0E4h
+.rdata:00007FF7A17E9C0F                 db 0CCh
+.rdata:00007FF7A17E9C10                 db 0CEh
+.rdata:00007FF7A17E9C11                 db 0EEh
+.rdata:00007FF7A17E9C12                 db 0A0h
+.rdata:00007FF7A17E9C13                 db 0D4h
+.rdata:00007FF7A17E9C14                 db 0D5h
+.rdata:00007FF7A17E9C15                 db  65h ; e
+.rdata:00007FF7A17E9C16                 db 0B4h
+.rdata:00007FF7A17E9C17                 db  83h
+.rdata:00007FF7A17E9C18                 db 0B7h
+.rdata:00007FF7A17E9C19                 db  67h ; g
+.rdata:00007FF7A17E9C1A                 db  95h
+.rdata:00007FF7A17E9C1B                 db 0E4h
+.rdata:00007FF7A17E9C1C                 db  1Dh
+.rdata:00007FF7A17E9C1D                 db  15h
+.rdata:00007FF7A17E9C1E                 db  6Ch ; l
+.rdata:00007FF7A17E9C1F                 db 0F9h
+.rdata:00007FF7A17E9C20                 db  3Ch ; <
+.rdata:00007FF7A17E9C21                 db 0FCh
+.rdata:00007FF7A17E9C22                 db 0CBh
+.rdata:00007FF7A17E9C23                 db 0B4h
+.rdata:00007FF7A17E9C24                 db  45h ; E
+.rdata:00007FF7A17E9C25                 db  84h
+.rdata:00007FF7A17E9C26                 db    4
+.rdata:00007FF7A17E9C27                 db  76h ; v
+.rdata:00007FF7A17E9C28                 db  45h ; E
+.rdata:00007FF7A17E9C29                 db  75h ; u
+.rdata:00007FF7A17E9C2A                 db 0FEh
+.rdata:00007FF7A17E9C2B                 db  84h
+.rdata:00007FF7A17E9C2C                 db  8Dh
+.rdata:00007FF7A17E9C2D                 db 0F4h
+.rdata:00007FF7A17E9C2E                 db 0DCh
+.rdata:00007FF7A17E9C2F                 db  0Ch
+.rdata:00007FF7A17E9C30                 db 0B7h
+.rdata:00007FF7A17E9C31                 db  16h
+.rdata:00007FF7A17E9C32                 db  37h ; 7
+.rdata:00007FF7A17E9C33                 db 0BDh
+.rdata:00007FF7A17E9C34                 db  5Eh ; ^
+.rdata:00007FF7A17E9C35                 db  6Dh ; m
+.rdata:00007FF7A17E9C36                 db 0BDh
+.rdata:00007FF7A17E9C37                 db  6Fh ; o
+.rdata:00007FF7A17E9C38                 db 0CEh
+.rdata:00007FF7A17E9C39                 db  9Fh
+.rdata:00007FF7A17E9C3A                 db    2
+.rdata:00007FF7A17E9C3B                 db  8Dh
+.rdata:00007FF7A17E9C3C                 db  96h
+.rdata:00007FF7A17E9C3D                 db  1Dh
+.rdata:00007FF7A17E9C3E                 db  65h ; e
+.rdata:00007FF7A17E9C3F                 db  15h
+.rdata:00007FF7A17E9C40                 db  45h ; E
+.rdata:00007FF7A17E9C41                 db    4
+.rdata:00007FF7A17E9C42                 db  5Ch ; \
+.rdata:00007FF7A17E9C43                 db 0DDh
+.rdata:00007FF7A17E9C44                 db 0CEh
+.rdata:00007FF7A17E9C45                 db  8Ch
+.rdata:00007FF7A17E9C46                 db  0Dh
+.rdata:00007FF7A17E9C47                 db  9Ah
+.rdata:00007FF7A17E9C48                 db  3Ch ; <
+.rdata:00007FF7A17E9C49                 db  8Dh
+.rdata:00007FF7A17E9C4A                 db  69h ; i
+.rdata:00007FF7A17E9C4B                 db 0EDh
+.rdata:00007FF7A17E9C4C                 db    6
+.rdata:00007FF7A17E9C4D                 db 0FCh
+.rdata:00007FF7A17E9C4E                 db 0D5h
+.rdata:00007FF7A17E9C4F                 db 0E0h
+.rdata:00007FF7A17E9C50                 db  38h ; 8
+.rdata:00007FF7A17E9C51                 db 0A0h
+.rdata:00007FF7A17E9C52                 db  76h ; v
+.rdata:00007FF7A17E9C53                 db  25h ; %
+.rdata:00007FF7A17E9C54                 db  2Dh ; -
+.rdata:00007FF7A17E9C55                 db  88h
+.rdata:00007FF7A17E9C56                 db  85h
+.rdata:00007FF7A17E9C57                 db 0AFh
+.rdata:00007FF7A17E9C58                 db  41h ; A
+.rdata:00007FF7A17E9C59                 db  29h ; )
+.rdata:00007FF7A17E9C5A                 db  43h ; C
+.rdata:00007FF7A17E9C5B                 db  15h
+.rdata:00007FF7A17E9C5C                 db 0E5h
+.rdata:00007FF7A17E9C5D                 db 0F8h
+.rdata:00007FF7A17E9C5E                 db  5Dh ; ]
+.rdata:00007FF7A17E9C5F                 db 0D5h
+.rdata:00007FF7A17E9C60                 db 0CAh
+.rdata:00007FF7A17E9C61                 db 0B2h
+.rdata:00007FF7A17E9C62                 db  1Dh
+.rdata:00007FF7A17E9C63                 db  45h ; E
+.rdata:00007FF7A17E9C64                 db 0BDh
+.rdata:00007FF7A17E9C65                 db  69h ; i
+.rdata:00007FF7A17E9C66                 db  35h ; 5
+.rdata:00007FF7A17E9C67                 db  5Ah ; Z
+.rdata:00007FF7A17E9C68                 db 0B3h
+.rdata:00007FF7A17E9C69                 db  3Bh ; ;
+.rdata:00007FF7A17E9C6A                 db  28h ; (
+.rdata:00007FF7A17E9C6B                 db  75h ; u
+.rdata:00007FF7A17E9C6C                 db  75h ; u
+.rdata:00007FF7A17E9C6D                 db  19h
+.rdata:00007FF7A17E9C6E                 db 0EDh
+.rdata:00007FF7A17E9C6F                 db  20h
+.rdata:00007FF7A17E9C70                 db 0C2h
+.rdata:00007FF7A17E9C71                 db 0E8h
+.rdata:00007FF7A17E9C72                 db  23h ; #
+.rdata:00007FF7A17E9C73                 db 0D5h
+.rdata:00007FF7A17E9C74                 db 0EAh
+.rdata:00007FF7A17E9C75                 db  81h
+.rdata:00007FF7A17E9C76                 db  95h
+.rdata:00007FF7A17E9C77                 db 0C4h
+.rdata:00007FF7A17E9C78                 db 0BBh
+.rdata:00007FF7A17E9C79                 db  61h ; a
+.rdata:00007FF7A17E9C7A                 db  16h
+.rdata:00007FF7A17E9C7B                 db 0E5h
+.rdata:00007FF7A17E9C7C                 db  22h ; "
+.rdata:00007FF7A17E9C7D                 db 0F1h
+.rdata:00007FF7A17E9C7E                 db  4Dh ; M
+.rdata:00007FF7A17E9C7F                 db 0BEh
+.rdata:00007FF7A17E9C80                 db  30h ; 0
+.rdata:00007FF7A17E9C81                 db 0FAh
+.rdata:00007FF7A17E9C82                 db  48h ; H
+.rdata:00007FF7A17E9C83                 db 0B5h
+.rdata:00007FF7A17E9C84                 db  7Ah ; z
+.rdata:00007FF7A17E9C85                 db  60h ; `
+.rdata:00007FF7A17E9C86                 db  25h ; %
+.rdata:00007FF7A17E9C87                 db  31h ; 1
+.rdata:00007FF7A17E9C88                 db  49h ; I
+.rdata:00007FF7A17E9C89                 db  73h ; s
+.rdata:00007FF7A17E9C8A                 db  7Dh ; }
+.rdata:00007FF7A17E9C8B                 db  85h
+.rdata:00007FF7A17E9C8C                 db 0B2h
+.rdata:00007FF7A17E9C8D                 db  10h
+.rdata:00007FF7A17E9C8E                 db 0FDh
+.rdata:00007FF7A17E9C8F                 db  4Bh ; K
+.rdata:00007FF7A17E9C90                 db  4Dh ; M
+.rdata:00007FF7A17E9C91                 db  5Eh ; ^
+.rdata:00007FF7A17E9C92                 db  62h ; b
+.rdata:00007FF7A17E9C93                 db  4Dh ; M
+.rdata:00007FF7A17E9C94                 db  99h
+.rdata:00007FF7A17E9C95                 db  64h ; d
+.rdata:00007FF7A17E9C96                 db 0ADh
+.rdata:00007FF7A17E9C97                 db    4
+.rdata:00007FF7A17E9C98                 db  34h ; 4
+.rdata:00007FF7A17E9C99                 db 0D7h
+.rdata:00007FF7A17E9C9A                 db  57h ; W
+.rdata:00007FF7A17E9C9B                 db  7Dh ; }
+.rdata:00007FF7A17E9C9C                 db  51h ; Q
+.rdata:00007FF7A17E9C9D                 db  14h
+.rdata:00007FF7A17E9C9E                 db  75h ; u
+.rdata:00007FF7A17E9C9F                 db  7Eh ; ~
+.rdata:00007FF7A17E9CA0                 db 0BFh
+.rdata:00007FF7A17E9CA1                 db  4Ch ; L
+.rdata:00007FF7A17E9CA2                 db    9
+.rdata:00007FF7A17E9CA3                 db  2Dh ; -
+.rdata:00007FF7A17E9CA4                 db    9
+.rdata:00007FF7A17E9CA5                 db  85h
+.rdata:00007FF7A17E9CA6                 db  1Dh
+.rdata:00007FF7A17E9CA7                 db 0F1h
+.rdata:00007FF7A17E9CA8                 db 0C6h
+.rdata:00007FF7A17E9CA9                 db 0C5h
+.rdata:00007FF7A17E9CAA                 db  3Ch ; <
+.rdata:00007FF7A17E9CAB                 db  1Dh
+.rdata:00007FF7A17E9CAC                 db 0C1h
+.rdata:00007FF7A17E9CAD                 db 0F5h
+.rdata:00007FF7A17E9CAE                 db 0C5h
+.rdata:00007FF7A17E9CAF                 db  8Bh
+.rdata:00007FF7A17E9CB0                 db  36h ; 6
+.rdata:00007FF7A17E9CB1                 db  79h ; y
+.rdata:00007FF7A17E9CB2                 db  89h
+.rdata:00007FF7A17E9CB3                 db  35h ; 5
+.rdata:00007FF7A17E9CB4                 db  65h ; e
+.rdata:00007FF7A17E9CB5                 db  92h
+.rdata:00007FF7A17E9CB6                 db 0B5h
+.rdata:00007FF7A17E9CB7                 db  12h
+.rdata:00007FF7A17E9CB8                 db  4Fh ; O
+.rdata:00007FF7A17E9CB9                 db 0F0h
+.rdata:00007FF7A17E9CBA                 db 0BCh
+.rdata:00007FF7A17E9CBB                 db    5
+.rdata:00007FF7A17E9CBC                 db 0ADh
+.rdata:00007FF7A17E9CBD                 db 0E2h
+.rdata:00007FF7A17E9CBE                 db  6Dh ; m
+.rdata:00007FF7A17E9CBF                 db  68h ; h
+.rdata:00007FF7A17E9CC0                 db 0C4h
+.rdata:00007FF7A17E9CC1                 db  6Bh ; k
+.rdata:00007FF7A17E9CC2                 db 0E2h
+.rdata:00007FF7A17E9CC3                 db  55h ; U
+.rdata:00007FF7A17E9CC4                 db 0F5h
+.rdata:00007FF7A17E9CC5                 db  73h ; s
+.rdata:00007FF7A17E9CC6                 db    5
+.rdata:00007FF7A17E9CC7                 db 0E7h
+.rdata:00007FF7A17E9CC8                 db 0BDh
+.rdata:00007FF7A17E9CC9                 db 0E2h
+.rdata:00007FF7A17E9CCA                 db 0D7h
+.rdata:00007FF7A17E9CCB                 db  65h ; e
+.rdata:00007FF7A17E9CCC                 db  3Dh ; =
+.rdata:00007FF7A17E9CCD                 db    3
+.rdata:00007FF7A17E9CCE                 db 0DDh
+.rdata:00007FF7A17E9CCF                 db  9Dh
+.rdata:00007FF7A17E9CD0                 db 0B9h
+.rdata:00007FF7A17E9CD1                 db 0CFh
+.rdata:00007FF7A17E9CD2                 db 0C8h
+.rdata:00007FF7A17E9CD3                 db 0ADh
+.rdata:00007FF7A17E9CD4                 db  16h
+.rdata:00007FF7A17E9CD5                 db  77h ; w
+.rdata:00007FF7A17E9CD6                 db  8Dh
+.rdata:00007FF7A17E9CD7                 db 0D2h
+.rdata:00007FF7A17E9CD8                 db 0C0h
+.rdata:00007FF7A17E9CD9                 db  46h ; F
+.rdata:00007FF7A17E9CDA                 db 0FDh
+.rdata:00007FF7A17E9CDB                 db  9Dh
+.rdata:00007FF7A17E9CDC                 db 0DEh
+.rdata:00007FF7A17E9CDD                 db    7
+.rdata:00007FF7A17E9CDE                 db  55h ; U
+.rdata:00007FF7A17E9CDF                 db 0A8h
+.rdata:00007FF7A17E9CE0                 db  4Bh ; K
+.rdata:00007FF7A17E9CE1                 db 0DDh
+.rdata:00007FF7A17E9CE2                 db 0A3h
+.rdata:00007FF7A17E9CE3                 db 0CDh
+.rdata:00007FF7A17E9CE4                 db  86h
+.rdata:00007FF7A17E9CE5                 db  96h
+.rdata:00007FF7A17E9CE6                 db  3Dh ; =
+.rdata:00007FF7A17E9CE7                 db  27h ; '
+.rdata:00007FF7A17E9CE8                 db  32h ; 2
+.rdata:00007FF7A17E9CE9                 db  54h ; T
+.rdata:00007FF7A17E9CEA                 db  96h
+.rdata:00007FF7A17E9CEB                 db 0FDh
+.rdata:00007FF7A17E9CEC                 db  4Eh ; N
+.rdata:00007FF7A17E9CED                 db 0E6h
+.rdata:00007FF7A17E9CEE                 db 0E5h
+.rdata:00007FF7A17E9CEF                 db  5Dh ; ]
+.rdata:00007FF7A17E9CF0                 db  43h ; C
+.rdata:00007FF7A17E9CF1                 db  87h
+.rdata:00007FF7A17E9CF2                 db  9Dh
+.rdata:00007FF7A17E9CF3                 db  5Dh ; ]
+.rdata:00007FF7A17E9CF4                 db 0D1h
+.rdata:00007FF7A17E9CF5                 db  7Eh ; ~
+.rdata:00007FF7A17E9CF6                 db  9Dh
+.rdata:00007FF7A17E9CF7                 db 0B9h
+.rdata:00007FF7A17E9CF8                 db  3Ah ; :
+.rdata:00007FF7A17E9CF9                 db  0Eh
+.rdata:00007FF7A17E9CFA                 db 0A8h
+.rdata:00007FF7A17E9CFB                 db  6Dh ; m
+.rdata:00007FF7A17E9CFC                 db  19h
+.rdata:00007FF7A17E9CFD                 db  0Eh
+.rdata:00007FF7A17E9CFE                 db  45h ; E
+.rdata:00007FF7A17E9CFF                 db 0C3h
+.rdata:00007FF7A17E9D00                 db 0B1h
+.rdata:00007FF7A17E9D01                 db  95h
+.rdata:00007FF7A17E9D02                 db 0F6h
+.rdata:00007FF7A17E9D03                 db  3Dh ; =
+.rdata:00007FF7A17E9D04                 db  41h ; A
+.rdata:00007FF7A17E9D05                 db  9Fh
+.rdata:00007FF7A17E9D06                 db  2Dh ; -
+.rdata:00007FF7A17E9D07                 db  4Ch ; L
+.rdata:00007FF7A17E9D08                 db 0C8h
+.rdata:00007FF7A17E9D09                 db  1Ch
+.rdata:00007FF7A17E9D0A                 db 0C3h
+.rdata:00007FF7A17E9D0B                 db  0Dh
+.rdata:00007FF7A17E9D0C                 db  89h
+.rdata:00007FF7A17E9D0D                 db 0EFh
+.rdata:00007FF7A17E9D0E                 db 0F5h
+.rdata:00007FF7A17E9D0F                 db  36h ; 6
+.rdata:00007FF7A17E9D10                 db 0CCh
+.rdata:00007FF7A17E9D11                 db  31h ; 1
+.rdata:00007FF7A17E9D12                 db 0DCh
+.rdata:00007FF7A17E9D13                 db 0C5h
+.rdata:00007FF7A17E9D14                 db 0A2h
+.rdata:00007FF7A17E9D15                 db  9Bh
+.rdata:00007FF7A17E9D16                 db 0A5h
+.rdata:00007FF7A17E9D17                 db  79h ; y
+.rdata:00007FF7A17E9D18                 db 0B5h
+.rdata:00007FF7A17E9D19                 db 0B8h
+.rdata:00007FF7A17E9D1A                 db 0E9h
+.rdata:00007FF7A17E9D1B                 db 0F5h
+.rdata:00007FF7A17E9D1C                 db  6Ah ; j
+.rdata:00007FF7A17E9D1D                 db 0EBh
+.rdata:00007FF7A17E9D1E                 db  7Dh ; }
+.rdata:00007FF7A17E9D1F                 db    3
+.rdata:00007FF7A17E9D20                 db  3Eh ; >
+.rdata:00007FF7A17E9D21                 db  23h ; #
+.rdata:00007FF7A17E9D22                 db 0B7h
+.rdata:00007FF7A17E9D23                 db 0A5h
+.rdata:00007FF7A17E9D24                 db  32h ; 2
+.rdata:00007FF7A17E9D25                 db  7Ah ; z
+.rdata:00007FF7A17E9D26                 db  15h
+.rdata:00007FF7A17E9D27                 db  8Ch
+.rdata:00007FF7A17E9D28                 db  47h ; G
+.rdata:00007FF7A17E9D29                 db 0AAh
+.rdata:00007FF7A17E9D2A                 db  82h
+.rdata:00007FF7A17E9D2B                 db  95h
+.rdata:00007FF7A17E9D2C                 db 0FAh
+.rdata:00007FF7A17E9D2D                 db  0Ah
+.rdata:00007FF7A17E9D2E                 db 0CDh
+.rdata:00007FF7A17E9D2F                 db 0F6h
+.rdata:00007FF7A17E9D30                 db 0DAh
+.rdata:00007FF7A17E9D31                 db 0E4h
+.rdata:00007FF7A17E9D32                 db  25h ; %
+.rdata:00007FF7A17E9D33                 db 0D6h
+.rdata:00007FF7A17E9D34                 db  94h
+.rdata:00007FF7A17E9D35                 db  49h ; I
+.rdata:00007FF7A17E9D36                 db 0D6h
+.rdata:00007FF7A17E9D37                 db  4Ah ; J
+.rdata:00007FF7A17E9D38                 db 0A3h
+.rdata:00007FF7A17E9D39                 db  6Dh ; m
+.rdata:00007FF7A17E9D3A                 db  10h
+.rdata:00007FF7A17E9D3B                 db 0E6h
+.rdata:00007FF7A17E9D3C                 db  5Ch ; \
+.rdata:00007FF7A17E9D3D                 db  39h ; 9
+.rdata:00007FF7A17E9D3E                 db  0Eh
+.rdata:00007FF7A17E9D3F                 db  30h ; 0
+.rdata:00007FF7A17E9D40                 db  28h ; (
+.rdata:00007FF7A17E9D41                 db 0F6h
+.rdata:00007FF7A17E9D42                 db  4Eh ; N
+.rdata:00007FF7A17E9D43                 db 0B6h
+.rdata:00007FF7A17E9D44                 db    4
+.rdata:00007FF7A17E9D45                 db 0A8h
+.rdata:00007FF7A17E9D46                 db  66h ; f
+.rdata:00007FF7A17E9D47                 db 0BFh
+.rdata:00007FF7A17E9D48                 db  51h ; Q
+.rdata:00007FF7A17E9D49                 db  7Fh ; 
+.rdata:00007FF7A17E9D4A                 db  7Bh ; {
+.rdata:00007FF7A17E9D4B                 db  86h
+.rdata:00007FF7A17E9D4C                 db 0CCh
+.rdata:00007FF7A17E9D4D                 db 0D8h
+.rdata:00007FF7A17E9D4E                 db 0BEh
+.rdata:00007FF7A17E9D4F                 db 0C5h
+.rdata:00007FF7A17E9D50                 db  55h ; U
+.rdata:00007FF7A17E9D51                 db  52h ; R
+.rdata:00007FF7A17E9D52                 db  64h ; d
+.rdata:00007FF7A17E9D53                 db  4Eh ; N
+.rdata:00007FF7A17E9D54                 db 0E7h
+.rdata:00007FF7A17E9D55                 db 0ACh
+.rdata:00007FF7A17E9D56                 db 0EEh
+.rdata:00007FF7A17E9D57                 db  8Ah
+.rdata:00007FF7A17E9D58                 db  2Ch ; ,
+.rdata:00007FF7A17E9D59                 db 0DBh
+.rdata:00007FF7A17E9D5A                 db  51h ; Q
+.rdata:00007FF7A17E9D5B                 db  7Eh ; ~
+.rdata:00007FF7A17E9D5C                 db  2Fh ; /
+.rdata:00007FF7A17E9D5D                 db 0DCh
+.rdata:00007FF7A17E9D5E                 db  36h ; 6
+.rdata:00007FF7A17E9D5F                 db 0F0h
+.rdata:00007FF7A17E9D60                 db 0A7h
+.rdata:00007FF7A17E9D61                 db  40h ; @
+.rdata:00007FF7A17E9D62                 db  0Fh
+.rdata:00007FF7A17E9D63                 db  2Eh ; .
+.rdata:00007FF7A17E9D64                 db  77h ; w
+.rdata:00007FF7A17E9D65                 db  4Dh ; M
+.rdata:00007FF7A17E9D66                 db  5Eh ; ^
+.rdata:00007FF7A17E9D67                 db  7Fh ; 
+.rdata:00007FF7A17E9D68                 db 0DEh
+.rdata:00007FF7A17E9D69                 db 0C9h
+.rdata:00007FF7A17E9D6A                 db  3Ah ; :
+.rdata:00007FF7A17E9D6B                 db  1Eh
+.rdata:00007FF7A17E9D6C                 db 0BFh
+.rdata:00007FF7A17E9D6D                 db  3Dh ; =
+.rdata:00007FF7A17E9D6E                 db  86h
+.rdata:00007FF7A17E9D6F                 db    5
+.rdata:00007FF7A17E9D70                 db 0AFh
+.rdata:00007FF7A17E9D71                 db  1Ah
+.rdata:00007FF7A17E9D72                 db  31h ; 1
+.rdata:00007FF7A17E9D73                 db 0BEh
+.rdata:00007FF7A17E9D74                 db  20h
+.rdata:00007FF7A17E9D75                 db 0A5h
+.rdata:00007FF7A17E9D76                 db 0FEh
+.rdata:00007FF7A17E9D77                 db 0E1h
+.rdata:00007FF7A17E9D78                 db 0D6h
+.rdata:00007FF7A17E9D79                 db  93h
+.rdata:00007FF7A17E9D7A                 db    4
+.rdata:00007FF7A17E9D7B                 db  8Eh
+.rdata:00007FF7A17E9D7C                 db 0E8h
+.rdata:00007FF7A17E9D7D                 db 0D5h
+.rdata:00007FF7A17E9D7E                 db  26h ; &
+.rdata:00007FF7A17E9D7F                 db  9Bh
+.rdata:00007FF7A17E9D80                 db  5Dh ; ]
+.rdata:00007FF7A17E9D81                 db    8
+.rdata:00007FF7A17E9D82                 db  5Ah ; Z
+.rdata:00007FF7A17E9D83                 db 0DEh
+.rdata:00007FF7A17E9D84                 db 0B0h
+.rdata:00007FF7A17E9D85                 db  44h ; D
+.rdata:00007FF7A17E9D86                 db  4Eh ; N
+.rdata:00007FF7A17E9D87                 db  14h
+.rdata:00007FF7A17E9D88                 db  24h ; $
+.rdata:00007FF7A17E9D89                 db  81h
+.rdata:00007FF7A17E9D8A                 db  6Fh ; o
+.rdata:00007FF7A17E9D8B                 db 0EEh
+.rdata:00007FF7A17E9D8C                 db  78h ; x
+.rdata:00007FF7A17E9D8D                 db  34h ; 4
+.rdata:00007FF7A17E9D8E                 db  96h
+.rdata:00007FF7A17E9D8F                 db  6Eh ; n
+.rdata:00007FF7A17E9D90                 db  20h
+.rdata:00007FF7A17E9D91                 db 0ACh
+.rdata:00007FF7A17E9D92                 db  70h ; p
+.rdata:00007FF7A17E9D93                 db  26h ; &
+.rdata:00007FF7A17E9D94                 db  53h ; S
+.rdata:00007FF7A17E9D95                 db  40h ; @
+.rdata:00007FF7A17E9D96                 db 0C6h
+.rdata:00007FF7A17E9D97                 db  21h ; !
+.rdata:00007FF7A17E9D98                 db  59h ; Y
+.rdata:00007FF7A17E9D99                 db  25h ; %
+.rdata:00007FF7A17E9D9A                 db  45h ; E
+.rdata:00007FF7A17E9D9B                 db  16h
+.rdata:00007FF7A17E9D9C                 db  9Bh
+.rdata:00007FF7A17E9D9D                 db  30h ; 0
+.rdata:00007FF7A17E9D9E                 db  1Eh
+.rdata:00007FF7A17E9D9F                 db  5Bh ; [
+.rdata:00007FF7A17E9DA0                 db 0D2h
+.rdata:00007FF7A17E9DA1                 db 0BEh
+.rdata:00007FF7A17E9DA2                 db  1Bh
+.rdata:00007FF7A17E9DA3                 db  46h ; F
+.rdata:00007FF7A17E9DA4                 db 0C3h
+.rdata:00007FF7A17E9DA5                 db 0A1h
+.rdata:00007FF7A17E9DA6                 db  76h ; v
+.rdata:00007FF7A17E9DA7                 db 0D4h
+.rdata:00007FF7A17E9DA8                 db 0ABh
+.rdata:00007FF7A17E9DA9                 db  37h ; 7
+.rdata:00007FF7A17E9DAA                 db  2Eh ; .
+.rdata:00007FF7A17E9DAB                 db  76h ; v
+.rdata:00007FF7A17E9DAC                 db  0Bh
+.rdata:00007FF7A17E9DAD                 db 0D1h
+.rdata:00007FF7A17E9DAE                 db 0AEh
+.rdata:00007FF7A17E9DAF                 db 0AEh
+.rdata:00007FF7A17E9DB0                 db  5Bh ; [
+.rdata:00007FF7A17E9DB1                 db  8Bh
+.rdata:00007FF7A17E9DB2                 db  9Bh
+.rdata:00007FF7A17E9DB3                 db  5Eh ; ^
+.rdata:00007FF7A17E9DB4                 db 0AFh
+.rdata:00007FF7A17E9DB5                 db 0B6h
+.rdata:00007FF7A17E9DB6                 db 0DEh
+.rdata:00007FF7A17E9DB7                 db  37h ; 7
+.rdata:00007FF7A17E9DB8                 db  22h ; "
+.rdata:00007FF7A17E9DB9                 db    2
+.rdata:00007FF7A17E9DBA                 db 0AEh
+.rdata:00007FF7A17E9DBB                 db  6Eh ; n
+.rdata:00007FF7A17E9DBC                 db  67h ; g
+.rdata:00007FF7A17E9DBD                 db 0C6h
+.rdata:00007FF7A17E9DBE                 db    6
+.rdata:00007FF7A17E9DBF                 db  4Dh ; M
+.rdata:00007FF7A17E9DC0                 db 0A9h
+.rdata:00007FF7A17E9DC1                 db  99h
+.rdata:00007FF7A17E9DC2                 db 0F0h
+.rdata:00007FF7A17E9DC3                 db  3Eh ; >
+.rdata:00007FF7A17E9DC4                 db  3Fh ; ?
+.rdata:00007FF7A17E9DC5                 db  57h ; W
+.rdata:00007FF7A17E9DC6                 db  6Eh ; n
+.rdata:00007FF7A17E9DC7                 db 0C2h
+.rdata:00007FF7A17E9DC8                 db 0D0h
+.rdata:00007FF7A17E9DC9                 db  10h
+.rdata:00007FF7A17E9DCA                 db 0C5h
+.rdata:00007FF7A17E9DCB                 db  0Eh
+.rdata:00007FF7A17E9DCC                 db 0F7h
+.rdata:00007FF7A17E9DCD                 db  27h ; '
+.rdata:00007FF7A17E9DCE                 db 0B6h
+.rdata:00007FF7A17E9DCF                 db 0B8h
+.rdata:00007FF7A17E9DD0                 db 0D4h
+.rdata:00007FF7A17E9DD1                 db  3Dh ; =
+.rdata:00007FF7A17E9DD2                 db 0DAh
+.rdata:00007FF7A17E9DD3                 db 0C6h
+.rdata:00007FF7A17E9DD4                 db 0DCh
+.rdata:00007FF7A17E9DD5                 db  53h ; S
+.rdata:00007FF7A17E9DD6                 db 0E6h
+.rdata:00007FF7A17E9DD7                 db 0F7h
+.rdata:00007FF7A17E9DD8                 db 0ADh
+.rdata:00007FF7A17E9DD9                 db 0B4h
+.rdata:00007FF7A17E9DDA                 db 0EFh
+.rdata:00007FF7A17E9DDB                 db 0F6h
+.rdata:00007FF7A17E9DDC                 db  14h
+.rdata:00007FF7A17E9DDD                 db  23h ; #
+.rdata:00007FF7A17E9DDE                 db  3Eh ; >
+.rdata:00007FF7A17E9DDF                 db  8Dh
+.rdata:00007FF7A17E9DE0                 db  26h ; &
+.rdata:00007FF7A17E9DE1                 db  2Fh ; /
+.rdata:00007FF7A17E9DE2                 db 0B1h
+.rdata:00007FF7A17E9DE3                 db 0A6h
+.rdata:00007FF7A17E9DE4                 db  4Ch ; L
+.rdata:00007FF7A17E9DE5                 db 0B2h
+.rdata:00007FF7A17E9DE6                 db  56h ; V
+.rdata:00007FF7A17E9DE7                 db    2
+.rdata:00007FF7A17E9DE8                 db  5Fh ; _
+.rdata:00007FF7A17E9DE9                 db 0A6h
+.rdata:00007FF7A17E9DEA                 db  84h
+.rdata:00007FF7A17E9DEB                 db  96h
+.rdata:00007FF7A17E9DEC                 db  84h
+.rdata:00007FF7A17E9DED                 db 0C2h
+.rdata:00007FF7A17E9DEE                 db  8Eh
+.rdata:00007FF7A17E9DEF                 db  78h ; x
+.rdata:00007FF7A17E9DF0                 db  2Eh ; .
+.rdata:00007FF7A17E9DF1                 db  75h ; u
+.rdata:00007FF7A17E9DF2                 db  8Fh
+.rdata:00007FF7A17E9DF3                 db  36h ; 6
+.rdata:00007FF7A17E9DF4                 db  1Bh
+.rdata:00007FF7A17E9DF5                 db  5Ah ; Z
+.rdata:00007FF7A17E9DF6                 db 0F6h
+.rdata:00007FF7A17E9DF7                 db  9Ch
+.rdata:00007FF7A17E9DF8                 db  57h ; W
+.rdata:00007FF7A17E9DF9                 db 0FCh
+.rdata:00007FF7A17E9DFA                 db 0BAh
+.rdata:00007FF7A17E9DFB                 db    6
+.rdata:00007FF7A17E9DFC                 db 0D3h
+.rdata:00007FF7A17E9DFD                 db  2Ah ; *
+.rdata:00007FF7A17E9DFE                 db  2Eh ; .
+.rdata:00007FF7A17E9DFF                 db 0E6h
+.rdata:00007FF7A17E9E00                 db 0DCh
+.rdata:00007FF7A17E9E01                 db  67h ; g
+.rdata:00007FF7A17E9E02                 db 0E4h
+.rdata:00007FF7A17E9E03                 db  56h ; V
+.rdata:00007FF7A17E9E04                 db  8Bh
+.rdata:00007FF7A17E9E05                 db 0BBh
+.rdata:00007FF7A17E9E06                 db  46h ; F
+.rdata:00007FF7A17E9E07                 db  69h ; i
+.rdata:00007FF7A17E9E08                 db 0A5h
+.rdata:00007FF7A17E9E09                 db 0EEh
+.rdata:00007FF7A17E9E0A                 db 0D1h
+.rdata:00007FF7A17E9E0B                 db  66h ; f
+.rdata:00007FF7A17E9E0C                 db  43h ; C
+.rdata:00007FF7A17E9E0D                 db 0CBh
+.rdata:00007FF7A17E9E0E                 db  9Eh
+.rdata:00007FF7A17E9E0F                 db  13h
+.rdata:00007FF7A17E9E10                 db 0A1h
+.rdata:00007FF7A17E9E11                 db 0C3h
+.rdata:00007FF7A17E9E12                 db 0CEh
+.rdata:00007FF7A17E9E13                 db 0AEh
+.rdata:00007FF7A17E9E14                 db  68h ; h
+.rdata:00007FF7A17E9E15                 db 0BFh
+.rdata:00007FF7A17E9E16                 db 0CEh
+.rdata:00007FF7A17E9E17                 db  5Ch ; \
+.rdata:00007FF7A17E9E18                 db 0D8h
+.rdata:00007FF7A17E9E19                 db  4Ah ; J
+.rdata:00007FF7A17E9E1A                 db 0FBh
+.rdata:00007FF7A17E9E1B                 db  9Eh
+.rdata:00007FF7A17E9E1C                 db 0A0h
+.rdata:00007FF7A17E9E1D                 db 0CFh
+.rdata:00007FF7A17E9E1E                 db  16h
+.rdata:00007FF7A17E9E1F                 db  26h ; &
+.rdata:00007FF7A17E9E20                 db  53h ; S
+.rdata:00007FF7A17E9E21                 db 0D1h
+.rdata:00007FF7A17E9E22                 db 0A5h
+.rdata:00007FF7A17E9E23                 db 0CEh
+.rdata:00007FF7A17E9E24                 db 0F8h
+.rdata:00007FF7A17E9E25                 db  5Eh ; ^
+.rdata:00007FF7A17E9E26                 db  7Eh ; ~
+.rdata:00007FF7A17E9E27                 db 0A9h
+.rdata:00007FF7A17E9E28                 db  2Ah ; *
+.rdata:00007FF7A17E9E29                 db  58h ; X
+.rdata:00007FF7A17E9E2A                 db  90h
+.rdata:00007FF7A17E9E2B                 db 0FEh
+.rdata:00007FF7A17E9E2C                 db  30h ; 0
+.rdata:00007FF7A17E9E2D                 db  2Eh ; .
+.rdata:00007FF7A17E9E2E                 db 0A6h
+.rdata:00007FF7A17E9E2F                 db 0D3h
+.rdata:00007FF7A17E9E30                 db 0D8h
+.rdata:00007FF7A17E9E31                 db  3Bh ; ;
+.rdata:00007FF7A17E9E32                 db  59h ; Y
+.rdata:00007FF7A17E9E33                 db 0C7h
+.rdata:00007FF7A17E9E34                 db 0E3h
+.rdata:00007FF7A17E9E35                 db 0B7h
+.rdata:00007FF7A17E9E36                 db 0C7h
+.rdata:00007FF7A17E9E37                 db 0B0h
+.rdata:00007FF7A17E9E38                 db 0A1h
+.rdata:00007FF7A17E9E39                 db 0B2h
+.rdata:00007FF7A17E9E3A                 db  6Ch ; l
+.rdata:00007FF7A17E9E3B                 db 0F7h
+.rdata:00007FF7A17E9E3C                 db  2Bh ; +
+.rdata:00007FF7A17E9E3D                 db 0C7h
+.rdata:00007FF7A17E9E3E                 db  1Fh
+.rdata:00007FF7A17E9E3F                 db 0CAh
+.rdata:00007FF7A17E9E40                 db  2Ah ; *
+.rdata:00007FF7A17E9E41                 db  29h ; )
+.rdata:00007FF7A17E9E42                 db  32h ; 2
+.rdata:00007FF7A17E9E43                 db 0A7h
+.rdata:00007FF7A17E9E44                 db  73h ; s
+.rdata:00007FF7A17E9E45                 db  56h ; V
+.rdata:00007FF7A17E9E46                 db  77h ; w
+.rdata:00007FF7A17E9E47                 db  45h ; E
+.rdata:00007FF7A17E9E48                 db  53h ; S
+.rdata:00007FF7A17E9E49                 db 0A0h
+.rdata:00007FF7A17E9E4A                 db    7
+.rdata:00007FF7A17E9E4B                 db  97h
+.rdata:00007FF7A17E9E4C                 db 0BBh
+.rdata:00007FF7A17E9E4D                 db  26h ; &
+.rdata:00007FF7A17E9E4E                 db 0AFh
+.rdata:00007FF7A17E9E4F                 db  3Fh ; ?
+.rdata:00007FF7A17E9E50                 db  57h ; W
+.rdata:00007FF7A17E9E51                 db  8Dh
+.rdata:00007FF7A17E9E52                 db  18h
+.rdata:00007FF7A17E9E53                 db  5Fh ; _
+.rdata:00007FF7A17E9E54                 db  90h
+.rdata:00007FF7A17E9E55                 db  52h ; R
+.rdata:00007FF7A17E9E56                 db 0FFh
+.rdata:00007FF7A17E9E57                 db  70h ; p
+.rdata:00007FF7A17E9E58                 db  2Eh ; .
+.rdata:00007FF7A17E9E59                 db    4
+.rdata:00007FF7A17E9E5A                 db  2Dh ; -
+.rdata:00007FF7A17E9E5B                 db  6Fh ; o
+.rdata:00007FF7A17E9E5C                 db  58h ; X
+.rdata:00007FF7A17E9E5D                 db  22h ; "
+.rdata:00007FF7A17E9E5E                 db  27h ; '
+.rdata:00007FF7A17E9E5F                 db  0Ah
+.rdata:00007FF7A17E9E60                 db 0A5h
+.rdata:00007FF7A17E9E61                 db  9Fh
+.rdata:00007FF7A17E9E62                 db  73h ; s
+.rdata:00007FF7A17E9E63                 db  3Fh ; ?
+.rdata:00007FF7A17E9E64                 db    0
+.rdata:00007FF7A17E9E65                 db 0B3h
+.rdata:00007FF7A17E9E66                 db  4Fh ; O
+.rdata:00007FF7A17E9E67                 db  85h
+.rdata:00007FF7A17E9E68                 db 0DCh
+.rdata:00007FF7A17E9E69                 db  16h
+.rdata:00007FF7A17E9E6A                 db  46h ; F
+.rdata:00007FF7A17E9E6B                 db  0Fh
+.rdata:00007FF7A17E9E6C                 db 0C8h
+.rdata:00007FF7A17E9E6D                 db 0C3h
+.rdata:00007FF7A17E9E6E                 db  97h
+.rdata:00007FF7A17E9E6F                 db 0FFh
+.rdata:00007FF7A17E9E70                 db 0ADh
+.rdata:00007FF7A17E9E71                 db 0C5h
+.rdata:00007FF7A17E9E72                 db  4Dh ; M
+.rdata:00007FF7A17E9E73                 db 0AFh
+.rdata:00007FF7A17E9E74                 db  57h ; W
+.rdata:00007FF7A17E9E75                 db  5Bh ; [
+.rdata:00007FF7A17E9E76                 db 0EFh
+.rdata:00007FF7A17E9E77                 db  1Bh
+.rdata:00007FF7A17E9E78                 db 0D4h
+.rdata:00007FF7A17E9E79                 db  4Ch ; L
+.rdata:00007FF7A17E9E7A                 db  78h ; x
+.rdata:00007FF7A17E9E7B                 db  9Fh
+.rdata:00007FF7A17E9E7C                 db  9Fh
+.rdata:00007FF7A17E9E7D                 db  2Bh ; +
+.rdata:00007FF7A17E9E7E                 db  37h ; 7
+.rdata:00007FF7A17E9E7F                 db  61h ; a
+.rdata:00007FF7A17E9E80                 db  5Fh ; _
+.rdata:00007FF7A17E9E81                 db 0D7h
+.rdata:00007FF7A17E9E82                 db  26h ; &
+.rdata:00007FF7A17E9E83                 db 0CFh
+.rdata:00007FF7A17E9E84                 db 0C7h
+.rdata:00007FF7A17E9E85                 db 0BAh
+.rdata:00007FF7A17E9E86                 db  5Fh ; _
+.rdata:00007FF7A17E9E87                 db 0EEh
+.rdata:00007FF7A17E9E88                 db  26h ; &
+.rdata:00007FF7A17E9E89                 db  5Eh ; ^
+.rdata:00007FF7A17E9E8A                 db  13h
+.rdata:00007FF7A17E9E8B                 db 0FFh
+.rdata:00007FF7A17E9E8C                 db  0Fh
+.rdata:00007FF7A17E9E8D                 db 0CAh
+.rdata:00007FF7A17E9E8E                 db  87h
+.rdata:00007FF7A17E9E8F                 db  94h
+.rdata:00007FF7A17E9E90                 db  22h ; "
+.rdata:00007FF7A17E9E91                 db  73h ; s
+.rdata:00007FF7A17E9E92                 db  0Ch
+.rdata:00007FF7A17E9E93                 db  37h ; 7
+.rdata:00007FF7A17E9E94                 db  24h ; $
+.rdata:00007FF7A17E9E95                 db 0BEh
+.rdata:00007FF7A17E9E96                 db 0D7h
+.rdata:00007FF7A17E9E97                 db 0DBh
+.rdata:00007FF7A17E9E98                 db  5Bh ; [
+.rdata:00007FF7A17E9E99                 db 0FAh
+.rdata:00007FF7A17E9E9A                 db  39h ; 9
+.rdata:00007FF7A17E9E9B                 db    7
+.rdata:00007FF7A17E9E9C                 db 0ECh
+.rdata:00007FF7A17E9E9D                 db 0CEh
+.rdata:00007FF7A17E9E9E                 db  0Fh
+.rdata:00007FF7A17E9E9F                 db 0A1h
+.rdata:00007FF7A17E9EA0                 db 0D0h
+.rdata:00007FF7A17E9EA1                 db  61h ; a
+.rdata:00007FF7A17E9EA2                 db  67h ; g
+.rdata:00007FF7A17E9EA3                 db  57h ; W
+.rdata:00007FF7A17E9EA4                 db 0B4h
+.rdata:00007FF7A17E9EA5                 db  5Fh ; _
+.rdata:00007FF7A17E9EA6                 db  67h ; g
+.rdata:00007FF7A17E9EA7                 db  2Eh ; .
+.rdata:00007FF7A17E9EA8                 db 0A9h
+.rdata:00007FF7A17E9EA9                 db 0E8h
+.rdata:00007FF7A17E9EAA                 db  52h ; R
+.rdata:00007FF7A17E9EAB                 db  67h ; g
+.rdata:00007FF7A17E9EAC                 db  7Ch ; |
+.rdata:00007FF7A17E9EAD                 db  2Fh ; /
+.rdata:00007FF7A17E9EAE                 db 0BFh
+.rdata:00007FF7A17E9EAF                 db  54h ; T
+.rdata:00007FF7A17E9EB0                 db  59h ; Y
+.rdata:00007FF7A17E9EB1                 db  54h ; T
+.rdata:00007FF7A17E9EB2                 db 0E7h
+.rdata:00007FF7A17E9EB3                 db  4Fh ; O
+.rdata:00007FF7A17E9EB4                 db 0D8h
+.rdata:00007FF7A17E9EB5                 db  48h ; H
+.rdata:00007FF7A17E9EB6                 db 0CFh
+.rdata:00007FF7A17E9EB7                 db 0CDh
+.rdata:00007FF7A17E9EB8                 db  20h
+.rdata:00007FF7A17E9EB9                 db 0DDh
+.rdata:00007FF7A17E9EBA                 db 0D2h
+.rdata:00007FF7A17E9EBB                 db  7Fh ; 
+.rdata:00007FF7A17E9EBC                 db  10h
+.rdata:00007FF7A17E9EBD                 db  38h ; 8
+.rdata:00007FF7A17E9EBE                 db  17h
+.rdata:00007FF7A17E9EBF                 db 0B7h
+.rdata:00007FF7A17E9EC0                 db 0ABh
+.rdata:00007FF7A17E9EC1                 db  46h ; F
+.rdata:00007FF7A17E9EC2                 db  8Ch
+.rdata:00007FF7A17E9EC3                 db  2Fh ; /
+.rdata:00007FF7A17E9EC4                 db  48h ; H
+.rdata:00007FF7A17E9EC5                 db 0A9h
+.rdata:00007FF7A17E9EC6                 db  7Fh ; 
+.rdata:00007FF7A17E9EC7                 db  38h ; 8
+.rdata:00007FF7A17E9EC8                 db 0D2h
+.rdata:00007FF7A17E9EC9                 db 0CFh
+.rdata:00007FF7A17E9ECA                 db 0B9h
+.rdata:00007FF7A17E9ECB                 db  1Fh
+.rdata:00007FF7A17E9ECC                 db  80h
+.rdata:00007FF7A17E9ECD                 db 0D9h
+.rdata:00007FF7A17E9ECE                 db 0A7h
+.rdata:00007FF7A17E9ECF                 db  42h ; B
+.rdata:00007FF7A17E9ED0                 db 0D6h
+.rdata:00007FF7A17E9ED1                 db 0E2h
+.rdata:00007FF7A17E9ED2                 db 0A6h
+.rdata:00007FF7A17E9ED3                 db 0D7h
+.rdata:00007FF7A17E9ED4                 db 0ABh
+.rdata:00007FF7A17E9ED5                 db 0ADh
+.rdata:00007FF7A17E9ED6                 db 0F7h
+.rdata:00007FF7A17E9ED7                 db  0Dh
+.rdata:00007FF7A17E9ED8                 db 0AFh
+.rdata:00007FF7A17E9ED9                 db  6Bh ; k
+.rdata:00007FF7A17E9EDA                 db  93h
+.rdata:00007FF7A17E9EDB                 db 0E7h
+.rdata:00007FF7A17E9EDC                 db  63h ; c
+.rdata:00007FF7A17E9EDD                 db 0DDh
+.rdata:00007FF7A17E9EDE                 db  2Fh ; /
+.rdata:00007FF7A17E9EDF                 db  77h ; w
+.rdata:00007FF7A17E9EE0                 db  24h ; $
+.rdata:00007FF7A17E9EE1                 db 0F0h
+.rdata:00007FF7A17E9EE2                 db 0CDh
+.rdata:00007FF7A17E9EE3                 db 0B7h
+.rdata:00007FF7A17E9EE4                 db  3Bh ; ;
+.rdata:00007FF7A17E9EE5                 db  4Ch ; L
+.rdata:00007FF7A17E9EE6                 db  47h ; G
+.rdata:00007FF7A17E9EE7                 db 0F8h
+.rdata:00007FF7A17E9EE8                 db  5Dh ; ]
+.rdata:00007FF7A17E9EE9                 db  79h ; y
+.rdata:00007FF7A17E9EEA                 db 0F8h
+.rdata:00007FF7A17E9EEB                 db  87h
+.rdata:00007FF7A17E9EEC                 db 0F3h
+.rdata:00007FF7A17E9EED                 db  3Ch ; <
+.rdata:00007FF7A17E9EEE                 db  9Fh
+.rdata:00007FF7A17E9EEF                 db  82h
+.rdata:00007FF7A17E9EF0                 db  2Ch ; ,
+.rdata:00007FF7A17E9EF1                 db 0AAh
+.rdata:00007FF7A17E9EF2                 db 0F3h
+.rdata:00007FF7A17E9EF3                 db  27h ; '
+.rdata:00007FF7A17E9EF4                 db  6Ch ; l
+.rdata:00007FF7A17E9EF5                 db 0A4h
+.rdata:00007FF7A17E9EF6                 db 0E7h
+.rdata:00007FF7A17E9EF7                 db  66h ; f
+.rdata:00007FF7A17E9EF8                 db  55h ; U
+.rdata:00007FF7A17E9EF9                 db  23h ; #
+.rdata:00007FF7A17E9EFA                 db 0C6h
+.rdata:00007FF7A17E9EFB                 db  17h
+.rdata:00007FF7A17E9EFC                 db 0A4h
+.rdata:00007FF7A17E9EFD                 db 0D4h
+.rdata:00007FF7A17E9EFE                 db  3Fh ; ?
+.rdata:00007FF7A17E9EFF                 db  1Ch
+.rdata:00007FF7A17E9F00                 db 0DEh
+.rdata:00007FF7A17E9F01                 db 0B8h
+.rdata:00007FF7A17E9F02                 db  98h
+.rdata:00007FF7A17E9F03                 db  47h ; G
+.rdata:00007FF7A17E9F04                 db 0FCh
+.rdata:00007FF7A17E9F05                 db  45h ; E
+.rdata:00007FF7A17E9F06                 db  57h ; W
+.rdata:00007FF7A17E9F07                 db  93h
+.rdata:00007FF7A17E9F08                 db 0A7h
+.rdata:00007FF7A17E9F09                 db  31h ; 1
+.rdata:00007FF7A17E9F0A                 db 0ADh
+.rdata:00007FF7A17E9F0B                 db  77h ; w
+.rdata:00007FF7A17E9F0C                 db  34h ; 4
+.rdata:00007FF7A17E9F0D                 db  35h ; 5
+.rdata:00007FF7A17E9F0E                 db  8Fh
+.rdata:00007FF7A17E9F0F                 db 0E9h
+.rdata:00007FF7A17E9F10                 db 0A3h
+.rdata:00007FF7A17E9F11                 db  1Ch
+.rdata:00007FF7A17E9F12                 db 0B2h
+.rdata:00007FF7A17E9F13                 db 0BFh
+.rdata:00007FF7A17E9F14                 db  1Fh
+.rdata:00007FF7A17E9F15                 db  41h ; A
+.rdata:00007FF7A17E9F16                 db 0DFh
+.rdata:00007FF7A17E9F17                 db 0A6h
+.rdata:00007FF7A17E9F18                 db 0DAh
+.rdata:00007FF7A17E9F19                 db  95h
+.rdata:00007FF7A17E9F1A                 db  87h
+.rdata:00007FF7A17E9F1B                 db  8Fh
+.rdata:00007FF7A17E9F1C                 db 0D7h
+.rdata:00007FF7A17E9F1D                 db  31h ; 1
+.rdata:00007FF7A17E9F1E                 db    7
+.rdata:00007FF7A17E9F1F                 db 0DCh
+.rdata:00007FF7A17E9F20                 db  51h ; Q
+.rdata:00007FF7A17E9F21                 db  0Eh
+.rdata:00007FF7A17E9F22                 db 0D9h
+.rdata:00007FF7A17E9F23                 db 0DFh
+.rdata:00007FF7A17E9F24                 db  8Fh
+.rdata:00007FF7A17E9F25                 db 0A0h
+.rdata:00007FF7A17E9F26                 db  6Fh ; o
+.rdata:00007FF7A17E9F27                 db  53h ; S
+.rdata:00007FF7A17E9F28                 db  28h ; (
+.rdata:00007FF7A17E9F29                 db  87h
+.rdata:00007FF7A17E9F2A                 db 0ECh
+.rdata:00007FF7A17E9F2B                 db 0EFh
+.rdata:00007FF7A17E9F2C                 db  47h ; G
+.rdata:00007FF7A17E9F2D                 db 0D0h
+.rdata:00007FF7A17E9F2E                 db 0B7h
+.rdata:00007FF7A17E9F2F                 db  29h 

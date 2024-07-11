@@ -1,0 +1,145 @@
+numer indeksu: 456366 
+nazwę zadania: Zadanie zaliczeniowe - kryptografia 
+flagi zadania podchodzącą ze zdalnego serwera cryptotask2023.tailcall.net:30007: 
+FLAG 1: flag{still-not-a-csprng} 
+FLAG2: flag{sh0rt-fl4G}
+FLAG3: flag{p4dding-1s-h4rd-but-re4ly-just-s1gn-y0ur-c1phert3xts}
+
+krótki(przepraszam, nie do końca krótki) opis znalezionych podatności i rozwiązania plaintextem:
+
+FLAG 1: flag{still-not-a-csprng} 
+Solution:
+We are given a random number generator:
+
+         class NcgPrng:
+         def __init__(self):
+             self.state = random.randint(0, 2**64-1)
+             self.a = random.randint(0, 2**64-1)
+             self.c = random.randint(0, 2**64-1)
+             self.m = 2**64
+
+         def next(self):
+             """Gets a next 64bit random number."""
+             self.state = (self.state * self.a ^ self.c) % self.m
+             return self.state
+
+and a sequence of 5 consecutive numbers produced by the generator 
+
+        rng = self.NcgPrng()
+        for i in range(5):
+            self.send_line(f'{rng.next()}')
+
+We have to "guess" the next number 
+
+            return
+        if answer == rng.next():
+            self.send_line(FLAG1)
+
+let a[j],  1 <= i <= 64 denote the ith bit of a(from least to most significant byte), c[i] denote the ith byte of c  and state[k,i], 0<=k<=4 denote ith byte in kth message respectively.
+
+We will try to find a and c by figuring out their bytes from i = 1 to 64. 
+
+for a scpecific we will check each guess of a[i] (meaning 0 or 1) and c[i] and make sure that it fits the conditions:
+  \forall k=0,..,3 state[k,:]*a^c=state[k+1,:i]
+  \iff state[k,:]*a^c[:i]=state[k+1,:i]
+  \iff state[k,:]*a[:i]^c[:i]=state[k+1,:i]
+
+if multiple guesses are correct we will proceed with the first found and save others for later 
+if no guess is correct, we will pick one of the previous guesses and proceed with it instead. 
+
+by the end of the loop we outta have the correct values of a and c, meaning we will find a and c s.t. they could produce the given set of numbers. 
+Of course, there could be multiple solutions to the problem(or there might not be, I don't really want to think about it, frankly), however in such case we will be able to find all of them(note: the implementation doesn't account for this fact, meaning we take the first sequence that fits the requirements).
+
+Knowing a and c it is easy to compute the next number(or numbers) in the sequence: state[6, :] = state[5,:]*a^c.
+
+FLAG2: flag{sh0rt-fl4G}
+FLAG3: flag{p4dding-1s-h4rd-but-re4ly-just-s1gn-y0ur-c1phert3xts}
+Solution: 
+
+Since the method to find both flags was quite identical, it makes sence to talk about a solution that would find both.
+
+
+The server is using the CBC AES mode to encrypt and decrypt the messages from the user 
+
+    def send_encrypted(self, key, msg):
+        iv = b'so_random_iv_wow'
+        aes = AES.new(key, AES.MODE_CBC, iv)
+        self.send_line_hex(iv + aes.encrypt(pad(msg)))
+
+    def recv_encrypted(self, key):
+        msg = self.read_line_hex()
+        aes = AES.new(key, AES.MODE_CBC, msg[:16])
+        return unpad(aes.decrypt(msg[16:]))
+    
+    def pad(msg):
+        byte = 16 - len(msg) % 16
+        return msg + bytes([byte] * byte)
+    
+    def unpad(msg):
+        if not msg:
+          return b''
+      return msg[:-msg[-1]]
+
+And interacts with the user in the following way:
+
+          key = get_random_bytes(16)
+        self.send_encrypted(key, b'Hello')
+        while True:
+            try:
+                msg = self.recv_encrypted(key).strip()
+                if msg.startswith(b'hash?'):
+                    self.send_encrypted(key, hashlib.sha256(msg[5:]).digest())
+                elif msg.startswith(b'flag?'):
+                    self.send_encrypted(key, FLAG2.encode())
+                elif msg.startswith(b'FLAG!'):
+                    self.send_encrypted(key, FLAG3.encode())
+                else:
+                    self.send_encrypted(key, b'unknown command')
+            except Exception:
+                self.send_line('???')
+                break
+Our goal is two things: get the flag from the server, decrypt the flag. 
+
+Sending arbitrary text shorter than a single block to the server is easy:
+Let enc_hello[32] be that first message that the server sent to us and desire[16] be the text that we want the server to read. Denote the decryption algorithm as dec_K_iv and dec_K_iv without the last step(xor with iv) as dec_K.
+
+new_iv = pad('Hello') ^ enc_hello[:16]^(desire) 
+desired_message = new_iv + enc_hello[16:]
+
+make sure that the server gets what we want it to get: dec_K_new_iv(desired_message[16:]) = dec_K(enc_hello[16:]) ^ enc_hello[:16] ^ pad('Hello') ^ (desire) = pad('Hello') ^ pad('Hello') ^ (desire) = desire
+
+and after the server unpads the message, it gets exactly what we needed it to. 
+
+denote such message as get_message(enc_hello, desire)
+
+How can we now use that power to get the flag? 
+
+We will simply send the corresponding request and store the result as enc_flag.
+
+How do we decipher it ?
+
+Assume that the flag is of the length of a single block 
+
+Consider two steps. 1. Decipher first 4 bytes of the flag 2. Decipher all the remaining bytes in the block
+
+1. Find those bytes in order. The method is the same for each byte, so we will first show how to get the first byte. 
+let i = 1, pload = get_message(enc_hello, " "*11+"hash?") + enc_flag + get_message(" "*15+ bytes(32+len(enc_flag)-i))
+
+when we send the pload to server, he reads it as hash?(flag[:i]^enc_flag[:16]^enc_hello[16:32]), since the whitespaces at the beginning are removed by strip() and the rest is removed by  unpad().
+this allows us to get a hash of the first i bytes of a xored flag. Afterwards we send to the server get_message("hash?"+b+" "*10+"\x01") where  we b is a byte that we iterate on. We compare the  response from the server which allows to figure out the first byte in less than 256*2 requests to the server. 
+Next we repeat for bytes 2,3 and 4, using the same method. 
+In total we shouldn't make more than 256*2*4 requests, assuming that the xored flag doesn't contain any escape sequences. if it does, we will have to find another enc_hello and try again. 
+The probability of the xored flag not containing any escape sequences is (245/255)^4 = 0.85, so the expected value of tries is 1/0.85=1.17.
+In total we expect to make 1.17*128*2*4 1.17*128*2*4 = 1198 requests to get the first 4 characters of the xored flag.
+
+Afterwards we xor the found characters with enc_flag[:16] ^ enc_hello[16:32] to get the actual beginning of the flag. Denote those characters as dec_flag
+
+2. Now that we have the first 4 bytes, we will use a different method(because using the previous method we can obtain at most 11 bytes, and we need all 16)
+
+If we were to send enc_flag back to server, the server would decipher the flag back and read it as it is, meaning that if we instead send dec_flag ^ enc_flag the server will get 4 0-bytes in the beginning and the rest of the flag unchanged. We also know that if the server gets a message that starts with 'FLAG!', it will respond with a long message(bc FLAG! is 3 blocks or more). so now what we do is we iterate on a byte b and send (dec_flag+b)^(' ' * (len(dec_flag)-4) +'FLAG!')^enc_flag until we get a response from server that is longer than 2 blocks(meaning that server got 'FLAG!'). Afterwards we add b to the dec_flag and repeat until we know all 16 characters or the last figured character was '}' (meaning we've got the whole flag and the rest is padding).
+
+On average we need about 128 requests to find each byte, so that's 128*11=1408 for the remaining bytes in the block. 
+In total, we have to make about 2600 requests to decipher a single block. 
+
+If the flag is longer than a single block, flag = iv+C1+C2+...+Ck, we will first apply the method to iv+C1, then to C1+C2 and so on until we decipher the whole flag. 
+
