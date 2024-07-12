@@ -1,0 +1,13 @@
+fn setX(var x: int) -> nil {
+    x = 1;
+    return;
+    x = 100;
+
+
+}
+
+var x: int = 0;
+
+setX(x);
+
+print("x is:", x);

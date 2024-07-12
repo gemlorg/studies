@@ -1,8 +1,0 @@
-fn getFInt()-> fn(int)->int {
-    var x: int = 15;
-    fn multByX(y: int) -> int {
-        return y * x;
-    }
-    return multByX;
-}
-print([getFInt()](10));

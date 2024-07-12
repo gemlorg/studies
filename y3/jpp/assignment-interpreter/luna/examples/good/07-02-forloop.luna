@@ -1,6 +1,0 @@
-var a: int = 1;
-var b: int = 5;
-for (i= a ; b; 1) {
-    print(i);
-    i = 50;
-}

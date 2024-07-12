@@ -1,7 +1,0 @@
-fn add(a: int, b: int) {
-    return a + b;
-
-}
-var a = 1;
-
-print(add(a, b));

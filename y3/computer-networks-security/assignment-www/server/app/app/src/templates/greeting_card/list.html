@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main">
+        <h2>Kartki dla Ciebie</h2>
+        <a href="/create">Stwórz nową kartkę</a>
+        <div style="margin-top: 15px">
+            {% if all %}
+                <a href="/?unread">Pokaż nieprzeczytane</a>
+            {% else %}
+                <a href="/">Pokaż wszytkie</a>
+            {% endif %}
+        </div>
+        <ul>
+            {% for object in object_list %}
+                <li><a href="/show/{{ object.token }}">Kartka od {{ object.sender.username }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

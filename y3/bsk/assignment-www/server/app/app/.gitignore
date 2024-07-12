@@ -1,4 +1,0 @@
-db.sqlite3
-staticdir
-*.pyc
-__pycache__

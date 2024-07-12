@@ -1,6 +1,0 @@
-var s: string = "hi" ;
-
-fn empty() -> int {
-    return s; 
-}
-var z: string = empty();

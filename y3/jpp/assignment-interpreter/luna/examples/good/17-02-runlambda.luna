@@ -1,1 +1,0 @@
-print("Does 1 equal 0?", [(x: int, y: int) => bool {return x == y;}](0,1));

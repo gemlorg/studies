@@ -1,3 +1,9 @@
 [submodule "y3/jnp3/assignment-sokoban-game"]
-	path = y3/jnp3/assignment-sokoban-game
+	path = y3/languages-and-tools-3/assignment-sokoban-game
 	url = https://github.com/gemlorg/sokoban
+[submodule "y3/zpp/thesis-project"]
+	path = y3/zpp/thesis-project
+	url = https://github.com/gemlorg/Thesis-Trading-LLM
+[submodule "y3/team-programming-project/thesis-project"]
+	path = y3/team-programming-project/thesis-project
+	url = https://github.com/gemlorg/Thesis-Trading-LLM

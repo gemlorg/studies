@@ -1,4 +1,0 @@
-fn empty()->VNil {
-    var x: int = 5; 
-}
-print(x);`

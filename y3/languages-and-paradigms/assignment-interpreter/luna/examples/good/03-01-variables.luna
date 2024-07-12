@@ -1,0 +1,7 @@
+var x: int = 1;
+var b: bool = true;
+var s: string = "hi";
+
+x ++;
+b = false;
+s = "bye";

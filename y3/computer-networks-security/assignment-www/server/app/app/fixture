@@ -1,0 +1,28 @@
+[
+   {
+      "fields" : {
+         "date_joined" : "2023-10-20T22:54:54.315Z",
+         "email" : "",
+         "first_name" : "",
+         "groups" : [],
+         "is_active" : true,
+         "is_staff" : false,
+         "is_superuser" : false,
+         "last_login" : null,
+         "last_name" : "",
+         "password" : "[redacted]",
+         "user_permissions" : [],
+         "username" : "admin"
+      },
+      "model" : "auth.user",
+      "pk" : 1
+   },
+   {
+      "fields" : {
+         "footer" : "FLAG{[redacted]}",
+         "user" : 1
+      },
+      "model" : "accounts.profile",
+      "pk" : 1
+   }
+]
