@@ -9,7 +9,7 @@ header-includes:
 
 Na potrzeby tego zadania przez implementację zbiorów będziemy rozumieć moduł dostarczający typ `Set` oraz operacje:
 
-``` haskell
+```haskell
 empty     :: Set a
 null      :: Set a -> Bool
 member    :: Eq a => a -> Set a -> Bool
@@ -25,7 +25,7 @@ insert    :: a -> Set a -> Set a
 
 tudzież instancje
 
-``` haskell
+```haskell
 instance Ord a => Eq (Set a) where
 
 instance Semigroup (Set a) where
@@ -39,7 +39,7 @@ instance Functor Set where
 
 Uzupełnij potrzebne operacje i instancje dla implementacji zbiorów przy pomocy typu
 
-``` haskell
+```haskell
 data Set a = Empty
            | Singleton a
            | Union (Set a) (Set a)
@@ -47,7 +47,7 @@ data Set a = Empty
 
 tak, by spełnione były warunki
 
-``` haskell
+```haskell
 leftUnit :: Set Int -> Bool
 leftUnit a = mempty <> a == a
 
@@ -65,8 +65,7 @@ assoc x y z = (x<>y)<>z == x<>(y<>z)
 ```
 
 (NB, implementacja musi być "uczciwa" - implementacje, w których kazdy zbiór jest pusty i temu podobne,
- nie bedą akceptowane)
-
+nie bedą akceptowane)
 
 ## B. Grafy
 
@@ -87,7 +86,7 @@ $$ (V_1, E_1) \to (V_2, E_2) = (V_1 \cup V_2, E_1 \cup E_2 \cup V_1 \times V_2) 
 
 Rozważmy dwie reprezentacje grafów - przy użyciu relacji i algebraiczną:
 
-``` haskell
+```haskell
 data Relation a = Relation { domain :: Set a, relation :: Set (a, a) }
     deriving (Eq, Show)
 
@@ -99,7 +98,7 @@ data Basic a = Empty
 
 Uzupełnij implementacje
 
-``` haskell
+```haskell
 instance Graph Relation where
 instance Graph Basic where
 instance Ord a => Eq (Basic a) where
@@ -112,7 +111,7 @@ Funkcja `fromBasic` ma dawać graf izomorficzny ze swoim argumentem.
 
 Ponadto spełnione muszą być własności
 
-``` haskell
+```haskell
 leftUnit :: Basic Int -> Bool
 leftUnit a = empty * a == a
 
@@ -140,7 +139,7 @@ decomposable x y z = x*y*z == x*y + x*z + y*z
 
 gdzie
 
-``` haskell
+```haskell
 instance (Ord a, Num a) => Num (Basic a) where
     fromInteger = vertex . fromInteger
     (+)         = union
@@ -164,7 +163,7 @@ example34 = 1*2 + 2*(3+4) + (3+4)*5 + 17
 
 Napisz funkcję
 
-``` haskell
+```haskell
 mergeV :: Eq a => a -> a -> a -> Basic a -> Basic a
 ```
 
@@ -183,7 +182,7 @@ Użytecznym narzedziem do wizualizacji grafów jest GraphViz (graphviz.org); na 
 
 Napisz funkcję reprezentujaca graf w formacie GraphViz
 
-``` haskell
+```haskell
 todot :: (Ord a, Show a) => Basic a -> String
 ```
 
@@ -215,27 +214,26 @@ otrzymamy plik `example34.png` jak na załączonym obrazku.
 
 ![example34.png](example34.png)
 
-
 \clearpage
 
 ## D. Applicative/Monad
 
 Uzupełnij instancje
 
-``` haskell
+```haskell
 instance Applicative Basic where
 instance Monad Basic where
 ```
 
 korzystajac z jednej z powyższych instancji, napisz funkcję
 
-``` haskell
+```haskell
 splitV :: Eq a => a -> a -> a -> Basic a -> Basic a
 ```
 
 taką, że `splitV a b c g` daje wariant grafu `g`, w którym zamiast wierzchołka `a` wystepują jego dwie kopie `b` oraz `c`, a krawędziom prowadzącym z/do `a` odpowiadają krawedzie prowadzące do `b` i `c`, n.p.
 
-``` haskell
+```haskell
 -- >>> splitV 34 3 4 (mergeV 3 4 34 example34)
 -- edges [(1,2),(2,3),(2,4),(3,5),(4,5)] + vertices [17]
 ```
@@ -244,11 +242,11 @@ taką, że `splitV a b c g` daje wariant grafu `g`, w którym zamiast wierzchoł
 
 1. Należy oddać pliki `Set.hs` i `Graph.hs` powstałe przez uzupełnienie odpowiednich szablonów (`*-template.hs`)
 2. Można importować:
-    - uzupełniony moduł `Set`
-    - moduły ze standardowego pakietu `base`
+   - uzupełniony moduł `Set`
+   - moduły ze standardowego pakietu `base`
 3. Do dostarczonych szablonów modułów można dodawać własne funkcje.
-Nie można natomiast usuwać, ani zmieniać znajdujących się w nich elementów (oczywiście za wyjątkiem `undefined`),
-w szczególności komentarzy zawierających testy.
+   Nie można natomiast usuwać, ani zmieniać znajdujących się w nich elementów (oczywiście za wyjątkiem `undefined`),
+   w szczególności komentarzy zawierających testy.
 4. rozwiązania skrajnie nieefektywne będą karane; przy porządnym rozwiązaniu testy (TestAll) przechodzą w ok 2s. Rozwiązanie, gdzie będzie to trwało ponad minutę uznamy za nieefektywne.
 
 ## Ocenianie
