@@ -1,0 +1,3 @@
+[submodule "y3/jnp3/assignment-sokoban-game"]
+	path = y3/jnp3/assignment-sokoban-game
+	url = https://github.com/gemlorg/sokoban
