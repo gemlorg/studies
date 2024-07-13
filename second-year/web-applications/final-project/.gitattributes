@@ -1,0 +1,6 @@
+coverage linguist-generated=true
+manage.py linguist-generated=true
+static linguist-generated=true
+database.sqlite3 linguist-generated=true
+# htmlcov
+# polls
