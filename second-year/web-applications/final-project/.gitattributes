@@ -4,4 +4,4 @@ static/* linguist-detectable=false
 database.sqlite3/* linguist-detectable=false
 htmlcov/* linguist-detectable=false
 polls/* linguist-detectable=false
-
+*.css linguist-detectable=false
