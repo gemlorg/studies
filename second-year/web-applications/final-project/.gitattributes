@@ -1,6 +1,7 @@
-coverage/* linguist-generated=true
-manage.py/* linguist-generated=true
-static/* linguist-generated=true
-database.sqlite3/* linguist-generated=true
-htmlcov/*
-polls/*
+coverage/* linguist-detectable=false
+manage.py/* linguist-detectable=false
+static/* linguist-detectable=false
+database.sqlite3/* linguist-detectable=false
+htmlcov/* linguist-detectable=false
+polls/* linguist-detectable=false
+
