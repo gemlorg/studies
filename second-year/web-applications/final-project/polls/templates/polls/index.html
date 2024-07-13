@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}" />
+    <script src="{% static 'polls/script.js' %}"></script>
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script src="lib/codemirror.js"></script>
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="mode/javascript/javascript.js"></script>
+
+    <script src="http://danml.com/js/download.js"></script>
+
+    <input type="file" name="my_files[]" style="display: none" multiple />
+    {% csrf_token %}
+    <script>
+      const csrftoken = "{{csrf_token}}";
+    </script>
+    <div class="container" id="root">
+      <div class="wrapper">
+        <div class="top-wrapper">
+          <button
+            type="button"
+            class="button"
+            id="file-button"
+            onclick="ShowOptions('file-button', 'additional-buttons')"
+          >
+            File
+          </button>
+          <div
+            id="additional-buttons"
+            style="display: none; position: absolute; top: 30px"
+          >
+            <button
+              type="button"
+              class="button"
+              style="width: 82px"
+              onclick="SaveFile();ShowOptions('file-button', 'additional-buttons')"
+            >
+              Compile
+            </button>
+
+            <button
+              type="button"
+              class="button"
+              onclick="DownloadFile();ShowOptions('file-button', 'additional-buttons')"
+            >
+              Download
+            </button>
+            <!-- <button>Option 2</button> -->
+            <!-- <button>Option 3</button> -->
+          </div>
+
+
+          <button type="button" class="button edit">Edit</button>
+
+
+         <button
+            type="button"
+            class="button"
+            id="file-button"
+            onclick="ShowOptions('file-button', 'additional-options')"
+          >
+          Options
+         </button>
+          <div
+            id="additional-options"
+            style="display: none; position: absolute; top: 30px; left: 113px"
+          >
+            <button
+              type="button"
+              class="button"
+              style="width: 82px"
+              onclick="LogIn();ShowOptions('file-button', 'additional-options')"
+            >
+             Log in 
+            </button>
+
+            <button
+              type="button"
+              class="button"
+              style="width: 82px"
+              onclick="LogOut();ShowOptions('file-button', 'additional-options')"
+            >
+             Log out 
+            </button>
+            <!-- <button>Option 2</button> -->
+            <!-- <button>Option 3</button> -->
+          </div>
+
+
+          
+          <button
+            type="button"
+            class="button light"
+            onclick="ChangeBackground()"
+          >
+            Switch Light
+          </button>
+          <button type="button" class="button" id="burger" onclick="hideMenu()">
+            &lt;&lt;
+          </button>
+          <button
+            type="button"
+            class="button"
+            id="burger2"
+            onclick="showMenu()"
+          >
+            &gt;&gt;
+          </button>
+        </div>
+        <div class="file-chooser-wrapper">
+          <div class="chooser-top-wrapper">
+            <button
+              type="button"
+              class="button"
+              id="btn-upload"
+              onclick="ShowOptions('file-button', 'folder-upload')"
+            >
+              New Folder
+            </button>
+            <form
+              action="new_folder/"
+              style="display: none"
+              id="folder-upload"
+              method="post"
+            >
+            {% csrf_token %}
+              <select name="catalog" id="select-folder">
+                {%for item in tree%} {% if item.0 == 1 %}
+                <option value="{{item.1.id}}">{{item.1.name}}</option>
+                {%endif%} {%endfor%}
+              </select>
+
+              <input
+                name="name"
+                type="text"
+                placeholder="Enter name"
+                id="select-text"
+              />
+              <input
+                type="submit"
+                class="button"
+                id="btn-upload"
+                onclick="ShowOptions('file-button', 'folder-upload')"
+              />
+            </form>
+
+            <!-- <button type="button" class="button" id="btn-upload">Remove file 
+          </button>
+           <button type="button" class="button" id="btn-upload">Add Catalog 
+            </button> -->
+            <script>
+
+
+
+
+            </script>
+            <div class="file-tree">
+              {% if user.is_authenticated%}
+              {% if catalogs %} {%for item in tree%} {% if item.0 == 0 %}
+              <div class="file" id="item_{{item1.id}}">
+                <div style="width: calc(100% - 50px)">
+                  {% for i in item.2 %} &nbsp; {% endfor %}
+                  <a
+                    href="#"
+                    onclick="OpenFile({{item.1.id}}, '{{item.1.name}}')"
+                    >{{item.1.name}}</a
+                  >
+                </div>
+
+                <div class="file-options">
+                  <a style="cursor: pointer" onclick="DeleteFile({{item.1.id}})"
+                    >delete</a
+                  >
+                </div>
+              </div>
+
+              {%else%}
+              <div class="folder" id="folder_{{item.1.id}}">
+                <div class="folder-text" id="folder-text-{{item.1.id}}">
+                  {% for i in item.2 %} &nbsp; {% endfor %} {{item.1.name}}
+                </div>
+                <div class="folder-options" id="folder-options-{{item.1.id}}">
+                  <a onclick="AddFile({{item.1.id}})" style="cursor: pointer"
+                    >add</a
+                  >
+                  {%if item.1.id != 1%} &nbsp;
+                  <a
+                    style="cursor: pointer"
+                    onclick="DeleteFolder({{item.1.id}})"
+                    >delete</a
+                  >
+                  {%else%} {%endif%}
+                </div>
+              </div>
+              {%endif%} {%endfor%} {% else %}
+              <p>No polls are available.</p>
+              {% endif %}
+            {%else%}
+            <h3>Please, log in</h3>
+            {%endif%}
+            </div>
+          </div>
+        </div>
+        <div class="program-text-wrapper">
+          <div class="editor">
+            <div class="code-area" >
+              <!-- <div class="line-numbers"></div> -->
+              <pre>
+            <p id="code" placeholder="Enter code here" spellcheck="false">
+              
+              </p>
+            </pre>
+            </div>
+          </div>
+        </div>
+        <pre>
+      <div class="fragment-wrapper" id="fragment">
+
+      </div>
+    </pre>
+        <form action="compile_options">
+          <div class="tabs-wrapper">
+            <input
+              type="radio"
+              class="tabs__radio"
+              name="tabs-example"
+              id="tab1"
+              checked
+            />
+            <label for="tab1" class="tabs__label">STANDARD </label>
+            <div class="tabs__content">
+              <select name="standard">
+                <option value="c89">C89</option>
+                <option value="c99">C99</option>
+                <option value="c11">C11</option>
+              </select>
+              <input type="submit" class="button" />
+            </div>
+            <input
+              type="radio"
+              class="tabs__radio"
+              name="tabs-example"
+              id="tab2"
+            />
+            <label for="tab2" class="tabs__label">OPTIMISATION </label>
+            <div class="tabs__content">
+              <input
+                type="checkbox"
+                name="optimisations"
+                id="optimisations1"
+                value="--allow-unsafe-read"
+              />
+              <label for="optimisations1"
+                >Allow optimizations to generate unsafe reads</label
+              ><br />
+
+              <input
+                type="checkbox"
+                name="optimisations"
+                id="optimisations2"
+                value="--opt-code-speed"
+              />
+              <label for="optimisations2">Fast code</label><br />
+
+              <input
+                type="checkbox"
+                name="optimisations"
+                id="optimisations3"
+                value="--opt-code-size"
+              />
+              <label for="optimisations3">Short code</label><br />
+
+              <input type="submit" class="button" />
+            </div>
+            <input
+              type="radio"
+              class="tabs__radio"
+              name="tabs-example"
+              id="tab3"
+            />
+            <label for="tab3" class="tabs__label">PROCESSOR </label>
+            <div class="tabs__content">
+              <select name="processor" id="processor-select">
+                <option value="mcs51">MCS51</option>
+                <option value="z80">Z80</option>
+                <option value="stm8">STM8</option>
+              </select>
+
+              <input type="submit" class="button" />
+              <script>
+                document
+                  .querySelector("#processor-select")
+                  .addEventListener("change", function () {
+                    ShowDependencies();
+                  });
+              </script>
+            </div>
+            <input
+              type="radio"
+              class="tabs__radio"
+              name="tabs-example"
+              id="tab4"
+            />
+            <label for="tab4" class="tabs__label">DEPENDENCIES </label>
+            <div class="tabs__content" id="tabs__content">
+              <script>
+                ShowDependencies();
+              </script>
+
+              <!-- 
+          CONTENT for Tab #4
+          <input type="checkbox"  name="dependencies" value="Bike">
+          <label for="vehicle1"> I have a bike</label><br>
+          <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+          <label for="vehicle2"> I have a car</label><br>
+          <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+          <label for="vehicle3"> I have a boat</label><br>
+          <input type="submit" class="button"> -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
