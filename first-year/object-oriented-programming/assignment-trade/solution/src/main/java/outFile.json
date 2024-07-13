@@ -1,0 +1,350 @@
+[{
+  "day" : 1,
+  "pricesAverage" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMax" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMin" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "workers" : [ {
+    "id" : 1,
+    "level" : 1,
+    "career" : "programmer",
+    "buyingStrategy" : {
+      "type" : "gadgeteer",
+      "numberOfTools" : 100
+    },
+    "productionStrategy" : {
+      "type" : "greedy"
+    },
+    "learning" : {
+      "type" : "student",
+      "productionReserve" : 2,
+      "period" : 5
+    },
+    "careerStrategy" : "revolutionary",
+    "productivity" : {
+      "programs" : 100,
+      "food" : 100,
+      "diamonds" : 100,
+      "clothes" : 100,
+      "tools" : 100
+    },
+    "reserve" : {
+      "diamonds" : 31600,
+      "food" : 0,
+      "clothes" : { },
+      "tools" : { },
+      "programs" : { }
+    }
+  } ],
+  "speculates" : [ {
+    "id" : 12,
+    "career" : "convex",
+    "reserve" : {
+      "diamonds" : 100,
+      "food" : 100,
+      "clothes" : {
+        "1" : 100
+      },
+      "tools" : {
+        "1" : 100
+      },
+      "programs" : {
+        "1" : 100
+      }
+    }
+  } ]
+},
+{
+  "day" : 2,
+  "pricesAverage" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMax" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMin" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "workers" : [ {
+    "id" : 1,
+    "level" : 2,
+    "career" : "programmer",
+    "buyingStrategy" : {
+      "type" : "gadgeteer",
+      "numberOfTools" : 100
+    },
+    "productionStrategy" : {
+      "type" : "greedy"
+    },
+    "learning" : {
+      "type" : "student",
+      "productionReserve" : 2,
+      "period" : 5
+    },
+    "careerStrategy" : "revolutionary",
+    "productivity" : {
+      "programs" : 100,
+      "food" : 100,
+      "diamonds" : 100,
+      "clothes" : 100,
+      "tools" : 100
+    },
+    "reserve" : {
+      "diamonds" : 31600,
+      "food" : 0,
+      "clothes" : { },
+      "tools" : { },
+      "programs" : { }
+    }
+  } ],
+  "speculates" : [ {
+    "id" : 12,
+    "career" : "convex",
+    "reserve" : {
+      "diamonds" : 100,
+      "food" : 100,
+      "clothes" : {
+        "1" : 100
+      },
+      "tools" : {
+        "1" : 100
+      },
+      "programs" : {
+        "1" : 100
+      }
+    }
+  } ]
+},
+{
+  "day" : 3,
+  "pricesAverage" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMax" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMin" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "workers" : [ {
+    "id" : 1,
+    "level" : 3,
+    "career" : "programmer",
+    "buyingStrategy" : {
+      "type" : "gadgeteer",
+      "numberOfTools" : 100
+    },
+    "productionStrategy" : {
+      "type" : "greedy"
+    },
+    "learning" : {
+      "type" : "student",
+      "productionReserve" : 2,
+      "period" : 5
+    },
+    "careerStrategy" : "revolutionary",
+    "productivity" : {
+      "programs" : 100,
+      "food" : 100,
+      "diamonds" : 100,
+      "clothes" : 100,
+      "tools" : 100
+    },
+    "reserve" : {
+      "diamonds" : 31600,
+      "food" : 0,
+      "clothes" : { },
+      "tools" : { },
+      "programs" : { }
+    }
+  } ],
+  "speculates" : [ {
+    "id" : 12,
+    "career" : "convex",
+    "reserve" : {
+      "diamonds" : 100,
+      "food" : 100,
+      "clothes" : {
+        "1" : 100
+      },
+      "tools" : {
+        "1" : 100
+      },
+      "programs" : {
+        "1" : 100
+      }
+    }
+  } ]
+},
+{
+  "day" : 4,
+  "pricesAverage" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMax" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMin" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "workers" : [ {
+    "id" : 1,
+    "level" : 4,
+    "career" : "programmer",
+    "buyingStrategy" : {
+      "type" : "gadgeteer",
+      "numberOfTools" : 100
+    },
+    "productionStrategy" : {
+      "type" : "greedy"
+    },
+    "learning" : {
+      "type" : "student",
+      "productionReserve" : 2,
+      "period" : 5
+    },
+    "careerStrategy" : "revolutionary",
+    "productivity" : {
+      "programs" : 100,
+      "food" : 100,
+      "diamonds" : 100,
+      "clothes" : 100,
+      "tools" : 100
+    },
+    "reserve" : {
+      "diamonds" : 31600,
+      "food" : 0,
+      "clothes" : { },
+      "tools" : { },
+      "programs" : { }
+    }
+  } ],
+  "speculates" : [ {
+    "id" : 12,
+    "career" : "convex",
+    "reserve" : {
+      "diamonds" : 100,
+      "food" : 100,
+      "clothes" : {
+        "1" : 100
+      },
+      "tools" : {
+        "1" : 100
+      },
+      "programs" : {
+        "1" : 100
+      }
+    }
+  } ]
+},
+{
+  "day" : 5,
+  "pricesAverage" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMax" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "pricesMin" : {
+    "food" : 125.27,
+    "clothes" : 10.0,
+    "tools" : 105.0,
+    "programs" : 10.0
+  },
+  "workers" : [ {
+    "id" : 1,
+    "level" : 5,
+    "career" : "programmer",
+    "buyingStrategy" : {
+      "type" : "gadgeteer",
+      "numberOfTools" : 100
+    },
+    "productionStrategy" : {
+      "type" : "greedy"
+    },
+    "learning" : {
+      "type" : "student",
+      "productionReserve" : 2,
+      "period" : 5
+    },
+    "careerStrategy" : "revolutionary",
+    "productivity" : {
+      "programs" : 100,
+      "food" : 100,
+      "diamonds" : 100,
+      "clothes" : 100,
+      "tools" : 100
+    },
+    "reserve" : {
+      "diamonds" : 31600,
+      "food" : 0,
+      "clothes" : { },
+      "tools" : { },
+      "programs" : { }
+    }
+  } ],
+  "speculates" : [ {
+    "id" : 12,
+    "career" : "convex",
+    "reserve" : {
+      "diamonds" : 100,
+      "food" : 100,
+      "clothes" : {
+        "1" : 100
+      },
+      "tools" : {
+        "1" : 100
+      },
+      "programs" : {
+        "1" : 100
+      }
+    }
+  } ]
+}]
