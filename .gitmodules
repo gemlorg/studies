@@ -1,5 +1,5 @@
 [submodule "y3/jnp3/assignment-sokoban-game"]
-	path = third-year/languages-and-tools-3/assignment-sokoban-game
+	path = third-year/haskell/assignment-sokoban-game
 	url = https://github.com/gemlorg/sokoban
 [submodule "y3/zpp/thesis-project"]
 	path = y3/zpp/thesis-project
