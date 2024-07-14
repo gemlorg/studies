@@ -1,0 +1,3609 @@
+diff -rupNEZbB orig/usr/src/minix/include/minix/callnr.h sol/usr/src/minix/include/minix/callnr.h
+--- orig/usr/src/minix/include/minix/callnr.h	2023-06-18 23:50:35.198816966 +0200
++++ sol/usr/src/minix/include/minix/callnr.h	2023-06-18 23:52:16.491177610 +0200
+@@ -118,7 +118,9 @@
+ #define VFS_COPYFD		(VFS_BASE + 46)
+ #define VFS_CHECKPERMS		(VFS_BASE + 47)
+ #define VFS_GETSYSINFO		(VFS_BASE + 48)
++#define VFS_EXCLUSIVE		(VFS_BASE + 49)
++#define VFS_FEXCLUSIVE		(VFS_BASE + 50)
+ 
+-#define NR_VFS_CALLS		49	/* highest number from base plus one */
++#define NR_VFS_CALLS		51	/* highest number from base plus one */
+ 
+ #endif /* !_MINIX_CALLNR_H */
+diff -rupNEZbB orig/usr/src/minix/include/minix/callnr.h.orig sol/usr/src/minix/include/minix/callnr.h.orig
+--- orig/usr/src/minix/include/minix/callnr.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/include/minix/callnr.h.orig	2023-06-18 23:52:17.427254879 +0200
+@@ -0,0 +1,124 @@
++/* This header file defines the calls to PM and VFS. */
++#ifndef _MINIX_CALLNR_H
++#define _MINIX_CALLNR_H
++
++/*===========================================================================*
++ *				Calls to PM				     *
++ *===========================================================================*/
++
++#define PM_BASE			0x000
++
++#define IS_PM_CALL(type)	(((type) & ~0xff) == PM_BASE)
++
++/* Message type 0 is traditionally reserved. */
++#define PM_EXIT			(PM_BASE + 1)
++#define PM_FORK			(PM_BASE + 2)
++#define PM_WAITPID		(PM_BASE + 3)
++#define PM_GETPID		(PM_BASE + 4)
++#define PM_SETUID		(PM_BASE + 5)
++#define PM_GETUID		(PM_BASE + 6)
++#define PM_STIME		(PM_BASE + 7)
++#define PM_PTRACE		(PM_BASE + 8)
++#define PM_SETGROUPS		(PM_BASE + 9)
++#define PM_GETGROUPS		(PM_BASE + 10)
++#define PM_KILL			(PM_BASE + 11)
++#define PM_SETGID		(PM_BASE + 12)
++#define PM_GETGID		(PM_BASE + 13)
++#define PM_EXEC			(PM_BASE + 14)
++#define PM_SETSID		(PM_BASE + 15)
++#define PM_GETPGRP		(PM_BASE + 16)
++#define PM_ITIMER		(PM_BASE + 17)
++#define PM_GETMCONTEXT		(PM_BASE + 18)
++#define PM_SETMCONTEXT		(PM_BASE + 19)
++#define PM_SIGACTION		(PM_BASE + 20)
++#define PM_SIGSUSPEND		(PM_BASE + 21)
++#define PM_SIGPENDING		(PM_BASE + 22)
++#define PM_SIGPROCMASK		(PM_BASE + 23)
++#define PM_SIGRETURN		(PM_BASE + 24)
++#define PM_SYSUNAME		(PM_BASE + 25)
++#define PM_GETPRIORITY		(PM_BASE + 26)
++#define PM_SETPRIORITY		(PM_BASE + 27)
++#define PM_GETTIMEOFDAY		(PM_BASE + 28)
++#define PM_SETEUID		(PM_BASE + 29)
++#define PM_SETEGID		(PM_BASE + 30)
++#define PM_ISSETUGID		(PM_BASE + 31)
++#define PM_GETSID		(PM_BASE + 32)
++#define PM_CLOCK_GETRES		(PM_BASE + 33)
++#define PM_CLOCK_GETTIME	(PM_BASE + 34)
++#define PM_CLOCK_SETTIME	(PM_BASE + 35)
++#define PM_GETRUSAGE		(PM_BASE + 36)
++#define PM_REBOOT		(PM_BASE + 37)
++#define PM_SVRCTL		(PM_BASE + 38)
++#define PM_SPROF		(PM_BASE + 39)
++#define PM_CPROF		(PM_BASE + 40)
++#define PM_SRV_FORK		(PM_BASE + 41)
++#define PM_SRV_KILL		(PM_BASE + 42)
++#define PM_EXEC_NEW		(PM_BASE + 43)
++#define PM_EXEC_RESTART		(PM_BASE + 44)
++#define PM_GETEPINFO		(PM_BASE + 45)
++#define PM_GETPROCNR		(PM_BASE + 46)
++#define PM_GETSYSINFO		(PM_BASE + 47)
++
++#define NR_PM_CALLS		48	/* highest number from base plus one */
++
++/*===========================================================================*
++ *				Calls to VFS				     *
++ *===========================================================================*/
++
++#define VFS_BASE		0x100
++
++#define IS_VFS_CALL(type)	(((type) & ~0xff) == VFS_BASE)
++
++#define VFS_READ		(VFS_BASE + 0)
++#define VFS_WRITE		(VFS_BASE + 1)
++#define VFS_LSEEK		(VFS_BASE + 2)
++#define VFS_OPEN		(VFS_BASE + 3)
++#define VFS_CREAT		(VFS_BASE + 4)
++#define VFS_CLOSE		(VFS_BASE + 5)
++#define VFS_LINK		(VFS_BASE + 6)
++#define VFS_UNLINK		(VFS_BASE + 7)
++#define VFS_CHDIR		(VFS_BASE + 8)
++#define VFS_MKDIR		(VFS_BASE + 9)
++#define VFS_MKNOD		(VFS_BASE + 10)
++#define VFS_CHMOD		(VFS_BASE + 11)
++#define VFS_CHOWN		(VFS_BASE + 12)
++#define VFS_MOUNT		(VFS_BASE + 13)
++#define VFS_UMOUNT		(VFS_BASE + 14)
++#define VFS_ACCESS		(VFS_BASE + 15)
++#define VFS_SYNC		(VFS_BASE + 16)
++#define VFS_RENAME		(VFS_BASE + 17)
++#define VFS_RMDIR		(VFS_BASE + 18)
++#define VFS_SYMLINK		(VFS_BASE + 19)
++#define VFS_READLINK		(VFS_BASE + 20)
++#define VFS_STAT		(VFS_BASE + 21)
++#define VFS_FSTAT		(VFS_BASE + 22)
++#define VFS_LSTAT		(VFS_BASE + 23)
++#define VFS_IOCTL		(VFS_BASE + 24)
++#define VFS_FCNTL		(VFS_BASE + 25)
++#define VFS_PIPE2		(VFS_BASE + 26)
++#define VFS_UMASK		(VFS_BASE + 27)
++#define VFS_CHROOT		(VFS_BASE + 28)
++#define VFS_GETDENTS		(VFS_BASE + 29)
++#define VFS_SELECT		(VFS_BASE + 30)
++#define VFS_FCHDIR		(VFS_BASE + 31)
++#define VFS_FSYNC		(VFS_BASE + 32)
++#define VFS_TRUNCATE		(VFS_BASE + 33)
++#define VFS_FTRUNCATE		(VFS_BASE + 34)
++#define VFS_FCHMOD		(VFS_BASE + 35)
++#define VFS_FCHOWN		(VFS_BASE + 36)
++#define VFS_UTIMENS		(VFS_BASE + 37)
++#define VFS_VMCALL		(VFS_BASE + 38)
++#define VFS_GETVFSSTAT		(VFS_BASE + 39)
++#define VFS_STATVFS1 	 	(VFS_BASE + 40)
++#define VFS_FSTATVFS1		(VFS_BASE + 41)
++#define VFS_GETRUSAGE		(VFS_BASE + 42)
++#define VFS_SVRCTL		(VFS_BASE + 43)
++#define VFS_GCOV_FLUSH		(VFS_BASE + 44)
++#define VFS_MAPDRIVER		(VFS_BASE + 45)
++#define VFS_COPYFD		(VFS_BASE + 46)
++#define VFS_CHECKPERMS		(VFS_BASE + 47)
++#define VFS_GETSYSINFO		(VFS_BASE + 48)
++
++#define NR_VFS_CALLS		49	/* highest number from base plus one */
++
++#endif /* !_MINIX_CALLNR_H */
+diff -rupNEZbB orig/usr/src/minix/include/minix/ipc.h sol/usr/src/minix/include/minix/ipc.h
+--- orig/usr/src/minix/include/minix/ipc.h	2023-06-18 23:50:36.266905120 +0200
++++ sol/usr/src/minix/include/minix/ipc.h	2023-06-18 23:52:17.031222188 +0200
+@@ -842,6 +842,16 @@ typedef struct {
+ _ASSERT_MSG_SIZE(mess_lc_vfs_umount);
+ 
+ typedef struct {
++	int fd;
++	vir_bytes name;
++	size_t len;
++	int flags;
++
++	uint8_t padding[40];
++} mess_lc_vfs_exclusive;
++_ASSERT_MSG_SIZE(mess_lc_vfs_exclusive);
++
++typedef struct {
+ 	void		*addr;
+ 	uint8_t		padding[52];
+ } mess_lc_vm_brk;
+@@ -2121,6 +2131,7 @@ typedef struct {
+ 		mess_lc_vfs_truncate	m_lc_vfs_truncate;
+ 		mess_lc_vfs_umask	m_lc_vfs_umask;
+ 		mess_lc_vfs_umount	m_lc_vfs_umount;
++		mess_lc_vfs_exclusive	m_lc_vfs_exclusive;
+ 		mess_lc_vm_brk		m_lc_vm_brk;
+ 		mess_lc_vm_getphys	m_lc_vm_getphys;
+ 		mess_lc_vm_rusage	m_lc_vm_rusage;
+diff -rupNEZbB orig/usr/src/minix/include/minix/ipc.h.orig sol/usr/src/minix/include/minix/ipc.h.orig
+--- orig/usr/src/minix/include/minix/ipc.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/include/minix/ipc.h.orig	2023-06-18 23:52:12.906881745 +0200
+@@ -0,0 +1,2420 @@
++#ifndef _IPC_H
++#define _IPC_H
++
++#include <minix/ipcconst.h>
++#include <minix/type.h>
++#include <minix/const.h>
++#include <sys/signal.h>
++#include <sys/types.h>
++
++/*==========================================================================* 
++ * Types relating to messages. 						    *
++ *==========================================================================*/ 
++
++#define M_PATH_STRING_MAX  40
++
++typedef struct {
++	uint8_t data[56];
++} mess_u8;
++_ASSERT_MSG_SIZE(mess_u8);
++
++typedef struct {
++	uint16_t data[28];
++} mess_u16;
++_ASSERT_MSG_SIZE(mess_u16);
++
++typedef struct {
++	uint32_t data[14];
++} mess_u32;
++_ASSERT_MSG_SIZE(mess_u32);
++
++typedef struct {
++	uint64_t data[7];
++} mess_u64;
++_ASSERT_MSG_SIZE(mess_u64);
++
++typedef struct {
++	uint64_t m1ull1;
++	int m1i1, m1i2, m1i3;
++	char *m1p1, *m1p2, *m1p3, *m1p4;
++	uint8_t padding[20];
++} mess_1;
++_ASSERT_MSG_SIZE(mess_1);
++
++typedef struct {
++	int64_t m2ll1;
++	int m2i1, m2i2, m2i3;
++	long m2l1, m2l2;
++	char *m2p1;
++	sigset_t sigset;
++	short m2s1;
++	uint8_t padding[6];
++} mess_2;
++_ASSERT_MSG_SIZE(mess_2);
++
++typedef struct {
++	int m3i1, m3i2;
++	char *m3p1;
++	char m3ca1[44];
++} mess_3;
++_ASSERT_MSG_SIZE(mess_3);
++
++typedef struct {
++	int64_t m4ll1;
++	long m4l1, m4l2, m4l3, m4l4, m4l5;
++	uint8_t padding[28];
++} mess_4;
++_ASSERT_MSG_SIZE(mess_4);
++
++typedef struct {
++	int m7i1, m7i2, m7i3, m7i4, m7i5;
++	char *m7p1, *m7p2;
++	uint8_t padding[28];
++} mess_7;
++_ASSERT_MSG_SIZE(mess_7);
++
++typedef struct {
++	uint64_t m9ull1, m9ull2;
++	long m9l1, m9l2, m9l3, m9l4, m9l5;
++	short m9s1, m9s2, m9s3, m9s4;
++	uint8_t padding[12];
++} mess_9;
++_ASSERT_MSG_SIZE(mess_9);
++
++typedef struct {
++	u64_t m10ull1;
++	int m10i1, m10i2, m10i3, m10i4;
++	long m10l1, m10l2, m10l3;
++	uint8_t padding[20];
++} mess_10;
++_ASSERT_MSG_SIZE(mess_10);
++
++/* Helper union for DS messages */
++union	ds_val {
++	cp_grant_id_t	grant;
++	u32_t		u32;
++	endpoint_t	ep;
++};
++
++typedef struct {
++	union	ds_val 	val_out;
++	int	val_len;
++	uint8_t padding[48];
++} mess_ds_reply;
++_ASSERT_MSG_SIZE(mess_ds_reply);
++
++typedef struct {
++	cp_grant_id_t	key_grant;
++	int		key_len;
++	int		flags;
++	union ds_val 	val_in;
++	int		val_len;
++	endpoint_t	owner;
++	uint8_t padding[32];
++} mess_ds_req;
++_ASSERT_MSG_SIZE(mess_ds_req);
++
++typedef struct {
++	off_t seek_pos;
++
++	size_t nbytes;
++
++	uint8_t data[44];
++} mess_fs_vfs_breadwrite;
++_ASSERT_MSG_SIZE(mess_fs_vfs_breadwrite);
++
++typedef struct {
++	mode_t mode;
++
++	uint8_t data[52];
++} mess_fs_vfs_chmod;
++_ASSERT_MSG_SIZE(mess_fs_vfs_chmod);
++
++typedef struct {
++	mode_t mode;
++
++	uint8_t data[52];
++} mess_fs_vfs_chown;
++_ASSERT_MSG_SIZE(mess_fs_vfs_chown);
++
++typedef struct {
++	off_t file_size;
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[28];
++} mess_fs_vfs_create;
++_ASSERT_MSG_SIZE(mess_fs_vfs_create);
++
++typedef struct {
++	off_t seek_pos;
++
++	size_t nbytes;
++
++	uint8_t data[44];
++} mess_fs_vfs_getdents;
++_ASSERT_MSG_SIZE(mess_fs_vfs_getdents);
++
++typedef struct {
++	off_t offset;
++	off_t file_size;
++	dev_t device;
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++
++	uint16_t symloop;
++
++	uint8_t data[10];
++} mess_fs_vfs_lookup;
++_ASSERT_MSG_SIZE(mess_fs_vfs_lookup);
++
++typedef struct {
++	off_t file_size;
++	dev_t device;
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[20];
++} mess_fs_vfs_newnode;
++_ASSERT_MSG_SIZE(mess_fs_vfs_newnode);
++
++typedef struct {
++	size_t nbytes;
++
++	uint8_t data[52];
++} mess_fs_vfs_rdlink;
++_ASSERT_MSG_SIZE(mess_fs_vfs_rdlink);
++
++typedef struct {
++	off_t file_size;
++	dev_t device;
++	ino_t inode;
++
++	uint32_t flags;
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++
++	uint16_t con_reqs;
++
++	uint8_t data[14];
++} mess_fs_vfs_readsuper;
++_ASSERT_MSG_SIZE(mess_fs_vfs_readsuper);
++
++typedef struct {
++	off_t seek_pos;
++
++	size_t nbytes;
++
++	uint8_t data[44];
++} mess_fs_vfs_readwrite;
++_ASSERT_MSG_SIZE(mess_fs_vfs_readwrite);
++
++typedef struct {
++	uint8_t padding[56];
++} mess_i2c_li2cdriver_busc_i2c_exec;
++_ASSERT_MSG_SIZE(mess_i2c_li2cdriver_busc_i2c_exec);
++
++typedef struct {
++	uint8_t padding[56];
++} mess_i2c_li2cdriver_busc_i2c_reserve;
++_ASSERT_MSG_SIZE(mess_i2c_li2cdriver_busc_i2c_reserve);
++
++typedef struct {
++	int kbd_id;
++	int mouse_id;
++	int rsvd1_id;
++	int rsvd2_id;
++
++	uint8_t padding[40];
++} mess_input_linputdriver_input_conf;
++_ASSERT_MSG_SIZE(mess_input_linputdriver_input_conf);
++
++typedef struct {
++	uint32_t led_mask;
++
++	uint8_t padding[52];
++} mess_input_linputdriver_setleds;
++_ASSERT_MSG_SIZE(mess_input_linputdriver_setleds);
++
++typedef struct {
++	int id;
++	int page;
++	int code;
++	int value;
++	int flags;
++
++	uint8_t padding[36];
++} mess_input_tty_event;
++_ASSERT_MSG_SIZE(mess_input_tty_event);
++
++typedef struct {
++	time_t acnt_queue;
++
++	unsigned long acnt_deqs;
++	unsigned long acnt_ipc_sync;
++	unsigned long acnt_ipc_async;
++	unsigned long acnt_preempt;
++	uint32_t acnt_cpu;
++	uint32_t acnt_cpu_load;
++
++	uint8_t padding[24];
++} mess_krn_lsys_schedule;
++_ASSERT_MSG_SIZE(mess_krn_lsys_schedule);
++
++typedef struct {
++	uint32_t value;
++
++	uint8_t padding[52];
++} mess_krn_lsys_sys_devio;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_devio);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes msgaddr;
++
++	uint8_t padding[48];
++} mess_krn_lsys_sys_fork;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_fork);
++
++typedef struct {
++	endpoint_t endpt;
++	int privflags;
++	char name[48];
++
++} mess_krn_lsys_sys_getwhoami;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_getwhoami);
++
++typedef struct {
++	int hook_id;
++
++	uint8_t padding[52];
++} mess_krn_lsys_sys_irqctl;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_irqctl);
++
++typedef struct {
++	clock_t real_ticks;
++	clock_t boot_ticks;
++	clock_t boot_time;
++	clock_t user_time;
++	clock_t system_time;
++
++	uint8_t padding[36];
++} mess_krn_lsys_sys_times;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_times);
++
++typedef struct {
++	long int data;
++
++	uint8_t padding[52];
++} mess_krn_lsys_sys_trace;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_trace);
++
++typedef struct {
++	phys_bytes dst_addr;
++
++	uint8_t padding[52];
++} mess_krn_lsys_sys_umap;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_umap);
++
++typedef struct {
++	int pcount;
++
++	uint8_t padding[52];
++} mess_krn_lsys_sys_vumap;
++_ASSERT_MSG_SIZE(mess_krn_lsys_sys_vumap);
++
++typedef struct {
++	off_t pos;
++
++	int minor;
++	int id;
++	int access;
++
++	int count;
++	cp_grant_id_t grant;
++	int flags;
++
++	endpoint_t user;
++	int request;
++
++	uint8_t padding[16];
++} mess_lbdev_lblockdriver_msg;
++_ASSERT_MSG_SIZE(mess_lbdev_lblockdriver_msg);
++
++typedef struct {
++	int status;
++	int id;
++
++	uint8_t padding[48];
++} mess_lblockdriver_lbdev_reply;
++_ASSERT_MSG_SIZE(mess_lblockdriver_lbdev_reply);
++
++typedef struct {
++	int		id;
++	int		num;
++	int		cmd;
++	int		opt;
++	int		ret;
++	uint8_t		padding[36];
++} mess_lc_ipc_semctl;
++_ASSERT_MSG_SIZE(mess_lc_ipc_semctl);
++
++typedef struct {
++	key_t		key;
++	int		nr;
++	int		flag;
++	int		retid;
++	uint8_t		padding[40];
++} mess_lc_ipc_semget;
++_ASSERT_MSG_SIZE(mess_lc_ipc_semget);
++
++typedef struct {
++	int		id;
++	void		*ops;
++	unsigned int	size;
++	uint8_t		padding[42];
++} mess_lc_ipc_semop;
++_ASSERT_MSG_SIZE(mess_lc_ipc_semop);
++
++typedef struct {
++	int		id;
++	const void	*addr;
++	int		flag;
++	void		*retaddr;
++	uint8_t		padding[40];
++} mess_lc_ipc_shmat;
++_ASSERT_MSG_SIZE(mess_lc_ipc_shmat);
++
++typedef struct {
++	int		id;
++	int		cmd;
++	void		*buf;
++	int		ret;
++	uint8_t		padding[40];
++} mess_lc_ipc_shmctl;
++_ASSERT_MSG_SIZE(mess_lc_ipc_shmctl);
++
++typedef struct {
++	const void	*addr;
++	uint8_t		padding[52];
++} mess_lc_ipc_shmdt;
++_ASSERT_MSG_SIZE(mess_lc_ipc_shmdt);
++
++typedef struct {
++	key_t		key;
++	size_t		size;
++	int		flag;
++	int		retid;
++	uint8_t		padding[40];
++} mess_lc_ipc_shmget;
++_ASSERT_MSG_SIZE(mess_lc_ipc_shmget);
++
++typedef struct {
++	int action;
++	vir_bytes ctl_ptr;
++	vir_bytes mem_ptr;
++	size_t mem_size;
++
++	uint8_t padding[40];
++} mess_lc_pm_cprof;
++_ASSERT_MSG_SIZE(mess_lc_pm_cprof);
++
++typedef struct {
++	vir_bytes name;
++	size_t namelen;
++	vir_bytes frame;
++	size_t framelen;
++	vir_bytes ps_str;
++
++	uint8_t padding[36];
++} mess_lc_pm_exec;
++_ASSERT_MSG_SIZE(mess_lc_pm_exec);
++
++typedef struct {
++	int status;
++
++	uint8_t padding[52];
++} mess_lc_pm_exit;
++_ASSERT_MSG_SIZE(mess_lc_pm_exit);
++
++typedef struct {
++	pid_t pid;
++
++	uint8_t padding[52];
++} mess_lc_pm_getsid;
++_ASSERT_MSG_SIZE(mess_lc_pm_getsid);
++
++typedef struct {
++	int num;
++	vir_bytes ptr;		/* gid_t * */
++
++	uint8_t padding[48];
++} mess_lc_pm_groups;
++_ASSERT_MSG_SIZE(mess_lc_pm_groups);
++
++typedef struct {
++	int which;
++	vir_bytes value;	/* const struct itimerval * */
++	vir_bytes ovalue;	/* struct itimerval * */
++
++	uint8_t padding[44];
++} mess_lc_pm_itimer;
++_ASSERT_MSG_SIZE(mess_lc_pm_itimer);
++
++typedef struct {
++	vir_bytes ctx;		/* mcontext_t * */
++
++	uint8_t padding[52];
++} mess_lc_pm_mcontext;
++_ASSERT_MSG_SIZE(mess_lc_pm_mcontext);
++
++typedef struct {
++	int which;
++	int who;
++	int prio;
++
++	uint8_t padding[44];
++} mess_lc_pm_priority;
++_ASSERT_MSG_SIZE(mess_lc_pm_priority);
++
++typedef struct {
++	pid_t pid;
++	int req;
++	vir_bytes addr;
++	long data;
++
++	uint8_t padding[40];
++} mess_lc_pm_ptrace;
++_ASSERT_MSG_SIZE(mess_lc_pm_ptrace);
++
++typedef struct {
++	int how;
++
++	uint8_t padding[52];
++} mess_lc_pm_reboot;
++_ASSERT_MSG_SIZE(mess_lc_pm_reboot);
++
++typedef struct {
++	endpoint_t who;
++	vir_bytes addr;
++
++	uint8_t padding[48];
++} mess_lc_pm_rusage;
++_ASSERT_MSG_SIZE(mess_lc_pm_rusage);
++
++typedef struct {
++	gid_t gid;
++
++	uint8_t padding[52];
++} mess_lc_pm_setgid;
++_ASSERT_MSG_SIZE(mess_lc_pm_setgid);
++
++typedef struct {
++	uid_t uid;
++
++	uint8_t padding[52];
++} mess_lc_pm_setuid;
++_ASSERT_MSG_SIZE(mess_lc_pm_setuid);
++
++typedef struct {
++	pid_t pid;
++	int nr;
++	vir_bytes act;		/* const struct sigaction * */
++	vir_bytes oact;		/* struct sigaction * */
++	vir_bytes ret;		/* int (*)(void) */
++
++	uint8_t padding[36];
++} mess_lc_pm_sig;
++_ASSERT_MSG_SIZE(mess_lc_pm_sig);
++
++typedef struct {
++	int how;
++	vir_bytes ctx;
++	sigset_t set;
++
++	uint8_t padding[32];
++} mess_lc_pm_sigset;
++_ASSERT_MSG_SIZE(mess_lc_pm_sigset);
++
++typedef struct {
++	int action;
++	int freq;
++	int intr_type;
++	vir_bytes ctl_ptr;
++	vir_bytes mem_ptr;
++	size_t mem_size;
++
++	uint8_t padding[32];
++} mess_lc_pm_sprof;
++_ASSERT_MSG_SIZE(mess_lc_pm_sprof);
++
++typedef struct {
++	int req;
++	int field;
++	size_t len;
++	vir_bytes value;
++
++	uint8_t padding[40];
++} mess_lc_pm_sysuname;
++_ASSERT_MSG_SIZE(mess_lc_pm_sysuname);
++
++typedef struct {
++	time_t sec;
++
++	clockid_t clk_id;
++	int now;
++	long nsec;
++
++	uint8_t padding[36];
++} mess_lc_pm_time;
++_ASSERT_MSG_SIZE(mess_lc_pm_time);
++
++typedef struct {
++	pid_t pid;
++	int options;
++
++	uint8_t padding[48];
++} mess_lc_pm_waitpid;
++_ASSERT_MSG_SIZE(mess_lc_pm_waitpid);
++
++typedef struct {
++	cp_grant_id_t grant;
++	vir_bytes tm;			/* struct tm * */
++	int flags;
++
++	uint8_t padding[44];
++} mess_lc_readclock_rtcdev;
++_ASSERT_MSG_SIZE(mess_lc_readclock_rtcdev);
++
++typedef struct {
++	vir_bytes name;
++	size_t len;
++	int fd;
++	uid_t owner;
++	gid_t group;
++
++	uint8_t padding[36];
++} mess_lc_vfs_chown;
++_ASSERT_MSG_SIZE(mess_lc_vfs_chown);
++
++typedef struct {
++	int fd;
++
++	uint8_t padding[52];
++} mess_lc_vfs_close;
++_ASSERT_MSG_SIZE(mess_lc_vfs_close);
++
++typedef struct {
++	vir_bytes name;
++	size_t len;
++	int flags;
++	mode_t mode;
++
++	uint8_t padding[40];
++} mess_lc_vfs_creat;
++_ASSERT_MSG_SIZE(mess_lc_vfs_creat);
++
++typedef struct {
++	int fd;
++
++	uint8_t padding[52];
++} mess_lc_vfs_fchdir;
++_ASSERT_MSG_SIZE(mess_lc_vfs_fchdir);
++
++typedef struct {
++	int fd;
++	mode_t mode;
++
++	uint8_t padding[48];
++} mess_lc_vfs_fchmod;
++_ASSERT_MSG_SIZE(mess_lc_vfs_fchmod);
++
++typedef struct {
++	int fd;
++	int cmd;
++	int arg_int;
++	vir_bytes arg_ptr;	/* struct flock * */
++
++	uint8_t padding[40];
++} mess_lc_vfs_fcntl;
++_ASSERT_MSG_SIZE(mess_lc_vfs_fcntl);
++
++typedef struct {
++	int fd;
++	vir_bytes buf;		/* struct stat * */
++
++	uint8_t padding[48];
++} mess_lc_vfs_fstat;
++_ASSERT_MSG_SIZE(mess_lc_vfs_fstat);
++
++typedef struct {
++	int fd;
++
++	uint8_t padding[52];
++} mess_lc_vfs_fsync;
++_ASSERT_MSG_SIZE(mess_lc_vfs_fsync);
++
++typedef struct {
++	cp_grant_id_t grant;
++	int pid;
++	vir_bytes buff_p;
++	size_t buff_sz;
++
++	uint8_t padding[40];
++} mess_lc_vfs_gcov;
++_ASSERT_MSG_SIZE(mess_lc_vfs_gcov);
++
++typedef struct {
++	int32_t flags;
++	size_t len;
++	vir_bytes buf;		/* struct statvfs */
++
++	uint8_t padding[44];
++} mess_lc_vfs_getvfsstat;
++_ASSERT_MSG_SIZE(mess_lc_vfs_getvfsstat);
++
++typedef struct {
++	int fd;
++	unsigned long req;
++	vir_bytes arg;
++
++	uint8_t padding[44];
++} mess_lc_vfs_ioctl;
++_ASSERT_MSG_SIZE(mess_lc_vfs_ioctl);
++
++typedef struct {
++	vir_bytes name1;
++	vir_bytes name2;
++	size_t len1;
++	size_t len2;
++
++	uint8_t padding[40];
++} mess_lc_vfs_link;
++_ASSERT_MSG_SIZE(mess_lc_vfs_link);
++
++typedef struct {
++	off_t offset;
++
++	int fd;
++	int whence;
++
++	uint8_t padding[40];
++} mess_lc_vfs_lseek;
++_ASSERT_MSG_SIZE(mess_lc_vfs_lseek);
++
++typedef struct {
++	dev_t device;
++
++	vir_bytes name;
++	size_t len;
++	mode_t mode;
++
++	uint8_t padding[36];
++} mess_lc_vfs_mknod;
++_ASSERT_MSG_SIZE(mess_lc_vfs_mknod);
++
++typedef struct {
++	int flags;
++	size_t devlen;
++	size_t pathlen;
++	size_t typelen;
++	size_t labellen;
++	vir_bytes dev;
++	vir_bytes path;
++	vir_bytes type;
++	vir_bytes label;
++
++	uint8_t padding[20];
++} mess_lc_vfs_mount;
++_ASSERT_MSG_SIZE(mess_lc_vfs_mount);
++
++typedef struct {
++	vir_bytes name;
++	size_t len;
++	int flags;
++	mode_t mode;
++	char buf[M_PATH_STRING_MAX];
++} mess_lc_vfs_path;
++_ASSERT_MSG_SIZE(mess_lc_vfs_path);
++
++typedef struct {
++	int fd0;
++	int fd1;
++	int flags;
++
++	uint8_t padding[44];
++} mess_lc_vfs_pipe2;
++_ASSERT_MSG_SIZE(mess_lc_vfs_pipe2);
++
++typedef struct {
++	vir_bytes name;		/* const char * */
++	size_t namelen;
++	vir_bytes buf;
++	size_t bufsize;
++
++	uint8_t padding[40];
++} mess_lc_vfs_readlink;
++_ASSERT_MSG_SIZE(mess_lc_vfs_readlink);
++
++typedef struct {
++	int fd;
++	vir_bytes buf;
++	size_t len;
++
++	uint8_t padding[44];
++} mess_lc_vfs_readwrite;
++_ASSERT_MSG_SIZE(mess_lc_vfs_readwrite);
++
++typedef struct {
++	vir_bytes addr;
++
++	uint8_t padding[52];
++} mess_lc_vfs_rusage;
++_ASSERT_MSG_SIZE(mess_lc_vfs_rusage);
++
++typedef struct {
++	uint32_t nfds;
++	fd_set *readfds;
++	fd_set *writefds;
++	fd_set *errorfds;
++	vir_bytes timeout;	/* user-provided 'struct timeval *' */
++
++	uint8_t padding[36];
++} mess_lc_vfs_select;
++_ASSERT_MSG_SIZE(mess_lc_vfs_select);
++
++typedef struct {
++	size_t len;
++	vir_bytes name;		/* const char * */
++	vir_bytes buf;		/* struct stat * */
++
++	uint8_t padding[44];
++} mess_lc_vfs_stat;
++_ASSERT_MSG_SIZE(mess_lc_vfs_stat);
++
++typedef struct {
++	int fd;
++	int flags;
++	size_t len;
++	vir_bytes name;
++	vir_bytes buf;
++
++	uint8_t padding[36];
++} mess_lc_vfs_statvfs1;
++_ASSERT_MSG_SIZE(mess_lc_vfs_statvfs1);
++
++typedef struct {
++	off_t offset;
++
++	int fd;
++	vir_bytes name;
++	size_t len;
++
++	uint8_t padding[36];
++} mess_lc_vfs_truncate;
++_ASSERT_MSG_SIZE(mess_lc_vfs_truncate);
++
++typedef struct {
++	mode_t mask;
++
++	uint8_t padding[52];
++} mess_lc_vfs_umask;
++_ASSERT_MSG_SIZE(mess_lc_vfs_umask);
++
++typedef struct {
++	vir_bytes name;
++	size_t namelen;
++	vir_bytes label;
++	size_t labellen;
++
++	uint8_t padding[40];
++} mess_lc_vfs_umount;
++_ASSERT_MSG_SIZE(mess_lc_vfs_umount);
++
++typedef struct {
++	void		*addr;
++	uint8_t		padding[52];
++} mess_lc_vm_brk;
++_ASSERT_MSG_SIZE(mess_lc_vm_brk);
++
++typedef struct {
++	endpoint_t	endpt;
++	void		*addr;
++	void		*ret_addr;
++	uint8_t		padding[44];
++} mess_lc_vm_getphys;
++_ASSERT_MSG_SIZE(mess_lc_vm_getphys);
++
++typedef struct {
++	vir_bytes addr;
++
++	uint8_t padding[52];
++} mess_lc_vm_rusage;
++_ASSERT_MSG_SIZE(mess_lc_vm_rusage);
++
++typedef struct {
++	endpoint_t	forwhom;
++	void		*addr;
++	uint8_t		padding[48];
++} mess_lc_vm_shm_unmap;
++_ASSERT_MSG_SIZE(mess_lc_vm_shm_unmap);
++
++typedef struct {
++	int status;
++	uint32_t id;		/* should be cdev_id_t */
++
++	uint8_t padding[48];
++} mess_lchardriver_vfs_reply;
++_ASSERT_MSG_SIZE(mess_lchardriver_vfs_reply);
++
++typedef struct {
++	int status;
++	int32_t minor;
++
++	uint8_t padding[48];
++} mess_lchardriver_vfs_sel1;
++_ASSERT_MSG_SIZE(mess_lchardriver_vfs_sel1);
++
++typedef struct {
++	int status;
++	int32_t minor;
++
++	uint8_t padding[48];
++} mess_lchardriver_vfs_sel2;
++_ASSERT_MSG_SIZE(mess_lchardriver_vfs_sel2);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes ptr;		/* struct exec_info * */
++
++	uint8_t padding[48];
++} mess_lexec_pm_exec_new;
++_ASSERT_MSG_SIZE(mess_lexec_pm_exec_new);
++
++typedef struct {
++	cp_grant_id_t grant;
++
++	uint8_t padding[52];
++} mess_li2cdriver_i2c_busc_i2c_exec;
++_ASSERT_MSG_SIZE(mess_li2cdriver_i2c_busc_i2c_exec);
++
++typedef struct {
++	uint16_t addr; /* FIXME: strictly speaking this is an i2c_addr_t, but
++			  to get it I would need to include
++			  sys/dev/i2c/i2c_io.h, which I am not sure is a good
++			  idea to have everywhere. */
++
++	uint8_t padding[54];
++} mess_li2cdriver_i2c_busc_i2c_reserve;
++_ASSERT_MSG_SIZE(mess_li2cdriver_i2c_busc_i2c_reserve);
++
++typedef struct {
++	int id;
++	int page;
++	int code;
++	int value;
++	int flags;
++
++	uint8_t padding[36];
++} mess_linputdriver_input_event;
++_ASSERT_MSG_SIZE(mess_linputdriver_input_event);
++
++typedef struct {
++        cp_grant_id_t gid;
++	size_t size;
++
++        uint8_t padding[48];
++} mess_lsys_fi_ctl;
++_ASSERT_MSG_SIZE(mess_lsys_fi_ctl);
++
++typedef struct {
++        int status;
++
++        uint8_t padding[52];
++} mess_lsys_fi_reply;
++_ASSERT_MSG_SIZE(mess_lsys_fi_reply);
++
++typedef struct {
++	int what;
++	vir_bytes where;
++	size_t size;
++
++	uint8_t padding[44];
++} mess_lsys_getsysinfo;
++_ASSERT_MSG_SIZE(mess_lsys_getsysinfo);
++
++typedef struct {
++	size_t size;
++	phys_bytes addr;
++	vir_bytes buf;
++
++	uint8_t padding[44];
++} mess_lsys_krn_readbios;
++_ASSERT_MSG_SIZE(mess_lsys_krn_readbios);
++
++typedef struct {
++	endpoint_t	from_to;
++	cp_grant_id_t	gid;
++	size_t		offset;
++	void		*address;
++	size_t		bytes;
++	uint8_t padding[36];
++} mess_lsys_kern_safecopy;
++_ASSERT_MSG_SIZE(mess_lsys_kern_safecopy);
++
++typedef struct {
++	uint32_t flags;
++	endpoint_t endpoint;
++	int priority;
++	int quantum;
++	int cpu;
++
++	uint8_t padding[36];
++} mess_lsys_krn_schedctl;
++_ASSERT_MSG_SIZE(mess_lsys_krn_schedctl);
++
++typedef struct {
++	endpoint_t endpoint;
++	int quantum;
++	int priority;
++	int cpu;
++
++	uint8_t padding[40];
++} mess_lsys_krn_schedule;
++_ASSERT_MSG_SIZE(mess_lsys_krn_schedule);
++
++typedef struct {
++	int how;
++
++	uint8_t padding[52];
++} mess_lsys_krn_sys_abort;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_abort);
++
++typedef struct {
++	endpoint_t endpt;
++
++	uint8_t padding[52];
++} mess_lsys_krn_sys_clear;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_clear);
++
++typedef struct {
++	endpoint_t src_endpt;
++	vir_bytes src_addr;
++	endpoint_t dst_endpt;
++	vir_bytes dst_addr;
++	phys_bytes nr_bytes;
++	int flags;
++
++	uint8_t padding[32];
++} mess_lsys_krn_sys_copy;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_copy);
++
++typedef struct {
++	endpoint_t endpt;
++	int action;
++	vir_bytes ctl_ptr;
++	vir_bytes mem_ptr;
++	size_t mem_size;
++
++	uint8_t padding[36];
++} mess_lsys_krn_sys_cprof;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_cprof);
++
++typedef struct {
++	int request;
++	int port;
++	uint32_t value;
++
++	uint8_t padding[44];
++} mess_lsys_krn_sys_devio;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_devio);
++
++typedef struct {
++	int code;
++	vir_bytes buf;
++	int len;
++	endpoint_t endpt;
++
++	uint8_t padding[40];
++} mess_lsys_krn_sys_diagctl;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_diagctl);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes ip;
++	vir_bytes stack;
++	vir_bytes name;
++	vir_bytes ps_str;
++
++	uint8_t padding[36];
++} mess_lsys_krn_sys_exec;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_exec);
++
++typedef struct {
++	endpoint_t endpt;
++	endpoint_t slot;
++	uint32_t flags;
++
++	uint8_t padding[44];
++} mess_lsys_krn_sys_fork;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_fork);
++
++typedef struct {
++	int request;
++	endpoint_t endpt;
++	vir_bytes val_ptr;
++	int val_len;
++	vir_bytes val_ptr2;
++	int val_len2_e;
++
++	uint8_t padding[32];
++} mess_lsys_krn_sys_getinfo;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_getinfo);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes ctx_ptr;
++
++	uint8_t padding[48];
++} mess_lsys_krn_sys_getmcontext;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_getmcontext);
++
++typedef struct {
++	endpoint_t endpt;
++
++	uint8_t padding[52];
++} mess_lsys_krn_sys_iopenable;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_iopenable);
++
++typedef struct {
++	int request;
++	int vector;
++	int policy;
++	int hook_id;
++
++	uint8_t padding[40];
++} mess_lsys_krn_sys_irqctl;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_irqctl);
++
++typedef struct {
++	phys_bytes base;
++	phys_bytes count;
++	unsigned long pattern;
++	endpoint_t process;
++
++	uint8_t padding[40];
++} mess_lsys_krn_sys_memset;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_memset);
++
++typedef struct {
++	int request;
++	endpoint_t endpt;
++	vir_bytes arg_ptr;
++	phys_bytes phys_start;
++	phys_bytes phys_len;
++
++	uint8_t padding[36];
++} mess_lsys_krn_sys_privctl;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_privctl);
++
++typedef struct {
++	vir_bytes ctl_ptr;
++	vir_bytes mem_ptr;
++
++	uint8_t padding[48];
++} mess_lsys_krn_sys_profbuf;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_profbuf);
++
++typedef struct {
++	int request;
++	long int port;
++	endpoint_t vec_endpt;
++	phys_bytes vec_addr;
++	vir_bytes vec_size;
++	vir_bytes offset;
++
++	uint8_t padding[32];
++} mess_lsys_krn_sys_sdevio;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_sdevio);
++
++typedef struct {
++	clock_t exp_time;
++	clock_t time_left;
++	int abs_time;
++
++	uint8_t padding[44];
++} mess_lsys_krn_sys_setalarm;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_setalarm);
++
++typedef struct {
++	vir_bytes addr;			/* cp_grant_t * */
++	int size;
++
++	uint8_t padding[48];
++} mess_lsys_krn_sys_setgrant;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_setgrant);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes ctx_ptr;
++
++	uint8_t padding[48];
++} mess_lsys_krn_sys_setmcontext;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_setmcontext);
++
++typedef struct {
++	time_t sec;		/* time in seconds since 1970 */
++	long int nsec;
++	int now;		/* non-zero for immediate, 0 for adjtime */
++	clockid_t clock_id;
++
++	uint8_t padding[36];
++} mess_lsys_krn_sys_settime;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_settime);
++
++typedef struct {
++	int action;
++	int freq;
++	int intr_type;
++	endpoint_t endpt;
++	vir_bytes ctl_ptr;
++	vir_bytes mem_ptr;
++	size_t mem_size;
++
++	uint8_t padding[28];
++} mess_lsys_krn_sys_sprof;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_sprof);
++
++typedef struct {
++	int request;
++
++	uint8_t padding[52];
++} mess_lsys_krn_sys_statectl;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_statectl);
++
++typedef struct {
++	time_t boot_time;
++
++	uint8_t padding[48];
++} mess_lsys_krn_sys_stime;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_stime);
++
++typedef struct {
++	endpoint_t endpt;
++
++	uint8_t padding[52];
++} mess_lsys_krn_sys_times;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_times);
++
++typedef struct {
++	int request;
++	endpoint_t endpt;
++	vir_bytes address;
++	long int data;
++
++	uint8_t padding[40];
++} mess_lsys_krn_sys_trace;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_trace);
++
++typedef struct {
++	endpoint_t src_endpt;
++	int segment;
++	vir_bytes src_addr;
++	endpoint_t dst_endpt;
++	int nr_bytes;
++
++	uint8_t padding[36];
++} mess_lsys_krn_sys_umap;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_umap);
++
++
++typedef struct {
++	int request;
++	int vec_size;
++	vir_bytes vec_addr;		/* pv{b,w,l}_pair_t * */
++
++	uint8_t padding[44];
++} mess_lsys_krn_sys_vdevio;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_vdevio);
++
++typedef struct {
++	endpoint_t endpt;
++	vir_bytes vaddr;			/* struct vumap_vir * */
++	int vcount;
++	vir_bytes paddr;			/* struct vumap_phys * */
++	int pmax;
++	int access;
++	size_t offset;
++
++	uint8_t padding[28];
++} mess_lsys_krn_sys_vumap;
++_ASSERT_MSG_SIZE(mess_lsys_krn_sys_vumap);
++
++typedef struct {
++	void		*vec_addr;
++	int		vec_size;
++	uint8_t padding[48];
++} mess_lsys_kern_vsafecopy;
++_ASSERT_MSG_SIZE(mess_lsys_kern_vsafecopy);
++
++typedef struct {
++	int devind;
++	int port;
++
++	uint8_t padding[48];
++} mess_lsys_pci_busc_get_bar;
++_ASSERT_MSG_SIZE(mess_lsys_pci_busc_get_bar);
++
++typedef struct {
++	endpoint_t endpt;
++
++	uint8_t padding[52];
++} mess_lsys_pm_getepinfo;
++_ASSERT_MSG_SIZE(mess_lsys_pm_getepinfo);
++
++typedef struct {
++	pid_t pid;
++
++	uint8_t padding[52];
++} mess_lsys_pm_getprocnr;
++_ASSERT_MSG_SIZE(mess_lsys_pm_getprocnr);
++
++typedef struct {
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t padding[48];
++} mess_lsys_pm_srv_fork;
++_ASSERT_MSG_SIZE(mess_lsys_pm_srv_fork);
++
++typedef struct {
++	endpoint_t endpoint;
++	endpoint_t parent;
++	int maxprio;
++	int quantum;
++
++	uint8_t padding[40];
++} mess_lsys_sched_scheduling_start;
++_ASSERT_MSG_SIZE(mess_lsys_sched_scheduling_start);
++
++typedef struct {
++	endpoint_t endpoint;
++
++	uint8_t padding[52];
++} mess_lsys_sched_scheduling_stop;
++_ASSERT_MSG_SIZE(mess_lsys_sched_scheduling_stop);
++
++typedef struct {
++	int request;
++	vir_bytes arg;
++
++	uint8_t padding[48];
++} mess_lsys_svrctl;
++_ASSERT_MSG_SIZE(mess_lsys_svrctl);
++
++typedef struct {
++	int request;
++	int fkeys;
++	int sfkeys;
++
++	uint8_t padding[44];
++} mess_lsys_tty_fkey_ctl;
++_ASSERT_MSG_SIZE(mess_lsys_tty_fkey_ctl);
++
++typedef struct {
++	endpoint_t endpt;
++	cp_grant_id_t grant;
++	size_t count;
++
++	uint8_t padding[44];
++} mess_lsys_vfs_checkperms;
++_ASSERT_MSG_SIZE(mess_lsys_vfs_checkperms);
++
++typedef struct {
++	endpoint_t endpt;
++	int fd;
++	int what;
++
++	uint8_t padding[44];
++} mess_lsys_vfs_copyfd;
++_ASSERT_MSG_SIZE(mess_lsys_vfs_copyfd);
++
++typedef struct {
++	devmajor_t major;
++	size_t labellen;
++	vir_bytes label;
++
++	uint8_t padding[44];
++} mess_lsys_vfs_mapdriver;
++_ASSERT_MSG_SIZE(mess_lsys_vfs_mapdriver);
++
++typedef struct {
++	endpoint_t	endpt;
++	void		*addr;
++	int		retc;
++	uint8_t		padding[44];
++} mess_lsys_vm_getref;
++_ASSERT_MSG_SIZE(mess_lsys_vm_getref);
++
++typedef struct {
++	int		what;
++	endpoint_t	ep;
++	int		count;
++	void		*ptr;
++	vir_bytes	next;
++	uint8_t		padding[36];
++} mess_lsys_vm_info;
++_ASSERT_MSG_SIZE(mess_lsys_vm_info);
++
++typedef struct {
++	endpoint_t	ep;
++	phys_bytes	phaddr;
++	size_t		len;
++	void		*reply;
++	uint8_t		padding[40];
++} mess_lsys_vm_map_phys;
++_ASSERT_MSG_SIZE(mess_lsys_vm_map_phys);
++
++typedef struct {
++	endpoint_t	ret_pt;
++	int		is_more;
++	uint8_t		padding[48];
++} mess_lsys_vm_query_exit;
++_ASSERT_MSG_SIZE(mess_lsys_vm_query_exit);
++
++typedef struct {
++	endpoint_t	ep;
++	void		*vaddr;
++	uint8_t		padding[48];
++} mess_lsys_vm_unmap_phys;
++_ASSERT_MSG_SIZE(mess_lsys_vm_unmap_phys);
++
++typedef struct {
++	endpoint_t src;
++	endpoint_t dst;
++	uint8_t		padding[48];
++} mess_lsys_vm_update;
++_ASSERT_MSG_SIZE(mess_lsys_vm_update);
++
++typedef struct {
++	endpoint_t	destination;
++	endpoint_t	source;
++	void		*dest_addr;
++	void		*src_addr;
++	size_t		size;
++	void		*ret_addr;
++	uint8_t		padding[32];
++} mess_lsys_vm_vmremap;
++_ASSERT_MSG_SIZE(mess_lsys_vm_vmremap);
++
++typedef struct {
++	endpoint_t	ep;
++	uint8_t		padding[52];
++} mess_lsys_vm_watch_exit;
++_ASSERT_MSG_SIZE(mess_lsys_vm_watch_exit);
++
++typedef struct {
++	off_t offset;
++	void *addr;
++	size_t len;
++	int prot;
++	int flags;
++	int fd;
++	endpoint_t forwhom;
++	void *retaddr;
++	u32_t padding[5];
++} mess_mmap;
++_ASSERT_MSG_SIZE(mess_mmap);
++
++typedef struct {
++	int mode;
++
++	uint8_t padding[52];
++} mess_net_netdrv_dl_conf;
++_ASSERT_MSG_SIZE(mess_net_netdrv_dl_conf);
++
++typedef struct {
++	cp_grant_id_t grant;
++
++	uint8_t padding[52];
++} mess_net_netdrv_dl_getstat_s;
++_ASSERT_MSG_SIZE(mess_net_netdrv_dl_getstat_s);
++
++typedef struct {
++	cp_grant_id_t grant;
++	int count;
++
++	uint8_t padding[48];
++} mess_net_netdrv_dl_readv_s;
++_ASSERT_MSG_SIZE(mess_net_netdrv_dl_readv_s);
++
++typedef struct {
++	cp_grant_id_t grant;
++	int count;
++
++	uint8_t padding[48];
++} mess_net_netdrv_dl_writev_s;
++_ASSERT_MSG_SIZE(mess_net_netdrv_dl_writev_s);
++
++typedef struct {
++	int stat;
++	uint8_t hw_addr[6];
++
++	uint8_t padding[46];
++} mess_netdrv_net_dl_conf;
++_ASSERT_MSG_SIZE(mess_netdrv_net_dl_conf);
++
++typedef struct {
++	int count;
++	uint32_t flags;
++
++	uint8_t padding[48];
++} mess_netdrv_net_dl_task;
++_ASSERT_MSG_SIZE(mess_netdrv_net_dl_task);
++
++typedef struct {
++	u64_t timestamp;	/* valid for every notify msg */
++	u64_t interrupts;	/* raised interrupts; valid if from HARDWARE */
++	sigset_t sigset;	/* raised signals; valid if from SYSTEM */
++	uint8_t padding[24];
++} mess_notify;
++_ASSERT_MSG_SIZE(mess_notify);
++
++typedef struct {
++	int base;
++	size_t size;
++	uint32_t flags;
++
++	uint8_t padding[44];
++} mess_pci_lsys_busc_get_bar;
++_ASSERT_MSG_SIZE(mess_pci_lsys_busc_get_bar);
++
++typedef struct {
++	uid_t egid;
++
++	uint8_t padding[52];
++} mess_pm_lc_getgid;
++_ASSERT_MSG_SIZE(mess_pm_lc_getgid);
++
++typedef struct {
++	pid_t parent_pid;
++
++	uint8_t padding[52];
++} mess_pm_lc_getpid;
++_ASSERT_MSG_SIZE(mess_pm_lc_getpid);
++
++typedef struct {
++	uid_t euid;
++
++	uint8_t padding[52];
++} mess_pm_lc_getuid;
++_ASSERT_MSG_SIZE(mess_pm_lc_getuid);
++
++typedef struct {
++	long data;
++
++	uint8_t padding[52];
++} mess_pm_lc_ptrace;
++_ASSERT_MSG_SIZE(mess_pm_lc_ptrace);
++
++typedef struct {
++	sigset_t set;
++
++	uint8_t padding[40];
++} mess_pm_lc_sigset;
++_ASSERT_MSG_SIZE(mess_pm_lc_sigset);
++
++typedef struct {
++	time_t sec;
++
++	long nsec;
++
++	uint8_t padding[44];
++} mess_pm_lc_time;
++_ASSERT_MSG_SIZE(mess_pm_lc_time);
++
++typedef struct {
++	int status;
++
++	uint8_t padding[52];
++} mess_pm_lc_waitpid;
++_ASSERT_MSG_SIZE(mess_pm_lc_waitpid);
++
++typedef struct {
++	int suid;
++
++	uint8_t padding[52];
++} mess_pm_lexec_exec_new;
++_ASSERT_MSG_SIZE(mess_pm_lexec_exec_new);
++
++typedef struct {
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t padding[48];
++} mess_pm_lsys_getepinfo;
++_ASSERT_MSG_SIZE(mess_pm_lsys_getepinfo);
++
++typedef struct {
++	endpoint_t endpt;
++
++	uint8_t padding[52];
++} mess_pm_lsys_getprocnr;
++_ASSERT_MSG_SIZE(mess_pm_lsys_getprocnr);
++
++typedef struct {
++	int num;
++
++	uint8_t padding[52];
++} mess_pm_lsys_sigs_signal;
++_ASSERT_MSG_SIZE(mess_pm_lsys_sigs_signal);
++
++typedef struct {
++	endpoint_t endpoint;
++	uint32_t maxprio;
++
++	uint8_t padding[48];
++} mess_pm_sched_scheduling_set_nice;
++_ASSERT_MSG_SIZE(mess_pm_sched_scheduling_set_nice);
++
++typedef struct {
++	int status;
++
++	uint8_t padding[52];
++} mess_readclock_lc_rtcdev;
++_ASSERT_MSG_SIZE(mess_readclock_lc_rtcdev);
++
++typedef struct {
++	int		result;
++	int		type;
++	cp_grant_id_t	rproctab_gid;
++	endpoint_t	old_endpoint;
++	uint8_t padding[40];
++} mess_rs_init;
++_ASSERT_MSG_SIZE(mess_rs_init);
++
++typedef struct {
++	endpoint_t endpt;
++	int result;
++	vir_bytes pc;
++	vir_bytes ps_str;
++
++	uint8_t padding[40];
++} mess_rs_pm_exec_restart;
++_ASSERT_MSG_SIZE(mess_rs_pm_exec_restart);
++
++typedef struct {
++	pid_t pid;
++	int nr;
++
++	uint8_t padding[48];
++} mess_rs_pm_srv_kill;
++_ASSERT_MSG_SIZE(mess_rs_pm_srv_kill);
++
++typedef struct {
++	int		len;
++	int		name_len;
++	endpoint_t	endpoint;
++	void		*addr;
++	const char	*name;
++	uint8_t padding[36];
++} mess_rs_req;
++_ASSERT_MSG_SIZE(mess_rs_req);
++
++typedef struct {
++	int		result;
++	int		state;
++	int		prepare_maxtime;
++	uint8_t padding[44];
++} mess_rs_update;
++_ASSERT_MSG_SIZE(mess_rs_update);
++
++typedef struct {
++	endpoint_t scheduler;
++
++	uint8_t padding[52];
++} mess_sched_lsys_scheduling_start;
++_ASSERT_MSG_SIZE(mess_sched_lsys_scheduling_start);
++
++/* For SYS_GETKSIG, _ENDKSIG, _KILL, _SIGSEND, _SIGRETURN. */
++typedef struct {
++	sigset_t map;		/* used to pass signal bit map */
++	endpoint_t endpt;	/* process number for inform */
++	int sig;		/* signal number to send */
++	void *sigctx;		/* pointer to signal context */
++	uint8_t padding[28];
++} mess_sigcalls;
++_ASSERT_MSG_SIZE(mess_sigcalls);
++
++typedef struct {
++	int fkeys;
++	int sfkeys;
++
++	uint8_t padding[48];
++} mess_tty_lsys_fkey_ctl;
++_ASSERT_MSG_SIZE(mess_tty_lsys_fkey_ctl);
++
++typedef struct {
++	dev_t device;
++	off_t seek_pos;
++
++	cp_grant_id_t grant;
++	size_t nbytes;
++
++	uint8_t data[32];
++} mess_vfs_fs_breadwrite;
++_ASSERT_MSG_SIZE(mess_vfs_fs_breadwrite);
++
++typedef struct {
++	ino_t inode;
++
++	mode_t mode;
++
++	uint8_t data[44];
++} mess_vfs_fs_chmod;
++_ASSERT_MSG_SIZE(mess_vfs_fs_chmod);
++
++typedef struct {
++	ino_t inode;
++
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[40];
++} mess_vfs_fs_chown;
++_ASSERT_MSG_SIZE(mess_vfs_fs_chown);
++
++typedef struct {
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[28];
++} mess_vfs_fs_create;
++_ASSERT_MSG_SIZE(mess_vfs_fs_create);
++
++typedef struct {
++	dev_t device;
++
++	uint8_t data[48];
++} mess_vfs_fs_flush;
++_ASSERT_MSG_SIZE(mess_vfs_fs_flush);
++
++typedef struct {
++	ino_t inode;
++	off_t trc_start;
++	off_t trc_end;
++
++	uint8_t data[32];
++} mess_vfs_fs_ftrunc;
++_ASSERT_MSG_SIZE(mess_vfs_fs_ftrunc);
++
++typedef struct {
++	ino_t inode;
++	off_t seek_pos;
++
++	cp_grant_id_t grant;
++	size_t mem_size;
++
++	uint8_t data[32];
++} mess_vfs_fs_getdents;
++_ASSERT_MSG_SIZE(mess_vfs_fs_getdents);
++
++typedef struct {
++	ino_t inode;
++
++	uint8_t data[48];
++} mess_vfs_fs_inhibread;
++_ASSERT_MSG_SIZE(mess_vfs_fs_inhibread);
++
++typedef struct {
++	ino_t inode;
++	ino_t dir_ino;
++
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[32];
++} mess_vfs_fs_link;
++_ASSERT_MSG_SIZE(mess_vfs_fs_link);
++
++typedef struct {
++	ino_t dir_ino;
++	ino_t root_ino;
++
++	uint32_t flags;
++	size_t path_len;
++	size_t path_size;
++	size_t ucred_size;
++	cp_grant_id_t grant_path;
++	cp_grant_id_t grant_ucred;
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[8];
++} mess_vfs_fs_lookup;
++_ASSERT_MSG_SIZE(mess_vfs_fs_lookup);
++
++typedef struct {
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[28];
++} mess_vfs_fs_mkdir;
++_ASSERT_MSG_SIZE(mess_vfs_fs_mkdir);
++
++typedef struct {
++	dev_t device;
++	ino_t inode;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[20];
++} mess_vfs_fs_mknod;
++_ASSERT_MSG_SIZE(mess_vfs_fs_mknod);
++
++typedef struct {
++	ino_t inode;
++
++	uint8_t data[48];
++} mess_vfs_fs_mountpoint;
++_ASSERT_MSG_SIZE(mess_vfs_fs_mountpoint);
++
++typedef struct {
++	dev_t device;
++
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[40];
++} mess_vfs_fs_new_driver;
++_ASSERT_MSG_SIZE(mess_vfs_fs_new_driver);
++
++typedef struct {
++	dev_t device;
++
++	mode_t mode;
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[36];
++} mess_vfs_fs_newnode;
++_ASSERT_MSG_SIZE(mess_vfs_fs_newnode);
++
++typedef struct {
++	uint64_t count;
++	ino_t inode;
++
++	uint8_t data[40];
++} mess_vfs_fs_putnode;
++_ASSERT_MSG_SIZE(mess_vfs_fs_putnode);
++
++typedef struct {
++	ino_t inode;
++
++	cp_grant_id_t grant;
++	size_t mem_size;
++
++	uint8_t data[40];
++} mess_vfs_fs_rdlink;
++_ASSERT_MSG_SIZE(mess_vfs_fs_rdlink);
++
++typedef struct {
++	dev_t device;
++
++	uint32_t flags;
++	size_t path_len;
++	cp_grant_id_t grant;
++
++	uint8_t data[36];
++} mess_vfs_fs_readsuper;
++_ASSERT_MSG_SIZE(mess_vfs_fs_readsuper);
++
++typedef struct {
++	ino_t inode;
++	off_t seek_pos;
++
++	cp_grant_id_t grant;
++	size_t nbytes;
++
++	uint8_t data[32];
++} mess_vfs_fs_readwrite;
++_ASSERT_MSG_SIZE(mess_vfs_fs_readwrite);
++
++typedef struct {
++	ino_t dir_old;
++	ino_t dir_new;
++
++	size_t len_old;
++	size_t len_new;
++	cp_grant_id_t grant_old;
++	cp_grant_id_t grant_new;
++
++	uint8_t data[24];
++} mess_vfs_fs_rename;
++_ASSERT_MSG_SIZE(mess_vfs_fs_rename);
++
++typedef struct {
++	ino_t inode;
++
++	size_t path_len;
++	size_t mem_size;
++	cp_grant_id_t grant_path;
++	cp_grant_id_t grant_target;
++	uid_t uid;
++	gid_t gid;
++
++	uint8_t data[24];
++} mess_vfs_fs_slink;
++_ASSERT_MSG_SIZE(mess_vfs_fs_slink);
++
++typedef struct {
++	ino_t inode;
++
++	cp_grant_id_t grant;
++
++	uint8_t data[44];
++} mess_vfs_fs_stat;
++_ASSERT_MSG_SIZE(mess_vfs_fs_stat);
++
++typedef struct {
++	cp_grant_id_t grant;
++
++	uint8_t data[52];
++} mess_vfs_fs_statvfs;
++_ASSERT_MSG_SIZE(mess_vfs_fs_statvfs);
++
++typedef struct {
++	ino_t inode;
++
++	cp_grant_id_t grant;
++	size_t path_len;
++
++	uint8_t data[40];
++} mess_vfs_fs_unlink;
++_ASSERT_MSG_SIZE(mess_vfs_fs_unlink);
++
++typedef struct {
++	ino_t inode;
++	time_t actime;
++	time_t modtime;
++
++	uint32_t acnsec;
++	uint32_t modnsec;
++
++	uint8_t data[24];
++} mess_vfs_fs_utime;
++_ASSERT_MSG_SIZE(mess_vfs_fs_utime);
++
++typedef struct {
++	off_t offset;
++
++	uint8_t padding[48];
++} mess_vfs_lc_lseek;
++_ASSERT_MSG_SIZE(mess_vfs_lc_lseek);
++
++typedef struct {
++	endpoint_t id;
++	devminor_t minor;
++
++	uint8_t padding[48];
++} mess_vfs_lchardriver_cancel;
++_ASSERT_MSG_SIZE(mess_vfs_lchardriver_cancel);
++
++typedef struct {
++	endpoint_t id;
++	endpoint_t user;
++	devminor_t minor;
++	int access;
++
++	uint8_t padding[40];
++} mess_vfs_lchardriver_openclose;
++_ASSERT_MSG_SIZE(mess_vfs_lchardriver_openclose);
++
++typedef struct {
++	off_t pos;
++	cp_grant_id_t grant;
++	size_t count;
++	int request;
++	int flags;
++	endpoint_t id;
++	endpoint_t user;
++	devminor_t minor;
++
++	uint8_t padding[20];
++} mess_vfs_lchardriver_readwrite;
++_ASSERT_MSG_SIZE(mess_vfs_lchardriver_readwrite);
++
++typedef struct {
++	devminor_t minor;
++	int ops;
++
++	uint8_t padding[48];
++} mess_vfs_lchardriver_select;
++_ASSERT_MSG_SIZE(mess_vfs_lchardriver_select);
++
++typedef struct {
++	time_t atime;
++	time_t mtime;
++	long ansec;
++	long mnsec;
++	size_t len;
++	char *name;
++	int fd;
++	int flags;
++	uint8_t padding[16];
++} mess_vfs_utimens;
++_ASSERT_MSG_SIZE(mess_vfs_utimens);
++
++typedef struct {
++	off_t offset;
++	dev_t dev;
++	ino_t ino;
++	endpoint_t who;
++	u32_t vaddr;
++	u32_t len;
++	u32_t flags;
++	u32_t fd;
++	u16_t clearend;
++	uint8_t padding[8];
++} mess_vm_vfs_mmap;
++_ASSERT_MSG_SIZE(mess_vm_vfs_mmap);
++
++typedef struct {
++	dev_t dev;	/* 64bits long. */
++	off_t dev_offset;
++	off_t ino_offset;
++	ino_t ino;
++	void *block;
++	u32_t *flags_ptr;
++	u8_t pages;
++	u8_t flags;
++	uint8_t padding[12];
++} mess_vmmcp;
++_ASSERT_MSG_SIZE(mess_vmmcp);
++
++typedef struct {
++	void *addr;
++	u8_t flags;
++	uint8_t padding[51];
++} mess_vmmcp_reply;
++_ASSERT_MSG_SIZE(mess_vmmcp_reply);
++
++typedef struct {
++	endpoint_t m_source;		/* who sent the message */
++	int m_type;			/* what kind of message is it */
++	union {
++		mess_u8			m_u8;
++		mess_u16		m_u16;
++		mess_u32		m_u32;
++		mess_u64		m_u64;
++
++		mess_1			m_m1;
++		mess_2			m_m2;
++		mess_3			m_m3;
++		mess_4			m_m4;
++		mess_7			m_m7;
++		mess_9			m_m9;
++		mess_10			m_m10;
++
++		mess_ds_reply		m_ds_reply;
++		mess_ds_req		m_ds_req;
++		mess_fs_vfs_breadwrite	m_fs_vfs_breadwrite;
++		mess_fs_vfs_chmod	m_fs_vfs_chmod;
++		mess_fs_vfs_chown	m_fs_vfs_chown;
++		mess_fs_vfs_create	m_fs_vfs_create;
++		mess_fs_vfs_getdents	m_fs_vfs_getdents;
++		mess_fs_vfs_lookup	m_fs_vfs_lookup;
++		mess_fs_vfs_newnode	m_fs_vfs_newnode;
++		mess_fs_vfs_rdlink	m_fs_vfs_rdlink;
++		mess_fs_vfs_readsuper	m_fs_vfs_readsuper;
++		mess_fs_vfs_readwrite	m_fs_vfs_readwrite;
++		mess_i2c_li2cdriver_busc_i2c_exec m_i2c_li2cdriver_busc_i2c_exec;
++		mess_i2c_li2cdriver_busc_i2c_reserve m_i2c_li2cdriver_busc_i2c_reserve;
++		mess_input_linputdriver_input_conf m_input_linputdriver_input_conf;
++		mess_input_linputdriver_setleds m_input_linputdriver_setleds;
++		mess_input_tty_event	m_input_tty_event;
++		mess_krn_lsys_schedule	m_krn_lsys_schedule;
++		mess_krn_lsys_sys_devio m_krn_lsys_sys_devio;
++		mess_krn_lsys_sys_fork m_krn_lsys_sys_fork;
++		mess_krn_lsys_sys_getwhoami m_krn_lsys_sys_getwhoami;
++		mess_krn_lsys_sys_irqctl m_krn_lsys_sys_irqctl;
++		mess_krn_lsys_sys_times	m_krn_lsys_sys_times;
++		mess_krn_lsys_sys_trace	m_krn_lsys_sys_trace;
++		mess_krn_lsys_sys_umap	m_krn_lsys_sys_umap;
++		mess_krn_lsys_sys_vumap	m_krn_lsys_sys_vumap;
++		mess_lbdev_lblockdriver_msg m_lbdev_lblockdriver_msg;
++		mess_lblockdriver_lbdev_reply m_lblockdriver_lbdev_reply;
++		mess_lc_ipc_semctl	m_lc_ipc_semctl;
++		mess_lc_ipc_semget	m_lc_ipc_semget;
++		mess_lc_ipc_semop	m_lc_ipc_semop;
++		mess_lc_ipc_shmat	m_lc_ipc_shmat;
++		mess_lc_ipc_shmctl	m_lc_ipc_shmctl;
++		mess_lc_ipc_shmdt	m_lc_ipc_shmdt;
++		mess_lc_ipc_shmget	m_lc_ipc_shmget;
++		mess_lc_pm_cprof	m_lc_pm_cprof;
++		mess_lc_pm_exec		m_lc_pm_exec;
++		mess_lc_pm_exit		m_lc_pm_exit;
++		mess_lc_pm_getsid	m_lc_pm_getsid;
++		mess_lc_pm_groups	m_lc_pm_groups;
++		mess_lc_pm_itimer	m_lc_pm_itimer;
++		mess_lc_pm_mcontext	m_lc_pm_mcontext;
++		mess_lc_pm_priority	m_lc_pm_priority;
++		mess_lc_pm_ptrace	m_lc_pm_ptrace;
++		mess_lc_pm_reboot	m_lc_pm_reboot;
++		mess_lc_pm_rusage	m_lc_pm_rusage;
++		mess_lc_pm_setgid	m_lc_pm_setgid;
++		mess_lc_pm_setuid	m_lc_pm_setuid;
++		mess_lc_pm_sig		m_lc_pm_sig;
++		mess_lc_pm_sigset	m_lc_pm_sigset;
++		mess_lc_pm_sprof	m_lc_pm_sprof;
++		mess_lc_pm_sysuname	m_lc_pm_sysuname;
++		mess_lc_pm_time		m_lc_pm_time;
++		mess_lc_pm_waitpid	m_lc_pm_waitpid;
++		mess_lc_readclock_rtcdev m_lc_readclock_rtcdev;
++		mess_lc_vfs_chown	m_lc_vfs_chown;
++		mess_lc_vfs_close	m_lc_vfs_close;
++		mess_lc_vfs_creat	m_lc_vfs_creat;
++		mess_lc_vfs_fchdir	m_lc_vfs_fchdir;
++		mess_lc_vfs_fchmod	m_lc_vfs_fchmod;
++		mess_lc_vfs_fcntl	m_lc_vfs_fcntl;
++		mess_lc_vfs_fstat	m_lc_vfs_fstat;
++		mess_lc_vfs_fsync	m_lc_vfs_fsync;
++		mess_lc_vfs_gcov	m_lc_vfs_gcov;
++		mess_lc_vfs_getvfsstat	m_lc_vfs_getvfsstat;
++		mess_lc_vfs_ioctl	m_lc_vfs_ioctl;
++		mess_lc_vfs_link	m_lc_vfs_link;
++		mess_lc_vfs_lseek	m_lc_vfs_lseek;
++		mess_lc_vfs_mknod	m_lc_vfs_mknod;
++		mess_lc_vfs_mount	m_lc_vfs_mount;
++		mess_lc_vfs_path	m_lc_vfs_path;
++		mess_lc_vfs_pipe2	m_lc_vfs_pipe2;
++		mess_lc_vfs_readlink	m_lc_vfs_readlink;
++		mess_lc_vfs_readwrite	m_lc_vfs_readwrite;
++		mess_lc_vfs_rusage	m_lc_vfs_rusage;
++		mess_lc_vfs_select	m_lc_vfs_select;
++		mess_lc_vfs_stat	m_lc_vfs_stat;
++		mess_lc_vfs_statvfs1	m_lc_vfs_statvfs1;
++		mess_lc_vfs_truncate	m_lc_vfs_truncate;
++		mess_lc_vfs_umask	m_lc_vfs_umask;
++		mess_lc_vfs_umount	m_lc_vfs_umount;
++		mess_lc_vm_brk		m_lc_vm_brk;
++		mess_lc_vm_getphys	m_lc_vm_getphys;
++		mess_lc_vm_rusage	m_lc_vm_rusage;
++		mess_lc_vm_shm_unmap	m_lc_vm_shm_unmap;
++		mess_lchardriver_vfs_reply m_lchardriver_vfs_reply;
++		mess_lchardriver_vfs_sel1 m_lchardriver_vfs_sel1;
++		mess_lchardriver_vfs_sel2 m_lchardriver_vfs_sel2;
++		mess_lexec_pm_exec_new	m_lexec_pm_exec_new;
++		mess_li2cdriver_i2c_busc_i2c_exec m_li2cdriver_i2c_busc_i2c_exec;
++		mess_li2cdriver_i2c_busc_i2c_reserve m_li2cdriver_i2c_busc_i2c_reserve;
++		mess_linputdriver_input_event m_linputdriver_input_event;
++		mess_lsys_fi_ctl	m_lsys_fi_ctl;
++		mess_lsys_fi_reply	m_lsys_fi_reply;
++		mess_lsys_getsysinfo	m_lsys_getsysinfo;
++		mess_lsys_krn_readbios	m_lsys_krn_readbios;
++		mess_lsys_kern_safecopy	m_lsys_kern_safecopy;
++		mess_lsys_krn_schedctl	m_lsys_krn_schedctl;
++		mess_lsys_krn_schedule	m_lsys_krn_schedule;
++		mess_lsys_krn_sys_abort m_lsys_krn_sys_abort;
++		mess_lsys_krn_sys_clear m_lsys_krn_sys_clear;
++		mess_lsys_krn_sys_copy	m_lsys_krn_sys_copy;
++		mess_lsys_krn_sys_cprof m_lsys_krn_sys_cprof;
++		mess_lsys_krn_sys_devio m_lsys_krn_sys_devio;
++		mess_lsys_krn_sys_diagctl m_lsys_krn_sys_diagctl;
++		mess_lsys_krn_sys_exec	m_lsys_krn_sys_exec;
++		mess_lsys_krn_sys_fork	m_lsys_krn_sys_fork;
++		mess_lsys_krn_sys_getinfo m_lsys_krn_sys_getinfo;
++		mess_lsys_krn_sys_getmcontext m_lsys_krn_sys_getmcontext;
++		mess_lsys_krn_sys_iopenable m_lsys_krn_sys_iopenable;
++		mess_lsys_krn_sys_irqctl m_lsys_krn_sys_irqctl;
++		mess_lsys_krn_sys_memset m_lsys_krn_sys_memset;
++		mess_lsys_krn_sys_privctl m_lsys_krn_sys_privctl;
++		mess_lsys_krn_sys_profbuf m_lsys_krn_sys_profbuf;
++		mess_lsys_krn_sys_sdevio m_lsys_krn_sys_sdevio;
++		mess_lsys_krn_sys_setalarm m_lsys_krn_sys_setalarm;
++		mess_lsys_krn_sys_setgrant m_lsys_krn_sys_setgrant;
++		mess_lsys_krn_sys_setmcontext m_lsys_krn_sys_setmcontext;
++		mess_lsys_krn_sys_settime m_lsys_krn_sys_settime;
++		mess_lsys_krn_sys_sprof m_lsys_krn_sys_sprof;
++		mess_lsys_krn_sys_statectl m_lsys_krn_sys_statectl;
++		mess_lsys_krn_sys_stime	m_lsys_krn_sys_stime;
++		mess_lsys_krn_sys_times	m_lsys_krn_sys_times;
++		mess_lsys_krn_sys_trace	m_lsys_krn_sys_trace;
++		mess_lsys_krn_sys_umap	m_lsys_krn_sys_umap;
++		mess_lsys_krn_sys_vdevio m_lsys_krn_sys_vdevio;
++		mess_lsys_krn_sys_vumap m_lsys_krn_sys_vumap;
++		mess_lsys_kern_vsafecopy m_lsys_kern_vsafecopy;
++		mess_lsys_pci_busc_get_bar m_lsys_pci_busc_get_bar;
++		mess_lsys_pm_getepinfo	m_lsys_pm_getepinfo;
++		mess_lsys_pm_getprocnr	m_lsys_pm_getprocnr;
++		mess_lsys_pm_srv_fork	m_lsys_pm_srv_fork;
++		mess_lsys_sched_scheduling_start m_lsys_sched_scheduling_start;
++		mess_lsys_sched_scheduling_stop m_lsys_sched_scheduling_stop;
++		mess_lsys_svrctl	m_lsys_svrctl;
++		mess_lsys_tty_fkey_ctl	m_lsys_tty_fkey_ctl;
++		mess_lsys_vfs_checkperms m_lsys_vfs_checkperms;
++		mess_lsys_vfs_copyfd	m_lsys_vfs_copyfd;
++		mess_lsys_vfs_mapdriver	m_lsys_vfs_mapdriver;
++		mess_lsys_vm_getref	m_lsys_vm_getref;
++		mess_lsys_vm_info	m_lsys_vm_info;
++		mess_lsys_vm_map_phys	m_lsys_vm_map_phys;
++		mess_lsys_vm_query_exit	m_lsys_vm_query_exit;
++		mess_lsys_vm_unmap_phys	m_lsys_vm_unmap_phys;
++		mess_lsys_vm_update	m_lsys_vm_update;
++		mess_lsys_vm_vmremap	m_lsys_vm_vmremap;
++		mess_lsys_vm_watch_exit	m_lsys_vm_watch_exit;
++		mess_mmap		m_mmap;
++		mess_net_netdrv_dl_conf m_net_netdrv_dl_conf;
++		mess_net_netdrv_dl_getstat_s m_net_netdrv_dl_getstat_s;
++		mess_net_netdrv_dl_readv_s m_net_netdrv_dl_readv_s;
++		mess_net_netdrv_dl_writev_s m_net_netdrv_dl_writev_s;
++		mess_netdrv_net_dl_conf m_netdrv_net_dl_conf;
++		mess_netdrv_net_dl_task m_netdrv_net_dl_task;
++		mess_notify		m_notify;
++		mess_pci_lsys_busc_get_bar m_pci_lsys_busc_get_bar;
++		mess_pm_lc_getgid	m_pm_lc_getgid;
++		mess_pm_lc_getpid	m_pm_lc_getpid;
++		mess_pm_lc_getuid	m_pm_lc_getuid;
++		mess_pm_lc_ptrace	m_pm_lc_ptrace;
++		mess_pm_lc_sigset	m_pm_lc_sigset;
++		mess_pm_lc_time		m_pm_lc_time;
++		mess_pm_lc_waitpid	m_pm_lc_waitpid;
++		mess_pm_lexec_exec_new	m_pm_lexec_exec_new;
++		mess_pm_lsys_getepinfo	m_pm_lsys_getepinfo;
++		mess_pm_lsys_getprocnr	m_pm_lsys_getprocnr;
++		mess_pm_lsys_sigs_signal m_pm_lsys_sigs_signal;
++		mess_pm_sched_scheduling_set_nice m_pm_sched_scheduling_set_nice;
++		mess_readclock_lc_rtcdev m_readclock_lc_rtcdev;
++		mess_rs_init		m_rs_init;
++		mess_rs_pm_exec_restart	m_rs_pm_exec_restart;
++		mess_rs_pm_srv_kill	m_rs_pm_srv_kill;
++		mess_rs_req		m_rs_req;
++		mess_rs_update		m_rs_update;
++		mess_sched_lsys_scheduling_start m_sched_lsys_scheduling_start;
++		mess_sigcalls		m_sigcalls;
++		mess_tty_lsys_fkey_ctl	m_tty_lsys_fkey_ctl;
++		mess_vfs_fs_breadwrite	m_vfs_fs_breadwrite;
++		mess_vfs_fs_chmod	m_vfs_fs_chmod;
++		mess_vfs_fs_chown	m_vfs_fs_chown;
++		mess_vfs_fs_create	m_vfs_fs_create;
++		mess_vfs_fs_flush	m_vfs_fs_flush;
++		mess_vfs_fs_ftrunc	m_vfs_fs_ftrunc;
++		mess_vfs_fs_getdents	m_vfs_fs_getdents;
++		mess_vfs_fs_inhibread	m_vfs_fs_inhibread;
++		mess_vfs_fs_link	m_vfs_fs_link;
++		mess_vfs_fs_lookup	m_vfs_fs_lookup;
++		mess_vfs_fs_mkdir	m_vfs_fs_mkdir;
++		mess_vfs_fs_mknod	m_vfs_fs_mknod;
++		mess_vfs_fs_mountpoint	m_vfs_fs_mountpoint;
++		mess_vfs_fs_new_driver	m_vfs_fs_new_driver;
++		mess_vfs_fs_newnode	m_vfs_fs_newnode;
++		mess_vfs_fs_putnode	m_vfs_fs_putnode;
++		mess_vfs_fs_rdlink	m_vfs_fs_rdlink;
++		mess_vfs_fs_readsuper	m_vfs_fs_readsuper;
++		mess_vfs_fs_readwrite	m_vfs_fs_readwrite;
++		mess_vfs_fs_rename	m_vfs_fs_rename;
++		mess_vfs_fs_slink	m_vfs_fs_slink;
++		mess_vfs_fs_stat	m_vfs_fs_stat;
++		mess_vfs_fs_statvfs	m_vfs_fs_statvfs;
++		mess_vfs_fs_unlink	m_vfs_fs_unlink;
++		mess_vfs_fs_utime	m_vfs_fs_utime;
++		mess_vfs_lc_lseek	m_vfs_lc_lseek;
++		mess_vfs_lchardriver_cancel	m_vfs_lchardriver_cancel;
++		mess_vfs_lchardriver_openclose	m_vfs_lchardriver_openclose;
++		mess_vfs_lchardriver_readwrite	m_vfs_lchardriver_readwrite;
++		mess_vfs_lchardriver_select	m_vfs_lchardriver_select;
++		mess_vfs_utimens	m_vfs_utimens;
++		mess_vm_vfs_mmap	m_vm_vfs_mmap;
++		mess_vmmcp		m_vmmcp;
++		mess_vmmcp_reply	m_vmmcp_reply;
++
++		u8_t size[56];	/* message payload may have 56 bytes at most */
++	};
++} message __aligned(16);
++
++/* Ensure the complete union respects the IPC assumptions. */
++typedef int _ASSERT_message[/* CONSTCOND */sizeof(message) == 64 ? 1 : -1];
++
++/* The following defines provide names for useful members. */
++#define m1_i1  m_m1.m1i1
++#define m1_i2  m_m1.m1i2
++#define m1_i3  m_m1.m1i3
++#define m1_p1  m_m1.m1p1
++#define m1_p2  m_m1.m1p2
++#define m1_p3  m_m1.m1p3
++#define m1_p4  m_m1.m1p4
++#define m1_ull1  m_m1.m1ull1
++
++#define m2_ll1  m_m2.m2ll1
++#define m2_i1  m_m2.m2i1
++#define m2_i2  m_m2.m2i2
++#define m2_i3  m_m2.m2i3
++#define m2_l1  m_m2.m2l1
++#define m2_l2  m_m2.m2l2
++#define m2_p1  m_m2.m2p1
++#define m2_sigset  m_m2.sigset
++
++#define m2_s1  m_m2.m2s1
++
++#define m3_i1  m_m3.m3i1
++#define m3_i2  m_m3.m3i2
++#define m3_p1  m_m3.m3p1
++#define m3_ca1 m_m3.m3ca1
++
++#define m4_ll1  m_m4.m4ll1
++#define m4_l1  m_m4.m4l1
++#define m4_l2  m_m4.m4l2
++#define m4_l3  m_m4.m4l3
++#define m4_l4  m_m4.m4l4
++#define m4_l5  m_m4.m4l5
++
++#define m7_i1  m_m7.m7i1
++#define m7_i2  m_m7.m7i2
++#define m7_i3  m_m7.m7i3
++#define m7_i4  m_m7.m7i4
++#define m7_i5  m_m7.m7i5
++#define m7_p1  m_m7.m7p1
++#define m7_p2  m_m7.m7p2
++
++#define m9_l1  m_m9.m9l1
++#define m9_l2  m_m9.m9l2
++#define m9_l3  m_m9.m9l3
++#define m9_l4  m_m9.m9l4
++#define m9_l5  m_m9.m9l5
++#define m9_s1  m_m9.m9s1
++#define m9_s2  m_m9.m9s2
++#define m9_s3  m_m9.m9s3
++#define m9_s4  m_m9.m9s4
++#define m9_ull1  m_m9.m9ull1
++#define m9_ull2  m_m9.m9ull2
++
++#define m10_i1 m_m10.m10i1
++#define m10_i2 m_m10.m10i2
++#define m10_i3 m_m10.m10i3
++#define m10_i4 m_m10.m10i4
++#define m10_l1 m_m10.m10l1
++#define m10_l2 m_m10.m10l2
++#define m10_l3 m_m10.m10l3
++#define m10_ull1 m_m10.m10ull1
++
++
++/*==========================================================================* 
++ * Minix run-time system (IPC). 					    *
++ *==========================================================================*/ 
++
++/* Datastructure for asynchronous sends */
++typedef struct asynmsg
++{
++	unsigned flags;
++	endpoint_t dst;
++	int result;
++	message msg;
++} asynmsg_t;
++
++/* Defines for flags field */
++#define AMF_EMPTY	000	/* slot is not inuse */
++#define AMF_VALID	001	/* slot contains message */
++#define AMF_DONE	002	/* Kernel has processed the message. The
++				 * result is stored in 'result'
++				 */
++#define AMF_NOTIFY	004	/* Send a notification when AMF_DONE is set */
++#define AMF_NOREPLY	010	/* Not a reply message for a SENDREC */
++#define AMF_NOTIFY_ERR	020	/* Send a notification when AMF_DONE is set and
++				 * delivery of the message failed */
++
++int _ipc_send_intr(endpoint_t dest, message *m_ptr);
++int _ipc_receive_intr(endpoint_t src, message *m_ptr, int *status_ptr);
++int _ipc_sendrec_intr(endpoint_t src_dest, message *m_ptr);
++int _ipc_sendnb_intr(endpoint_t dest, message *m_ptr);
++int _ipc_notify_intr(endpoint_t dest);
++int _ipc_senda_intr(asynmsg_t *table, size_t count);
++
++int _do_kernel_call_intr(message *m_ptr);
++
++int get_minix_kerninfo(struct minix_kerninfo **);
++
++/* Hide names to avoid name space pollution. */
++#define ipc_notify	_ipc_notify
++#define ipc_sendrec	_ipc_sendrec
++#define ipc_receive	_ipc_receive
++#define ipc_receivenb	_ipc_receivenb
++#define ipc_send	_ipc_send
++#define ipc_sendnb	_ipc_sendnb
++#define ipc_senda	_ipc_senda
++
++#define do_kernel_call	_do_kernel_call
++
++struct minix_ipcvecs {
++	int (*send)(endpoint_t dest, message *m_ptr);
++	int (*receive)(endpoint_t src, message *m_ptr, int *st);
++	int (*sendrec)(endpoint_t src_dest, message *m_ptr);
++	int (*sendnb)(endpoint_t dest, message *m_ptr);
++	int (*notify)(endpoint_t dest);
++	int (*do_kernel_call)(message *m_ptr);
++	int (*senda)(asynmsg_t *table, size_t count);
++};
++
++/* kernel-set IPC vectors retrieved by a constructor in
++ * minix/lib/libc/sys/init.c */
++extern struct minix_ipcvecs _minix_ipcvecs;
++
++static inline int _ipc_send(endpoint_t dest, message *m_ptr)
++{
++	return _minix_ipcvecs.send(dest, m_ptr);
++}
++
++static inline int _ipc_receive(endpoint_t src, message *m_ptr, int *st)
++{
++	return _minix_ipcvecs.receive(src, m_ptr, st);
++}
++
++static inline int _ipc_sendrec(endpoint_t src_dest, message *m_ptr)
++{
++	return _minix_ipcvecs.sendrec(src_dest, m_ptr);
++}
++
++static inline int _ipc_sendnb(endpoint_t dest, message *m_ptr)
++{
++	return _minix_ipcvecs.sendnb(dest, m_ptr);
++}
++
++static inline int _ipc_notify(endpoint_t dest)
++{
++	return _minix_ipcvecs.notify(dest);
++}
++
++static inline int _do_kernel_call(message *m_ptr)
++{
++	return _minix_ipcvecs.do_kernel_call(m_ptr);
++}
++
++static inline int _ipc_senda(asynmsg_t *table, size_t count)
++{
++	return _minix_ipcvecs.senda(table, count);
++}
++
++#endif /* _IPC_H */
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/const.h sol/usr/src/minix/servers/vfs/const.h
+--- orig/usr/src/minix/servers/vfs/const.h	2023-06-19 00:04:51.525200980 +0200
++++ sol/usr/src/minix/servers/vfs/const.h	2023-06-19 00:06:02.604271838 +0200
+@@ -7,6 +7,9 @@
+ #define NR_MNTS           16 	/* # slots in mount table */
+ #define NR_VNODES       1024	/* # slots in vnode table */
+ #define NR_WTHREADS	   9	/* # slots in worker thread table */
++#define NR_EXCLUSIVE	8	/* # slots in the exclusive locking table */
++#define EX_READ 1 
++#define EX_WRITE 2
+ 
+ #define NR_NONEDEVS	NR_MNTS	/* # slots in nonedev bitmap */
+ 
+@@ -45,4 +48,5 @@
+ /* special driver endpoint for CTTY_MAJOR; must be able to pass isokendpt() */
+ #define CTTY_ENDPT	VFS_PROC_NR
+ 
++#define E_BIT           0000008	/* EXCLUSIVE/FEXCLUSIVE protection bit */
+ #endif
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/const.h.orig sol/usr/src/minix/servers/vfs/const.h.orig
+--- orig/usr/src/minix/servers/vfs/const.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/servers/vfs/const.h.orig	2023-06-19 00:05:55.599954727 +0200
+@@ -0,0 +1,48 @@
++#ifndef __VFS_CONST_H__
++#define __VFS_CONST_H__
++
++/* Tables sizes */
++#define NR_FILPS        1024	/* # slots in filp table */
++#define NR_LOCKS           8	/* # slots in the file locking table */
++#define NR_MNTS           16 	/* # slots in mount table */
++#define NR_VNODES       1024	/* # slots in vnode table */
++#define NR_WTHREADS	   9	/* # slots in worker thread table */
++
++#define NR_NONEDEVS	NR_MNTS	/* # slots in nonedev bitmap */
++
++/* Miscellaneous constants */
++#define SU_UID 	 ((uid_t) 0)	/* super_user's uid_t */
++#define SYS_UID  ((uid_t) 0)	/* uid_t for system processes and INIT */
++#define SYS_GID  ((gid_t) 0)	/* gid_t for system processes and INIT */
++
++#define FP_BLOCKED_ON_NONE	0 /* not blocked */
++#define FP_BLOCKED_ON_PIPE	1 /* susp'd on pipe */
++#define FP_BLOCKED_ON_LOCK	2 /* susp'd on lock */
++#define FP_BLOCKED_ON_POPEN	3 /* susp'd on pipe open */
++#define FP_BLOCKED_ON_SELECT	4 /* susp'd on select */
++#define FP_BLOCKED_ON_OTHER	5 /* blocked on other process, check
++				     fp_task to find out */
++
++/* test if the process is blocked on something */
++#define fp_is_blocked(fp)	((fp)->fp_blocked_on != FP_BLOCKED_ON_NONE)
++
++#define INVALID_THREAD	((thread_t) -1) 	/* known-invalid thread ID */
++
++#define SYMLOOP		16
++
++#define LABEL_MAX	16	/* maximum label size (including '\0'). Should
++				 * not be smaller than 16 or bigger than
++				 * M_PATH_STRING_MAX.
++				 */
++#define FSTYPE_MAX	VFS_NAMELEN	/* maximum file system type size */
++
++/* possible select() operation types; read, write, errors */
++#define SEL_RD		CDEV_OP_RD
++#define SEL_WR		CDEV_OP_WR
++#define SEL_ERR		CDEV_OP_ERR
++#define SEL_NOTIFY	CDEV_NOTIFY /* not a real select operation */
++
++/* special driver endpoint for CTTY_MAJOR; must be able to pass isokendpt() */
++#define CTTY_ENDPT	VFS_PROC_NR
++
++#endif
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/exclusive.c sol/usr/src/minix/servers/vfs/exclusive.c
+--- orig/usr/src/minix/servers/vfs/exclusive.c	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/servers/vfs/exclusive.c	2023-06-19 00:05:51.475769437 +0200
+@@ -0,0 +1,140 @@
++#include "fs.h"
++#include "glo.h"
++#include "proto.h"
++#include "vnode.h"
++#include <lib.h>
++#include <stdio.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <minix/callnr.h>
++#include <minix/com.h>
++#include "file.h"
++#include "scratchpad.h"
++#include "lock.h"
++#include <minix/vfsif.h>
++#include "vmnt.h"
++#include "path.h"
++
++
++#define SANEVP(v) ((((v) >= &vnode[0] && (v) < &vnode[NR_VNODES])))
++
++int do_exclusive(void) {
++  char fullpath[PATH_MAX]; 
++  size_t vname_length;
++  int flags;
++  int r;
++  vir_bytes vname;
++  int is_force;
++  struct lookup resolve;
++  struct vmnt *vmp;
++  struct vnode *vp;
++
++  is_force = 0;
++  r = OK;
++
++  vname_length = job_m_in.m_lc_vfs_exclusive.len;
++  flags = job_m_in.m_lc_vfs_exclusive.flags;
++  vname =  job_m_in.m_lc_vfs_exclusive.name;
++
++  if (fetch_name(vname, vname_length, fullpath) != OK){
++	  return(err_code);
++  }
++
++  lookup_init(&resolve, fullpath, PATH_NOFLAGS, &vmp, &vp);
++  
++	resolve.l_vmnt_lock = VMNT_READ;
++	resolve.l_vnode_lock = VNODE_WRITE;
++	
++  if ((vp = eat_path(&resolve, fp)) == NULL) {
++		r = (err_code);
++	}
++  
++  if(r == OK) {
++    if(!S_ISREG(vp->v_mode)) r = EFTYPE;
++    else if(forbidden(fp, vp, W_BIT) != OK && forbidden(fp, vp, R_BIT) != OK) r = EACCES;
++  }
++
++  if(r == OK && SANEVP(vp)){
++    switch(flags) {
++      case EXCL_LOCK_NO_OTHERS:
++        if(vp->v_ref_count > 1) {
++          r = EAGAIN;
++          break;
++        }
++      case EXCL_LOCK:
++        r = add_exclusive_file(fp, vp, NAME_LOCK, 0);
++        break;
++      case EXCL_UNLOCK_FORCE:
++        is_force = 1;
++      case EXCL_UNLOCK:
++        r = remove_exclusive_file(fp, vp, is_force);
++        break;
++      default:
++        r = EINVAL;
++    }
++  }
++  
++  if (vmp != NULL) unlock_vmnt(vmp);
++  
++  if(SANEVP(vp)){ 
++    unlock_vnode(vp);
++    put_vnode(vp);
++  }else return EINVAL;
++
++ return r;
++}
++
++int do_fexclusive(void) {
++  int flags;
++  int r, fd;
++  int is_force;
++  struct filp* f;
++  struct vnode *vp = NULL;
++
++  is_force = 0;
++  r = OK;
++
++  flags = job_m_in.m_lc_vfs_exclusive.flags;
++  fd = job_m_in.m_lc_vfs_exclusive.fd;
++  
++   if ((f = get_filp(fd, VNODE_WRITE)) == NULL)
++      return(err_code);
++
++  vp = f->filp_vno;
++
++  if(!SANEVP(vp))  {
++    unlock_filp(f);
++    return EINVAL;
++  }
++  if(!(f->filp_mode & W_BIT || f->filp_mode & R_BIT)) r = EBADF;
++  else if(!S_ISREG(vp->v_mode)) r = EFTYPE;
++  else if(forbidden(fp, vp, W_BIT) != OK && forbidden(fp, vp, R_BIT) != OK) r = EACCES;
++
++  if(r != OK) {
++    unlock_filp(f);
++    return r;
++  }
++
++  switch(flags) {
++    case EXCL_LOCK_NO_OTHERS:
++      if(vp->v_ref_count > 1) {
++        r = EAGAIN;
++        break;
++      }
++    case EXCL_LOCK:
++      r = add_exclusive_file(fp, vp, FD_LOCK, fd);
++      break;
++    case EXCL_UNLOCK_FORCE:
++      is_force = 1;
++    case EXCL_UNLOCK:
++      r = remove_exclusive_file(fp, vp, is_force);
++      break;
++    default:
++      r = EINVAL;
++  }
++
++  unlock_filp(f);
++  return r;
++}
+Binary files orig/usr/src/minix/servers/vfs/exclusive.o and sol/usr/src/minix/servers/vfs/exclusive.o differ
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/link.c sol/usr/src/minix/servers/vfs/link.c
+--- orig/usr/src/minix/servers/vfs/link.c	2023-06-19 00:04:40.428603869 +0200
++++ sol/usr/src/minix/servers/vfs/link.c	2023-06-19 00:05:50.647732363 +0200
+@@ -11,6 +11,7 @@
+  *   do_rdlink:       perform the RDLNK system call
+  */
+ 
++#include "const.h"
+ #include "fs.h"
+ #include <sys/stat.h>
+ #include <string.h>
+@@ -21,9 +22,13 @@
+ #include <assert.h>
+ #include "file.h"
+ #include "path.h"
++#include "proto.h"
+ #include "vnode.h"
+ #include "scratchpad.h"
+ 
++#define SANEVP(v) ((((v) >= &vnode[0] && (v) < &vnode[NR_VNODES])))
++
++
+ /*===========================================================================*
+  *				do_link					     *
+  *===========================================================================*/
+@@ -140,6 +145,8 @@ int do_unlink(void)
+ 	if (vp != NULL) {
+ 		if (vp->v_uid != fp->fp_effuid && fp->fp_effuid != SU_UID)
+ 			r = EPERM;
++    else if(exclusive_access(fp, vp, EX_READ) != OK) r = EACCES;
++    else remove_exclusive_file(fp, vp, 0);
+ 		unlock_vnode(vp);
+ 		put_vnode(vp);
+ 	} else
+@@ -171,13 +178,14 @@ int do_rename(void)
+ {
+ /* Perform the rename(name1, name2) system call. */
+   int r = OK, r1;
+-  struct vnode *old_dirp = NULL, *new_dirp = NULL, *new_dirp_l = NULL, *vp;
+-  struct vmnt *oldvmp, *newvmp, *vmp2;
++  struct vnode *old_dirp = NULL, *new_dirp = NULL, *new_dirp_l = NULL, *vp, *vp2;
++  struct vmnt *oldvmp, *newvmp, *vmp2, *vmp3;
+   char old_name[PATH_MAX];
+   char fullpath[PATH_MAX];
+   struct lookup resolve, stickycheck;
+   vir_bytes vname1, vname2;
+   size_t vname1_length, vname2_length;
++  ino_t old_inode = 0;
+ 
+   vname1 = job_m_in.m_lc_vfs_link.name1;
+   vname1_length = job_m_in.m_lc_vfs_link.len1;
+@@ -203,8 +211,10 @@ int do_rename(void)
+ 	vp = advance(old_dirp, &stickycheck, fp);
+ 	assert(vmp2 == NULL);
+ 	if (vp != NULL) {
++    old_inode = vp->v_inode_nr;
+ 		if(vp->v_uid != fp->fp_effuid && fp->fp_effuid != SU_UID)
+ 			r = EPERM;
++     else if((r1 = exclusive_access(fp, vp, EX_READ)) != OK) r = r1;
+ 		unlock_vnode(vp);
+ 		put_vnode(vp);
+ 	} else
+@@ -250,10 +262,25 @@ int do_rename(void)
+   /* Both parent directories must be on the same device. */
+   if (old_dirp->v_fs_e != new_dirp->v_fs_e) r = EXDEV;
+ 
++
+   /* Parent dirs must be writable, searchable and on a writable device */
+   if ((r1 = forbidden(fp, old_dirp, W_BIT|X_BIT)) != OK ||
+       (r1 = forbidden(fp, new_dirp, W_BIT|X_BIT)) != OK) r = r1;
+ 
++ 
++  lookup_init(&stickycheck, resolve.l_path, PATH_RET_SYMLINK, &vmp3, &vp2);
++    stickycheck.l_vmnt_lock = VMNT_READ;
++    stickycheck.l_vnode_lock = VNODE_READ;
++
++  vp2 = advance(new_dirp, &stickycheck, fp);
++  if(vp2 != NULL && SANEVP(vp2)) {
++        if((r1 = exclusive_access(fp, vp2, EX_READ) ) != OK) r = r1;
++        else if(old_inode != vp2->v_inode_nr) remove_exclusive_file(fp, vp2, 0);
++        unlock_vnode(vp2);
++        put_vnode(vp2);
++      }
++    if (vmp3 != NULL) unlock_vmnt(vmp3);
++
+   if (r == OK) {
+ 	upgrade_vmnt_lock(oldvmp); /* Upgrade to exclusive access */
+ 	r = req_rename(old_dirp->v_fs_e, old_dirp->v_inode_nr, old_name,
+@@ -305,7 +332,7 @@ int do_truncate(void)
+   if ((vp = eat_path(&resolve, fp)) == NULL) return(err_code);
+ 
+   /* Ask FS to truncate the file */
+-  if ((r = forbidden(fp, vp, W_BIT)) == OK) {
++  if ((r = forbidden(fp, vp, W_BIT)) == OK && (r = exclusive_access(fp, vp, EX_READ)) == OK) {
+ 	/* If the file size does not change, do not make the actual call. This
+ 	 * ensures that the file times are retained when the file size remains
+ 	 * the same, which is a POSIX requirement.
+@@ -352,6 +379,7 @@ int do_ftruncate(void)
+ 	 * the same, which is a POSIX requirement.
+ 	 */
+ 	r = OK;
++  else if((r= exclusive_access(fp, vp, EX_READ)) != OK);
+   else
+ 	r = truncate_vnode(vp, length);
+ 
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/Makefile sol/usr/src/minix/servers/vfs/Makefile
+--- orig/usr/src/minix/servers/vfs/Makefile	2023-06-19 00:04:41.004651441 +0200
++++ sol/usr/src/minix/servers/vfs/Makefile	2023-06-19 00:05:51.163755459 +0200
+@@ -7,7 +7,8 @@ SRCS=	main.c open.c read.c write.c pipe.
+ 	filedes.c stadir.c protect.c time.c \
+ 	lock.c misc.c utility.c select.c table.c \
+ 	vnode.c vmnt.c request.c \
+-	tll.c comm.c worker.c coredump.c
++	tll.c comm.c worker.c coredump.c \
++	exclusive.c
+ 
+ .if ${MKCOVERAGE} != "no"
+ SRCS+=  gcov.c
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/Makefile.orig sol/usr/src/minix/servers/vfs/Makefile.orig
+--- orig/usr/src/minix/servers/vfs/Makefile.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/servers/vfs/Makefile.orig	2023-06-19 00:06:03.356306065 +0200
+@@ -0,0 +1,21 @@
++# Makefile for Virtual File System (VFS)
++.include <bsd.own.mk>
++
++PROG=	vfs
++SRCS=	main.c open.c read.c write.c pipe.c dmap.c \
++	path.c device.c mount.c link.c exec.c \
++	filedes.c stadir.c protect.c time.c \
++	lock.c misc.c utility.c select.c table.c \
++	vnode.c vmnt.c request.c \
++	tll.c comm.c worker.c coredump.c
++
++.if ${MKCOVERAGE} != "no"
++SRCS+=  gcov.c
++CPPFLAGS+= -DUSE_COVERAGE
++.endif
++
++CFLAGS+= -Wall -Wextra -Wno-sign-compare -Werror
++DPADD+=	${LIBSYS} ${LIBTIMERS} ${LIBEXEC}
++LDADD+=	-lsys -ltimers -lexec -lmthread
++
++.include <minix.service.mk>
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/mount.c sol/usr/src/minix/servers/vfs/mount.c
+--- orig/usr/src/minix/servers/vfs/mount.c	2023-06-19 00:04:42.036736675 +0200
++++ sol/usr/src/minix/servers/vfs/mount.c	2023-06-19 00:05:53.179845865 +0200
+@@ -6,6 +6,7 @@
+  *   unmount:		unmount a file system
+  */
+ 
++#include "const.h"
+ #include "fs.h"
+ #include <fcntl.h>
+ #include <string.h>
+@@ -482,7 +483,11 @@ int unmount(
+   locks = count = 0;
+   for (vp = &vnode[0]; vp < &vnode[NR_VNODES]; vp++)
+ 	  if (vp->v_ref_count > 0 && vp->v_dev == dev) {
++
+ 		count += vp->v_ref_count;
++    for(int i = 0 ;i < NR_EXCLUSIVE; i++) {
++      count += (exclusive[i].lock_type != 0 && exclusive[i].inode_nr == vp->v_inode_nr);
++    }
+ 		if (is_vnode_locked(vp)) locks++;
+ 	  }
+ 
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/open.c sol/usr/src/minix/servers/vfs/open.c
+--- orig/usr/src/minix/servers/vfs/open.c	2023-06-19 00:04:51.673207019 +0200
++++ sol/usr/src/minix/servers/vfs/open.c	2023-06-19 00:06:02.744278206 +0200
+@@ -9,6 +9,7 @@
+  *   do_lseek:  perform the LSEEK system call
+  */
+ 
++#include "const.h"
+ #include "fs.h"
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -18,6 +19,7 @@
+ #include <minix/com.h>
+ #include <minix/u64.h>
+ #include "file.h"
++#include "proto.h"
+ #include "scratchpad.h"
+ #include "lock.h"
+ #include <sys/dirent.h>
+@@ -142,7 +144,7 @@ int common_open(char path[PATH_MAX], int
+   /* Only do the normal open code if we didn't just create the file. */
+   if (exist) {
+ 	/* Check protections. */
+-	if ((r = forbidden(fp, vp, bits)) == OK) {
++	if ((r = forbidden(fp, vp, bits)) == OK && (r = exclusive_access(fp, vp, EX_READ)) == OK ){
+ 		/* Opening reg. files, directories, and special files differ */
+ 		switch (vp->v_mode & S_IFMT) {
+ 		   case S_IFREG:
+@@ -708,6 +709,9 @@ int fd_nr;
+ 	if (nr_locks < lock_count)
+ 		lock_revive();	/* one or more locks released */
+   }
++    //remove the block. it works not when intended, so just leave it commented
++    // fd_remove_exclusive(rfp, fd_nr);
++
+ 
+   return(OK);
+ }
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/protect.c sol/usr/src/minix/servers/vfs/protect.c
+--- orig/usr/src/minix/servers/vfs/protect.c	2023-06-19 00:04:38.940480973 +0200
++++ sol/usr/src/minix/servers/vfs/protect.c	2023-06-19 00:05:49.739691756 +0200
+@@ -8,6 +8,7 @@
+  *   do_access:	perform the ACCESS system call
+  */
+ 
++#include "const.h"
+ #include "fs.h"
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -286,6 +288,72 @@ int forbidden(struct fproc *rfp, struct
+   return(r);
+ }
+ 
++//check if the user has access to the file
++int exclusive_access(struct fproc *rfp, struct vnode *vp, mode_t desired) {
++  if(desired != EX_READ && desired != EX_WRITE) return EINVAL;
++  struct exclusive current;
++
++  for(int i = 0; i < NR_EXCLUSIVE; i++) {
++    current = exclusive[i];
++    if(current.lock_type != 0 && vp->v_inode_nr == current.inode_nr && current.locker_id != rfp->fp_realuid) return desired == EX_READ ? EACCES : EPERM;    
++  }
++  return(OK);
++}
++
++//add a file to exclusive table
++int add_exclusive_file(struct fproc *rfp, struct vnode *vp, int mode, int fd) {
++  int i;
++
++  if(mode != NAME_LOCK && mode != FD_LOCK) return EINVAL;
++  for(i = 0; i < NR_EXCLUSIVE; i++) {
++    if(exclusive[i].lock_type != 0 && vp->v_inode_nr == exclusive[i].inode_nr){
++      return rfp->fp_realuid == exclusive[i].locker_id ?  EALREADY : EPERM;
++  }}
++  for(i = 0; i < NR_EXCLUSIVE; i++) {
++    if(exclusive[i].lock_type == 0) {
++    printf("blocking num=%llu\n" , vp->v_inode_nr);
++    exclusive[i].lock_type = mode; 
++    exclusive[i].inode_nr = vp->v_inode_nr;
++    exclusive[i].fd = fd;
++    exclusive[i].locker_id = rfp->fp_realuid;
++    break;
++    }
++    if(i == NR_EXCLUSIVE - 1) return ENOLCK;
++  }
++  return OK;
++}
++
++int fd_remove_exclusive(struct fproc* rfp, int fd){
++  int i;
++
++  for(i = 0; i< NR_EXCLUSIVE; i++) {
++    if(exclusive[i].lock_type == FD_LOCK && exclusive[i].fd == fd && exclusive[i].locker_id == rfp->fp_realuid) {
++      exclusive[i].lock_type = 0;
++      return OK;
++    }
++  }
++  return EINVAL;
++}
++
++//removes a file from exclusive table
++int remove_exclusive_file(struct fproc *rfp, struct vnode *vp, int is_force) {
++  int i;
++
++  for(i = 0; i < NR_EXCLUSIVE; i++) {
++    if(exclusive[i].lock_type != 0 && exclusive[i].inode_nr == vp->v_inode_nr) {
++      if(!is_force && exclusive[i].locker_id != rfp->fp_realuid) return EPERM;
++      if(rfp->fp_realuid != SU_UID && rfp->fp_realuid != exclusive[i].locker_id && 
++        rfp->fp_realuid != vp->v_uid) return EPERM;
++      exclusive[i].inode_nr = 0;
++      exclusive[i].lock_type = 0;
++      break;
++    }
++    if(i == NR_EXCLUSIVE - 1) return EINVAL;
++  }
++
++  return OK;
++} 
++
+ /*===========================================================================*
+  *				read_only				     *
+  *===========================================================================*/
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/proto.h sol/usr/src/minix/servers/vfs/proto.h
+--- orig/usr/src/minix/servers/vfs/proto.h	2023-06-19 00:04:39.028488241 +0200
++++ sol/usr/src/minix/servers/vfs/proto.h	2023-06-19 00:05:49.831695866 +0200
+@@ -180,6 +180,10 @@ int do_chown(void);
+ int do_umask(void);
+ int forbidden(struct fproc *rfp, struct vnode *vp, mode_t
+ 	access_desired);
++int exclusive_access(struct fproc *rfp, struct vnode *vp, mode_t desired);
++int remove_exclusive_file(struct fproc *rfp, struct vnode *vp, int is_force);
++int add_exclusive_file(struct fproc *rfp, struct vnode *vp, int mode, int fd);
++int fd_remove_exclusive(struct fproc* rfp, int fd);
+ int read_only(struct vnode *vp);
+ 
+ /* read.c */
+@@ -348,4 +352,9 @@ void worker_wait(void);
+ struct worker_thread *worker_suspend(void);
+ void worker_resume(struct worker_thread *org_self);
+ void worker_set_proc(struct fproc *rfp);
++
++/* exclusive.c */
++int do_exclusive(void);
++int do_fexclusive(void);
++
+ #endif
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/proto.h.orig sol/usr/src/minix/servers/vfs/proto.h.orig
+--- orig/usr/src/minix/servers/vfs/proto.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/servers/vfs/proto.h.orig	2023-06-19 00:05:51.383765315 +0200
+@@ -0,0 +1,351 @@
++#ifndef __VFS_PROTO_H__
++#define __VFS_PROTO_H__
++
++/* Function prototypes. */
++
++#include <minix/rs.h>
++#include <minix/timers.h>
++
++#include "request.h"
++#include "threads.h"
++#include "tll.h"
++
++/* Structs used in prototypes must be declared as such first. */
++struct filp;
++struct fproc;
++struct timespec;
++struct vmnt;
++struct vnode;
++struct lookup;
++struct worker_thread;
++struct job;
++
++/* comm.c */
++int drv_sendrec(endpoint_t drv_e, message *reqm);
++void fs_cancel(struct vmnt *vmp);
++int fs_sendrec(endpoint_t fs_e, message *reqm);
++int vm_sendrec(message *reqm);
++void fs_sendmore(struct vmnt *vmp);
++void send_work(void);
++int vm_vfs_procctl_handlemem(endpoint_t ep, vir_bytes mem, vir_bytes len, int flags);
++
++/* device.c */
++int cdev_open(dev_t dev, int flags);
++int cdev_close(dev_t dev);
++int cdev_io(int op, dev_t dev, endpoint_t proc_e, vir_bytes buf, off_t pos,
++	unsigned long bytes, int flags);
++dev_t cdev_map(dev_t dev, struct fproc *rfp);
++int cdev_select(dev_t dev, int ops);
++int cdev_cancel(dev_t dev);
++void cdev_reply(void);
++int bdev_open(dev_t dev, int access);
++int bdev_close(dev_t dev);
++void bdev_reply(void);
++void bdev_up(devmajor_t major);
++int do_ioctl(void);
++
++/* dmap.c */
++void lock_dmap(struct dmap *dp);
++void unlock_dmap(struct dmap *dp);
++int do_mapdriver(void);
++void init_dmap(void);
++int dmap_driver_match(endpoint_t proc, devmajor_t major);
++void dmap_endpt_up(endpoint_t proc_nr, int is_blk);
++struct dmap *get_dmap(endpoint_t proc_e);
++struct dmap *get_dmap_by_major(devmajor_t major);
++void dmap_unmap_by_endpt(endpoint_t proc_nr);
++int map_service(struct rprocpub *rpub);
++
++/* elf_core_dump.c */
++void write_elf_core_file(struct filp *f, int csig, char *exe_name);
++
++/* exec.c */
++int pm_exec(vir_bytes path, size_t path_len, vir_bytes frame, size_t frame_len,
++	vir_bytes *pc, vir_bytes *newsp, vir_bytes *ps_str);
++
++/* filedes.c */
++void check_filp_locks(void);
++void check_filp_locks_by_me(void);
++void init_filps(void);
++struct filp *find_filp(struct vnode *vp, mode_t bits);
++int get_fd(struct fproc *rfp, int start, mode_t bits, int *k,
++	struct filp **fpt);
++struct filp *get_filp(int fild, tll_access_t locktype);
++struct filp *get_filp2(struct fproc *rfp, int fild, tll_access_t locktype);
++void lock_filp(struct filp *filp, tll_access_t locktype);
++void unlock_filp(struct filp *filp);
++void unlock_filps(struct filp *filp1, struct filp *filp2);
++void invalidate_filp(struct filp *);
++void invalidate_filp_by_endpt(endpoint_t proc_e);
++void invalidate_filp_by_char_major(devmajor_t major);
++void close_filp(struct filp *fp);
++int do_copyfd(void);
++
++/* fscall.c */
++void nested_fs_call(message *m);
++
++/* link.c */
++int do_link(void);
++int do_unlink(void);
++int do_rename(void);
++int do_truncate(void);
++int do_ftruncate(void);
++int truncate_vnode(struct vnode *vp, off_t newsize);
++int rdlink_direct(char *orig_path, char *link_path, struct fproc *rfp);
++
++/* lock.c */
++int lock_op(struct filp *f, int req);
++void lock_revive(void);
++
++/* main.c */
++int main(void);
++void lock_proc(struct fproc *rfp);
++void unlock_proc(struct fproc *rfp);
++void replycode(endpoint_t whom, int result);
++void service_pm_postponed(void);
++void thread_cleanup(void);
++
++/* misc.c */
++void pm_exit(void);
++int do_fcntl(void);
++void pm_fork(endpoint_t pproc, endpoint_t cproc, pid_t cpid);
++void pm_setgid(endpoint_t proc_e, int egid, int rgid);
++void pm_setuid(endpoint_t proc_e, int euid, int ruid);
++void pm_setgroups(endpoint_t proc_e, int ngroups, gid_t *addr);
++void pm_setsid(endpoint_t proc_e);
++int do_sync(void);
++int do_fsync(void);
++void pm_reboot(void);
++int do_svrctl(void);
++int do_getsysinfo(void);
++int do_vm_call(void);
++int pm_dumpcore(int sig, vir_bytes exe_name);
++void ds_event(void);
++int dupvm(struct fproc *fp, int pfd, int *vmfd, struct filp **f);
++int do_getrusage(void);
++
++/* mount.c */
++int do_mount(void);
++int do_umount(void);
++int is_nonedev(dev_t dev);
++void mount_pfs(void);
++int mount_fs(dev_t dev, char mount_dev[PATH_MAX], char mount_path[PATH_MAX],
++	endpoint_t fs_e, int rdonly, char mount_type[FSTYPE_MAX],
++	char mount_label[LABEL_MAX]);
++int unmount(dev_t dev, char label[LABEL_MAX]);
++void unmount_all(int force);
++
++/* open.c */
++int do_close(void);
++int close_fd(struct fproc *rfp, int fd_nr);
++int common_open(char path[PATH_MAX], int oflags, mode_t omode);
++int do_creat(void);
++int do_lseek(void);
++int do_mknod(void);
++int do_mkdir(void);
++int do_open(void);
++int do_creat(void);
++int do_slink(void);
++int actual_lseek(struct fproc *rfp, int seekfd, int seekwhence, off_t offset,
++	off_t *newposp);
++
++/* path.c */
++struct vnode *advance(struct vnode *dirp, struct lookup *resolve, struct
++	fproc *rfp);
++struct vnode *eat_path(struct lookup *resolve, struct fproc *rfp);
++struct vnode *last_dir(struct lookup *resolve, struct fproc *rfp);
++void lookup_init(struct lookup *resolve, char *path, int flags, struct
++	vmnt **vmp, struct vnode **vp);
++int get_name(struct vnode *dirp, struct vnode *entry, char *_name);
++int canonical_path(char *orig_path, struct fproc *rfp);
++int do_checkperms(void);
++
++/* pipe.c */
++int do_pipe2(void);
++int map_vnode(struct vnode *vp, endpoint_t fs_e);
++void unpause(void);
++int pipe_check(struct filp *filp, int rw_flag, int oflags, int bytes,
++	int notouch);
++void release(struct vnode *vp, int op, int count);
++void revive(endpoint_t proc_e, int returned);
++void suspend(int why);
++void pipe_suspend(struct filp *rfilp, vir_bytes buf, size_t size);
++void unsuspend_by_endpt(endpoint_t proc_e);
++void wait_for(endpoint_t proc_e);
++
++/* protect.c */
++int do_access(void);
++int do_chmod(void);
++int do_chown(void);
++int do_umask(void);
++int forbidden(struct fproc *rfp, struct vnode *vp, mode_t
++	access_desired);
++int read_only(struct vnode *vp);
++
++/* read.c */
++int do_read(void);
++int do_getdents(void);
++void lock_bsf(void);
++void unlock_bsf(void);
++void check_bsf_lock(void);
++int do_read_write_peek(int rw_flag, int fd, vir_bytes buf, size_t bytes);
++int actual_read_write_peek(struct fproc *rfp, int rw_flag, int fd, vir_bytes buf,
++	size_t bytes);
++int read_write(struct fproc *rfp, int rw_flag, struct filp *f, vir_bytes buffer,
++	size_t nbytes, endpoint_t for_e);
++int rw_pipe(int rw_flag, endpoint_t usr, struct filp *f, vir_bytes buf,
++	size_t req_size);
++
++/* request.c */
++int req_breadwrite(endpoint_t fs_e, endpoint_t user_e, dev_t dev, off_t pos,
++	unsigned int num_of_bytes, vir_bytes user_addr, int rw_flag,
++	off_t *new_posp, unsigned int *cum_iop);
++int req_chmod(endpoint_t fs_e, ino_t inode_nr, mode_t rmode,
++	mode_t *new_modep);
++int req_chown(endpoint_t fs_e, ino_t inode_nr, uid_t newuid, gid_t newgid,
++	mode_t *new_modep);
++int req_create(endpoint_t fs_e, ino_t inode_nr, int omode, uid_t uid,
++	gid_t gid, char *path, node_details_t *res);
++int req_flush(endpoint_t fs_e, dev_t dev);
++int req_statvfs(endpoint_t fs_e, struct statvfs *buf);
++int req_ftrunc(endpoint_t fs_e, ino_t inode_nr, off_t start, off_t end);
++int req_getdents(endpoint_t fs_e, ino_t inode_nr, off_t pos, vir_bytes buf,
++	size_t size, off_t *new_pos, int direct);
++int req_inhibread(endpoint_t fs_e, ino_t inode_nr);
++int req_link(endpoint_t fs_e, ino_t link_parent, char *lastc,
++	ino_t linked_file);
++int req_lookup(endpoint_t fs_e, ino_t dir_ino, ino_t root_ino, uid_t uid,
++	gid_t gid, struct lookup *resolve, lookup_res_t *res,
++	struct fproc *rfp);
++int req_mkdir(endpoint_t fs_e, ino_t inode_nr, char *lastc, uid_t uid,
++	gid_t gid, mode_t dmode);
++int req_mknod(endpoint_t fs_e, ino_t inode_nr, char *lastc, uid_t uid,
++	gid_t gid, mode_t dmode, dev_t dev);
++int req_mountpoint(endpoint_t fs_e, ino_t inode_nr);
++int req_newnode(endpoint_t fs_e, uid_t uid, gid_t gid, mode_t dmode,
++	dev_t dev, struct node_details *res);
++int req_putnode(int fs_e, ino_t inode_nr, int count);
++int req_rdlink(endpoint_t fs_e, ino_t inode_nr, endpoint_t proc_e,
++	vir_bytes buf, size_t len, int direct);
++int req_readsuper(struct vmnt *vmp, char *driver_name, dev_t dev, int readonly,
++	int isroot, struct node_details *res_nodep, unsigned int *fs_flags);
++int req_readwrite(endpoint_t fs_e, ino_t inode_nr, off_t pos, int rw_flag,
++	endpoint_t user_e, vir_bytes user_addr, unsigned int num_of_bytes,
++	off_t *new_posp, unsigned int *cum_iop);
++int req_bpeek(endpoint_t fs_e, dev_t dev, off_t pos, unsigned int num_of_bytes);
++int req_peek(endpoint_t fs_e, ino_t inode_nr, off_t pos, unsigned int bytes);
++int req_rename(endpoint_t fs_e, ino_t old_dir, char *old_name, ino_t new_dir,
++	char *new_name);
++int req_rmdir(endpoint_t fs_e, ino_t inode_nr, char *lastc);
++int req_slink(endpoint_t fs_e, ino_t inode_nr, char *lastc, endpoint_t proc_e,
++	vir_bytes path_addr, size_t path_length, uid_t uid, gid_t gid);
++int req_stat(endpoint_t fs_e, ino_t inode_nr, endpoint_t proc_e, vir_bytes buf);
++int req_sync(endpoint_t fs_e);
++int req_unlink(endpoint_t fs_e, ino_t inode_nr, char *lastc);
++int req_unmount(endpoint_t fs_e);
++int req_utime(endpoint_t fs_e, ino_t inode_nr, struct timespec * actv,
++	struct timespec * modtv);
++int req_newdriver(endpoint_t fs_e, dev_t dev, char *label);
++
++/* stadir.c */
++int do_chdir(void);
++int do_fchdir(void);
++int do_chroot(void);
++int do_fstat(void);
++int do_stat(void);
++int do_statvfs(void);
++int do_fstatvfs(void);
++int do_getvfsstat(void);
++int do_rdlink(void);
++int do_lstat(void);
++int update_statvfs(struct vmnt *vmp, struct statvfs *buf);
++
++/* time.c */
++int do_utimens(void);
++
++/* tll.c */
++void tll_downgrade(tll_t *tllp);
++int tll_haspendinglock(tll_t *tllp);
++void tll_init(tll_t *tllp);
++int tll_islocked(tll_t *tllp);
++int tll_lock(tll_t *tllp, tll_access_t locktype);
++int tll_locked_by_me(tll_t *tllp);
++void tll_lockstat(tll_t *tllp);
++int tll_unlock(tll_t *tllp);
++void tll_upgrade(tll_t *tllp);
++
++/* utility.c */
++struct timespec clock_timespec(void);
++int copy_path(char *dest, size_t size);
++int fetch_name(vir_bytes path, size_t len, char *dest);
++int isokendpt_f(const char *f, int l, endpoint_t e, int *p, int ft);
++int in_group(struct fproc *rfp, gid_t grp);
++int sys_datacopy_wrapper(endpoint_t src, vir_bytes srcv, endpoint_t dst, vir_bytes dstv,
++	size_t len);
++
++#define okendpt(e, p) isokendpt_f(__FILE__, __LINE__, (e), (p), 1)
++#define isokendpt(e, p) isokendpt_f(__FILE__, __LINE__, (e), (p), 0)
++
++/* vmnt.c */
++void check_vmnt_locks(void);
++void check_vmnt_locks_by_me(struct fproc *rfp);
++void mark_vmnt_free(struct vmnt *vmp);
++struct vmnt *get_free_vmnt(void);
++struct vmnt *find_vmnt(endpoint_t fs_e);
++struct vmnt *get_locked_vmnt(struct fproc *rfp);
++void init_vmnts(void);
++int lock_vmnt(struct vmnt *vp, tll_access_t locktype);
++void unlock_vmnt(struct vmnt *vp);
++void vmnt_unmap_by_endpt(endpoint_t proc_e);
++void fetch_vmnt_paths(void);
++void upgrade_vmnt_lock(struct vmnt *vmp);
++void downgrade_vmnt_lock(struct vmnt *vmp);
++
++/* vnode.c */
++void check_vnode_locks(void);
++void check_vnode_locks_by_me(struct fproc *rfp);
++struct vnode *get_free_vnode(void);
++struct vnode *find_vnode(int fs_e, ino_t inode);
++void init_vnodes(void);
++int is_vnode_locked(struct vnode *vp);
++int lock_vnode(struct vnode *vp, tll_access_t locktype);
++void unlock_vnode(struct vnode *vp);
++void dup_vnode(struct vnode *vp);
++void put_vnode(struct vnode *vp);
++void vnode_clean_refs(struct vnode *vp);
++void upgrade_vnode_lock(struct vnode *vp);
++
++/* write.c */
++int do_write(void);
++
++/* gcov.c */
++int do_gcov_flush(void);
++#if ! USE_COVERAGE
++#define do_gcov_flush NULL
++#endif
++
++/* select.c */
++int do_select(void);
++void init_select(void);
++void select_callback(struct filp *, int ops);
++void select_forget(void);
++void select_reply1(endpoint_t driver_e, devminor_t minor, int status);
++void select_reply2(endpoint_t driver_e, devminor_t minor, int status);
++void select_timeout_check(minix_timer_t *);
++void select_unsuspend_by_endpt(endpoint_t proc);
++
++/* worker.c */
++void worker_init(void);
++int worker_available(void);
++struct worker_thread *worker_get(thread_t worker_tid);
++void worker_signal(struct worker_thread *worker);
++int worker_can_start(struct fproc *rfp);
++void worker_start(struct fproc *rfp, void (*func)(void), message *m_ptr,
++	int use_spare);
++void worker_stop(struct worker_thread *worker);
++void worker_stop_by_endpt(endpoint_t proc_e);
++void worker_wait(void);
++struct worker_thread *worker_suspend(void);
++void worker_resume(struct worker_thread *org_self);
++void worker_set_proc(struct fproc *rfp);
++#endif
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/read.c sol/usr/src/minix/servers/vfs/read.c
+--- orig/usr/src/minix/servers/vfs/read.c	2023-06-19 00:04:44.580919298 +0200
++++ sol/usr/src/minix/servers/vfs/read.c	2023-06-19 00:05:55.143934183 +0200
+@@ -10,6 +10,7 @@
+  *
+  */
+ 
++#include "const.h"
+ #include "fs.h"
+ #include <minix/callnr.h>
+ #include <minix/com.h>
+@@ -110,6 +111,10 @@ int actual_read_write_peek(struct fproc
+ 	unlock_filp(f);
+ 	return(0);	/* so char special files need not check for 0*/
+   }
++  if((r = exclusive_access(rfp, f->filp_vno, EX_READ)) != OK ) {
++    unlock_filp(f);
++    return r;
++  }
+ 
+   r = read_write(rfp, rw_flag, f, scratch(rfp).io.io_buffer,
+ 	scratch(rfp).io.io_nbytes, who_e);
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/table.c sol/usr/src/minix/servers/vfs/table.c
+--- orig/usr/src/minix/servers/vfs/table.c	2023-06-19 00:04:36.980319096 +0200
++++ sol/usr/src/minix/servers/vfs/table.c	2023-06-19 00:05:47.263581292 +0200
+@@ -65,4 +65,6 @@ int (* const call_vec[NR_VFS_CALLS])(voi
+ 	CALL(VFS_COPYFD)	= do_copyfd,		/* copyfd(2) */
+ 	CALL(VFS_CHECKPERMS)	= do_checkperms,	/* checkperms(2) */
+ 	CALL(VFS_GETSYSINFO)	= do_getsysinfo,	/* getsysinfo(2) */
++	CALL(VFS_EXCLUSIVE)	= do_exclusive,		/* exclusive() */
++	CALL(VFS_FEXCLUSIVE)	= do_fexclusive,	/* fexclusive() */
+ };
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/table.c.orig sol/usr/src/minix/servers/vfs/table.c.orig
+--- orig/usr/src/minix/servers/vfs/table.c.orig	1970-01-01 01:00:00.000000000 +0100
++++ sol/usr/src/minix/servers/vfs/table.c.orig	2023-06-19 00:05:54.807919058 +0200
+@@ -0,0 +1,68 @@
++/* This file contains the table used to map system call numbers onto the
++ * routines that perform them.
++ */
++
++#define _TABLE
++
++#include "fs.h"
++#include <minix/callnr.h>
++#include <minix/com.h>
++#include "file.h"
++#include "lock.h"
++#include "scratchpad.h"
++#include "vnode.h"
++#include "vmnt.h"
++
++#define CALL(n) [((n) - VFS_BASE)]
++
++int (* const call_vec[NR_VFS_CALLS])(void) = {
++	CALL(VFS_READ)		= do_read,		/* read(2) */
++	CALL(VFS_WRITE)		= do_write,		/* write(2) */
++	CALL(VFS_LSEEK)		= do_lseek,		/* lseek(2) */
++	CALL(VFS_OPEN)		= do_open,		/* open(2) */
++	CALL(VFS_CREAT)		= do_creat,		/* creat(2) */
++	CALL(VFS_CLOSE)		= do_close,		/* close(2) */
++	CALL(VFS_LINK)		= do_link,		/* link(2) */
++	CALL(VFS_UNLINK)	= do_unlink,		/* unlink(2) */
++	CALL(VFS_CHDIR)		= do_chdir,		/* chdir(2) */
++	CALL(VFS_MKDIR)		= do_mkdir,		/* mkdir(2) */
++	CALL(VFS_MKNOD)		= do_mknod,		/* mknod(2) */
++	CALL(VFS_CHMOD)		= do_chmod,		/* chmod(2) */
++	CALL(VFS_CHOWN)		= do_chown,		/* chown(2) */
++	CALL(VFS_MOUNT)		= do_mount,		/* mount(2) */
++	CALL(VFS_UMOUNT)	= do_umount,		/* umount(2) */
++	CALL(VFS_ACCESS)	= do_access,		/* access(2) */
++	CALL(VFS_SYNC)		= do_sync,		/* sync(2) */
++	CALL(VFS_RENAME)	= do_rename,		/* rename(2) */
++	CALL(VFS_RMDIR)		= do_unlink,		/* rmdir(2) */
++	CALL(VFS_SYMLINK)	= do_slink,		/* symlink(2) */
++	CALL(VFS_READLINK)	= do_rdlink,		/* readlink(2) */
++	CALL(VFS_STAT)		= do_stat,		/* stat(2) */
++	CALL(VFS_FSTAT)		= do_fstat,		/* fstat(2) */
++	CALL(VFS_LSTAT)		= do_lstat,		/* lstat(2) */
++	CALL(VFS_IOCTL)		= do_ioctl,		/* ioctl(2) */
++	CALL(VFS_FCNTL)		= do_fcntl,		/* fcntl(2) */
++	CALL(VFS_PIPE2)		= do_pipe2,		/* pipe2(2) */
++	CALL(VFS_UMASK)		= do_umask,		/* umask(2) */
++	CALL(VFS_CHROOT)	= do_chroot,		/* chroot(2) */
++	CALL(VFS_GETDENTS)	= do_getdents,		/* getdents(2) */
++	CALL(VFS_SELECT)	= do_select,		/* select(2) */
++	CALL(VFS_FCHDIR)	= do_fchdir,		/* fchdir(2) */
++	CALL(VFS_FSYNC)		= do_fsync,		/* fsync(2) */
++	CALL(VFS_TRUNCATE)	= do_truncate,		/* truncate(2) */
++	CALL(VFS_FTRUNCATE)	= do_ftruncate,		/* ftruncate(2) */
++	CALL(VFS_FCHMOD)	= do_chmod,		/* fchmod(2) */
++	CALL(VFS_FCHOWN)	= do_chown,		/* fchown(2) */
++	CALL(VFS_UTIMENS)	= do_utimens,		/* [fl]utime[n]s(2) */
++	CALL(VFS_VMCALL)	= do_vm_call,
++	CALL(VFS_GETVFSSTAT)	= do_getvfsstat,	/* getvfsstat(2) */
++	CALL(VFS_STATVFS1)	= do_statvfs,		/* statvfs(2) */
++	CALL(VFS_FSTATVFS1)	= do_fstatvfs,		/* fstatvfs(2) */
++	CALL(VFS_GETRUSAGE)	= do_getrusage,		/* getrusage(2) */
++	CALL(VFS_SVRCTL)	= do_svrctl,		/* svrctl(2) */
++	CALL(VFS_GCOV_FLUSH)	= do_gcov_flush,	/* gcov_flush(2) */
++	CALL(VFS_MAPDRIVER)	= do_mapdriver,		/* mapdriver(2) */
++	CALL(VFS_COPYFD)	= do_copyfd,		/* copyfd(2) */
++	CALL(VFS_CHECKPERMS)	= do_checkperms,	/* checkperms(2) */
++	CALL(VFS_GETSYSINFO)	= do_getsysinfo,	/* getsysinfo(2) */
++};
+diff -rupNEZbB orig/usr/src/minix/servers/vfs/vnode.h sol/usr/src/minix/servers/vfs/vnode.h
+--- orig/usr/src/minix/servers/vfs/vnode.h	2023-06-19 00:04:37.972401026 +0200
++++ sol/usr/src/minix/servers/vfs/vnode.h	2023-06-19 00:05:47.803605350 +0200
+@@ -1,6 +1,9 @@
+ #ifndef __VFS_VNODE_H__
+ #define __VFS_VNODE_H__
+ 
++#define NAME_LOCK 1
++#define FD_LOCK 2
++
+ EXTERN struct vnode {
+   endpoint_t v_fs_e;            /* FS process' endpoint number */
+   endpoint_t v_mapfs_e;		/* mapped FS process' endpoint number */
+@@ -22,6 +25,14 @@ EXTERN struct vnode {
+   tll_t v_lock;			/* three-level-lock */
+ } vnode[NR_VNODES];
+ 
++EXTERN struct exclusive {
++  int lock_type;
++  ino_t inode_nr;
++  int fd;
++  uid_t locker_id;
++
++} exclusive[NR_EXCLUSIVE];
++
+ /* vnode lock types mapping */
+ #define VNODE_NONE TLL_NONE	/* used only for get_filp2 to avoid locking */
+ #define VNODE_READ TLL_READ
