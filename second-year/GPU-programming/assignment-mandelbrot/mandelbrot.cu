@@ -1,13 +1,3 @@
-//
-//  Mandelbrot.cpp
-//
-//
-//  Created by Witold Rudnicki
-//
-// Kompilacja
-// c++ -o mandel_cpu Mandelbrot.cpp -L /usr/local/lib -l PNGwriter -l png
-//
-
 #define NO_FREETYPE
 
 #include <math.h>
@@ -164,38 +154,40 @@ void compute_cpu(real X0, real Y0, real X1, real Y1, int POZ, int PION,
 void compute_gpu(real X0, real Y0, real X1, real Y1, int POZ, int PION,
                  int ITER, int TIMES, int* Iters_gpu, double ORIG, double FRAC,
                  int d1, int d2) {
-  double * result = (double*) malloc(TIMES * sizeof(double));
- //printf("calculating for %d D %d \n", d1, d2);
-    dim3 blockSize{d1, d2, 1};
-    dim3 blockCount{POZ / blockSize.x + 1, PION / blockSize.y + 1, 1};
-    double sum = 0;
-    for (int j = 0; j < TIMES; j++) {
-      auto start2 = chrono::steady_clock::now();
-      computeMandelbrotDD<<<blockCount, blockSize>>>(X0, Y0, X1, Y1, POZ, PION,
-                                                     ITER, Iters_gpu);
-      cudaDeviceSynchronize();
-      auto stop = chrono::steady_clock::now();
-      auto diff = stop - start2;
-      double dif = chrono::duration<double, milli>(diff).count();
-      // printf("iteration #%d for %d D %d took %.2f ms\n", j,TOTAL/i, i, dif);
-      result[j] = dif;
-      sum += dif;
-    }
-    qsort(result, TIMES, sizeof(double), compare);
-    sum /= TIMES;
-    double ssd = 0;
-    for (int j = 0; j < TIMES; j++) {
-      ssd += pow((sum - result[j]), 2) / (TIMES - 1);
-    }
-    ssd = pow(ssd, 0.5) / pow(TIMES, 0.5);
+  double* result = (double*)malloc(TIMES * sizeof(double));
+  //printf("calculating for %d D %d \n", d1, d2);
+  dim3 blockSize{d1, d2, 1};
+  dim3 blockCount{POZ / blockSize.x + 1, PION / blockSize.y + 1, 1};
+  double sum = 0;
+  for (int j = 0; j < TIMES; j++) {
+    auto start2 = chrono::steady_clock::now();
+    computeMandelbrotDD<<<blockCount, blockSize>>>(X0, Y0, X1, Y1, POZ, PION,
+                                                   ITER, Iters_gpu);
+    cudaDeviceSynchronize();
+    auto stop = chrono::steady_clock::now();
+    auto diff = stop - start2;
+    double dif = chrono::duration<double, milli>(diff).count();
+    // printf("iteration #%d for %d D %d took %.2f ms\n", j,TOTAL/i, i, dif);
+    result[j] = dif;
+    sum += dif;
+  }
+  qsort(result, TIMES, sizeof(double), compare);
+  sum /= TIMES;
+  double ssd = 0;
+  for (int j = 0; j < TIMES; j++) {
+    ssd += pow((sum - result[j]), 2) / (TIMES - 1);
+  }
+  ssd = pow(ssd, 0.5) / pow(TIMES, 0.5);
 
-    /* printf("result for %d D %d: \n", d1, d2); */
-    /* printf("median: %.2f\n", result[TIMES / 2]); */
-    /* printf("min: %.2f\n", result[0]); */
-    /* printf("average: %.2f +/- %.2f\n", sum, ssd); */
-   /* printf("speedup: %.2f +/- %.2f\n", ORIG / sum,  (ORIG + FRAC) / (sum - ssd) -  ORIG / sum); */
-    printf("%d& %d& %.2f& %.2f& %.2f +/- %.2f& %.2f +/- %.2f \\\n", d1, d2, result[TIMES / 2], result[0], sum, ssd, ORIG/sum,  (ORIG + FRAC) / (sum - ssd) -  ORIG / sum);
- }
+  /* printf("result for %d D %d: \n", d1, d2); */
+  /* printf("median: %.2f\n", result[TIMES / 2]); */
+  /* printf("min: %.2f\n", result[0]); */
+  /* printf("average: %.2f +/- %.2f\n", sum, ssd); */
+  /* printf("speedup: %.2f +/- %.2f\n", ORIG / sum,  (ORIG + FRAC) / (sum - ssd) -  ORIG / sum); */
+  printf("%d& %d& %.2f& %.2f& %.2f +/- %.2f& %.2f +/- %.2f \\\n", d1, d2,
+         result[TIMES / 2], result[0], sum, ssd, ORIG / sum,
+         (ORIG + FRAC) / (sum - ssd) - ORIG / sum);
+}
 
 int main(int argc, char** argv) {
   struct timeval T0, T1;
@@ -232,81 +224,76 @@ int main(int argc, char** argv) {
     std::cout << cudaGetErrorString(status) << std::endl;
     return 1;
   }
-for(int a = 0; a < 2; a++){
-  double* result = (double*)calloc(TIMES, sizeof(double));
-  double* arr = (double*)malloc(2 * sizeof(double));
-  for (int k = 0; k < 12; k++) {
-    compute_cpu(X0, Y0, X1, Y1, POZ / 10, PION / 10, ITER, 1, arr);
-  }
-  double ORIG = arr[0];
-  double FRAC = arr[1];
-  while(FRAC > 50) {
-    compute_cpu(X0, Y0, X1, Y1, POZ / 10, PION / 10, ITER, 1, arr);
-    ORIG = arr[0];
-    FRAC = arr[1];
-  }
-  // do computations
-  printf("Computations for rectangle { (%lf %lf), (%lf %lf) }\n", X0, Y0, X1,
-         Y1);
+  for (int a = 0; a < 2; a++) {
+    double* result = (double*)calloc(TIMES, sizeof(double));
+    double* arr = (double*)malloc(2 * sizeof(double));
+    for (int k = 0; k < 12; k++) {
+      compute_cpu(X0, Y0, X1, Y1, POZ / 10, PION / 10, ITER, 1, arr);
+    }
+    double ORIG = arr[0];
+    double FRAC = arr[1];
+    while (FRAC > 50) {
+      compute_cpu(X0, Y0, X1, Y1, POZ / 10, PION / 10, ITER, 1, arr);
+      ORIG = arr[0];
+      FRAC = arr[1];
+    }
+    // do computations
+    printf("Computations for rectangle { (%lf %lf), (%lf %lf) }\n", X0, Y0, X1,
+           Y1);
 
-  printf("1d calculations: \n");
-  for (int i = 32; i <= 1024; i *= 2) {
-    compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, i,
-              1);
+    printf("1d calculations: \n");
+    for (int i = 32; i <= 1024; i *= 2) {
+      compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                  i, 1);
+    }
 
+    int TOTAL = 256;
+    printf("2d calculations: \n");
+    for (int i = 1; i <= TOTAL; i *= 2) {
+      compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                  TOTAL / i, i);
+    }
 
-  }
+    TOTAL = 1024;
+    printf("2d calculations: \n");
+    for (int i = 1; i <= TOTAL; i *= 2) {
+      compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                  TOTAL / i, i);
+    }
 
-  int TOTAL = 256;
-  printf("2d calculations: \n");
-  for (int i = 1; i <= TOTAL; i *= 2) {
-    compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, TOTAL / i,
-              i);
+    for (int k = 32; k >= 8; k /= 2) {
+      compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                  k, k);
+    }
 
-  }
-
-  TOTAL = 1024;
-  printf("2d calculations: \n");
-  for (int i = 1; i <= TOTAL; i *= 2) {
-  compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, TOTAL / i,
-              i);
-  }
-
-  for (int k = 32; k >= 8; k /= 2) {
     compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
-                k, k);
+                32, 16);
+
+    compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                64, 8);
+
+    compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                8, 64);
+
+    compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC,
+                16, 32);
+
+    /**/
+    /*        auto start2 = chrono::steady_clock::now();  */
+    /* gettimeofday(&t0,NULL); */
+    /* dim3 blockSize{32, 1, 1}; */
+    /* dim3 blockCount{POZ * PION / (blockSize.x * blockSize.y) + 1, 1, 1}; */
+    /**/
+    /* computeMandelbrot<<<blockCount, blockSize>>>(X0, Y0, X1, Y1, POZ, PION, ITER, Iters_gpu); */
+    /* gettimeofday(&t1,NULL); */
+    /*     end=clock(); */
+    /* auto diff = stop - start2; */
+    /**/
+    /* cout << chrono::duration <double, milli> (diff).count() << " ms" << endl; */
+    /* cout << chrono::duration <double, micro> (diff).count() << " us" << endl; */
+    /* cout << chrono::duration <double, nano> (diff).count() << " ns" << endl; */
+    /**/
+    /* printf("\nTotal %d iterations took %lf s\n\n",1,1.0*(end-start)/CLOCKS_PER_SEC); */
+    /* printf("Elapsed time %12.6lf s\n\n",(t1.tv_sec-t0.tv_sec)+1e-6*(t1.tv_usec-t0.tv_usec)); */
   }
-
-  compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, 32,
-              16);
-
-  compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, 64,
-              8);
-
-  compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, 8,
-              64);
-
-  compute_gpu(X0, Y0, X1, Y1, POZ, PION, ITER, TIMES, Iters_gpu, ORIG, FRAC, 16,
-              32);
-
-  /**/
-  /*        auto start2 = chrono::steady_clock::now();  */
-  /* gettimeofday(&t0,NULL); */
-  /* dim3 blockSize{32, 1, 1}; */
-  /* dim3 blockCount{POZ * PION / (blockSize.x * blockSize.y) + 1, 1, 1}; */
-  /**/
-  /* computeMandelbrot<<<blockCount, blockSize>>>(X0, Y0, X1, Y1, POZ, PION, ITER, Iters_gpu); */
-  /* gettimeofday(&t1,NULL); */
-  /*     end=clock(); */
-  /* auto diff = stop - start2; */
-  /**/
-  /* cout << chrono::duration <double, milli> (diff).count() << " ms" << endl; */
-  /* cout << chrono::duration <double, micro> (diff).count() << " us" << endl; */
-  /* cout << chrono::duration <double, nano> (diff).count() << " ns" << endl; */
-  /**/
-  /* printf("\nTotal %d iterations took %lf s\n\n",1,1.0*(end-start)/CLOCKS_PER_SEC); */
-  /* printf("Elapsed time %12.6lf s\n\n",(t1.tv_sec-t0.tv_sec)+1e-6*(t1.tv_usec-t0.tv_usec)); */
-
 }
-}
-
