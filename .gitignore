@@ -1,3 +1,49 @@
 **/.DS_Store
 **/.vscode 
 **/.clang-format
+**/.idea
+**/.mypy_cache
+**/*.lock
+**/*debug*
+
+# standalone thesis repo (own git history)
+fifth-year/thesis/
+
+# fifth-year VM images (too large for git)
+**/*.ova
+**/*.vmdk
+**/*.ovf
+**/*.mf
+
+# latex build artifacts
+**/*.aux
+**/*.fdb_latexmk
+**/*.fls
+**/*.synctex.gz
+**/*.out
+**/*.log
+**/*.toc
+
+# compiled / build artifacts
+**/*.class
+**/*.profraw
+**/.stack-work/
+**/dist-newstyle/
+**/__pycache__/
+**/*.pyc
+**/.venv/
+
+# rust build dirs
+**/target/
+
+# editor/generated backups
+**/*.bak
+**/Par.info
+
+# stray / duplicate junk
+fourth-year/iii/grocery.zip
+fourth-year/iii/grocery/README.mdgit
+fourth-year/compiling-languages/instant231015/instester/instester
+fourth-year/distributed-systems/dsassignment3/hl456366/
+fourth-year/distributed-systems/dsassignment3/hl456366.zip
+fourth-year/distributed-systems/dsassignment3/public-tests/log.txt
