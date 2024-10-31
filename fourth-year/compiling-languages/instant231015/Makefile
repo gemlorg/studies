@@ -1,8 +1,10 @@
 .PHONY: build 
 
 build:
-	cabal build
-	cabal install  --installdir=. --overwrite-policy=always   
+	cabal build insc_jvm 
+	cabal build insc_llvm 
+	cabal install  insc_jvm --installdir=. --overwrite-policy=always   
+	cabal install  insc_llvm --installdir=. --overwrite-policy=always   
 	
 
 .PHONY: clean
