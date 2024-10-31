@@ -1,0 +1,78 @@
+cabal-version:      3.0
+name:               instant231015
+version:            0.1.0.0
+license:            MIT
+license-file:       LICENSE
+author:             Heorhii Lopatin
+maintainer:         gosha10goshalol@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wno-missing-home-modules -Wno-partial-fields -Wredundant-constraints -Wno-name-shadowing
+
+library
+    import:           warnings
+
+    exposed-modules:
+        LLVM.Compiler
+        LLVM.Monad
+        LLVM.Types
+        LLVM.Environment
+        JVM.Compiler
+        JVM.Monad
+        JVM.Types
+        JVM.Environment
+        Grammar.Abs
+        Grammar.Lex
+        Grammar.Par
+        Grammar.Print
+        Grammar.Skel
+
+    build-depends:    array
+        , base >=4.7 && <5
+        , containers
+        , mtl >= 2.2
+        , lens >= 4.19
+        , text
+        , filepath
+        , process
+
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable insc_llvm
+    import:           warnings
+    main-is:          insc_llvm.hs
+
+    build-depends:    instant231015
+                      , array
+                      , base >=4.7 && <5
+                      , containers
+                      , mtl >= 2.2
+                      , lens >= 4.19
+                      , text
+                      , filepath
+                      , process
+    ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wno-missing-home-modules -Wpartial-fields -Wredundant-constraints
+
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable insc_jvm
+    import:           warnings
+    main-is:          insc_jvm.hs
+
+    build-depends:    instant231015
+                      , array
+                      , base >=4.7 && <5
+                      , containers
+                      , mtl >= 2.2
+                      , lens >= 4.19
+                      , text
+                      , filepath
+                      , process
+
+
+    hs-source-dirs:   src
+    default-language: Haskell2010
