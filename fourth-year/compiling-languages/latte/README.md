@@ -31,3 +31,14 @@ None of the extensions are currently implemented, but if they will be, it would 
   ```
   The testing script (`test.sh`), as well as the tests, however, was taken from an external repository.
 
+
+required haskell libs: 
+
+    build-depends:    array
+        , base >=4.7 && <5
+        , containers
+        , mtl >= 2.2
+        , lens >= 4.19
+        , text
+        , filepath
+        , process
