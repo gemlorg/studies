@@ -4,18 +4,18 @@
 
 ## Overview
 
-This project implements a compiler with a focus on modularity and extensibility. It is written in **Haskell** and structured to facilitate both front-end and back-end development. The implementation adheres to course requirements, targeting both **LLVM IR** and **x86_64 assembly** for code generation.
+This project implements a compiler, for the Latte language, the executale compiles the source code to x86 assembly, using llvm as an IR for better optimisation. 
 
+None of the extensions are currently implemented, but if they will be, it would be mentioned in the README file
 ## Directory Structure
 
 - **`src/`**: Contains the source code for the project, organized into key components:
-  - `Common/`: Shared utilities and data structures.
+  - `Common/`: Shared utilities and exceptions logic.
   - `Compiler/`: Main compiler logic.
-  - `Grammar/`: Grammar definitions and parsers.
-  - `Typechecker/`: Semantic analysis for type checking.
-  - `latc_x86_64.hs`: The entry point for the x86_64 back-end.
+  - `Grammar/`: Grammar definition and parsers.
+  - `Typechecker/`: Front-end.
+  - `latc_x86_64.hs`: The main file.
 - **`tests/`**: Contains test scripts and programs for validating the compiler's functionality.
-- **`Makefile`**: Build system for compiling the project and managing dependencies.
 
 ## Compilation and Testing
 
@@ -29,19 +29,5 @@ This project implements a compiler with a focus on modularity and extensibility.
   ```bash
   make test
   ```
-  The testing script (`test.sh`) is adapted from an external repository, with proper attribution included in the source files.
+  The testing script (`test.sh`), as well as the tests, however, was taken from an external repository.
 
-## Key Features
-
-- **Front-End**: Implements lexical, syntactic, and semantic analysis using tools and libraries native to Haskell.
-- **Back-End**:
-  - **LLVM IR**: Generates `.ll` files for intermediate representation and optimizations.
-  - **x86_64 Assembly**: Produces `.s` assembly files optimized for x86_64 architecture.
-- **Optimizations**: The LLVM back-end incorporates optimizations such as register allocation with `phi` nodes, avoiding unnecessary memory operations.
-
-## Submission and Compatibility
-
-The project is designed to be portable and runs on lab machines. It adheres to the required submission format (TAR archive). Once built, the `latc_x86_64` executable can process programs written in the target language, outputting assembly or LLVM IR as appropriate.
-```
-
-You can copy and paste this Markdown into your README file. Let me know if further adjustments are needed!
