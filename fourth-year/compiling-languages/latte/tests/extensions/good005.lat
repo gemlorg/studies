@@ -1,0 +1,22 @@
+int main() {
+    A a = new A;
+    A b = a;
+    //int x = 2;
+    a.a = 42;
+    f();
+    printInt(a.a);
+    return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+}
+
+
+int f() {
+    A a = new A;
+    A b = new A;
+    return 1;
+}

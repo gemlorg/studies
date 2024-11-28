@@ -1,0 +1,14 @@
+int main() {
+    string[] arr = new string[20]; 
+    int i = 1;
+    string s = "hej";
+    while (i < 20) {
+        string[] arr2 = new string[20];
+        arr2[i] = s + s;
+        printString(arr2[i]);
+        i = i + 2;
+    }
+    printInt(arr.length);
+    return 0;
+}
+

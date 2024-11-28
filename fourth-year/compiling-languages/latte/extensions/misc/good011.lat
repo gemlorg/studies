@@ -1,0 +1,17 @@
+int main() {
+    string a = "bb", b = "bb";
+    if (a == b) {
+        a = "ab";
+        printString("then");
+    } else {
+        printString("else");
+    }
+
+    if (a == b) {
+        printString("then");
+    } else {
+        printString("else");
+    }
+
+    return 0;
+}

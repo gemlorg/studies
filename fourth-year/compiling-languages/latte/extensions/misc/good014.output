@@ -1,0 +1,10 @@
+A a = new A;
+0
+
+hi
+B b = new B;
+0
+A ab = new B;
+C c = new C;
+hi from C.a of type A
+f from A

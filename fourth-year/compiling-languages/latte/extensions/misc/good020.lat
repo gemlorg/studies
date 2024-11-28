@@ -1,0 +1,10 @@
+int main() {
+    string[] arr = new string[10];
+
+    printInt(arr.length);
+    printString(arr[0]); 
+    printString(arr[4]);
+    arr[3] = "Hello World!";
+    printString(arr[3]);
+    return 0;
+}

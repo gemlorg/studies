@@ -1,0 +1,12 @@
+int main() {
+    string s1 = "";
+    string s2;  
+    if (s1 == s2) {
+        printString("empty string == null string");
+    } else {
+        error();
+    }
+
+    return 0;
+}
+

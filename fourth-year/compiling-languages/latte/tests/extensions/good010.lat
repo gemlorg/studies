@@ -1,0 +1,16 @@
+int main() {
+    {
+        string a = "test" + "test2";
+        string b = a;
+        {
+            string a = "test" + "test2";
+            string c = "test" + "test2";
+            {
+                string x = "test" + "test2";
+                "test" + "test2";
+                return 0;
+            }
+        }
+    }
+    return 0;
+}

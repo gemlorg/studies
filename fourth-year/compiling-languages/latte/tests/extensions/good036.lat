@@ -1,0 +1,27 @@
+int main() {
+    int i = 0;
+    A a = new A;
+    a;
+    a;
+    a.a = 2;
+    a;
+    a;
+    printInt(a.a);
+    while (i <= 1000) {
+        newA();
+        a = newA();
+        A a2 = newA();
+        A a3;
+        i++;
+    }
+
+    return 0;
+}
+
+A newA() {return new A;}
+
+class A {
+    int a;
+    int b;
+    int c;
+}

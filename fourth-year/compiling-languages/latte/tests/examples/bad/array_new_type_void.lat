@@ -1,0 +1,4 @@
+int main() {
+    int[] arr = new void[10];
+    return 1;
+}

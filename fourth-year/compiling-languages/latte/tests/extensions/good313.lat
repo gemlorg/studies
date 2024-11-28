@@ -1,0 +1,14 @@
+int main() {
+    A[] arr = new A[10];
+    arr[0] = new A;
+    arr[3] = new A;
+    arr[3].a = 13;
+    printInt(arr[3].a);
+    return 0;
+}
+
+
+class A {
+    int a;
+    int b;
+}

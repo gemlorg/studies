@@ -1,0 +1,16 @@
+int main() {
+    int a, b;
+    a = 0; b = 1;
+    a = 42;
+    printInt(a*b);
+    printInt(a*10);
+    printInt(10*a);
+    printInt(a*b);
+
+    printInt(a+b);
+    printInt(a-b);
+
+    string s1 = "a", s2 = "b";
+    printString(s2);
+    return 0;
+}

@@ -1,0 +1,14 @@
+int main() {
+    A a;
+    if (a == cast<A,null>) {
+        printString("ok");
+    } else {
+        printString("wrong");
+    }
+
+    return 0;
+}
+
+class A {
+    int a;
+}

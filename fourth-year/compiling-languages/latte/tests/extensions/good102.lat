@@ -1,0 +1,12 @@
+int main() {
+    string[] arr = new string[10];
+    int i = 0;
+    //string s = "a";
+    while (i < 10) {
+        arr[i] = "a";
+        printString(arr[i]);
+        i++;
+    }
+    return 0;
+}
+

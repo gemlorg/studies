@@ -1,0 +1,11 @@
+int main() {
+    A a;
+    B b;
+    C c;
+    a = c;
+    return 0;
+}
+
+class A {}
+class B extends A {}
+class C {}

@@ -1,0 +1,12 @@
+int main() {
+    A a;
+    a.f(true);
+
+    return 1;
+}
+ 
+class A {
+    int a;
+    int f(int a) {return 1;}
+}
+

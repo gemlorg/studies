@@ -1,0 +1,29 @@
+int main() {
+    {
+        A a = new A;
+        A b = a;
+        int x = 2;
+        {
+            A a = new A;
+            A c = new A;
+            {
+                A t = new A;
+                new A;
+                int x = 5;
+                if (x > 10) {
+                    return 0;
+                }
+            }
+        }
+        if (x < 3) {
+            return 0;
+        }
+    }
+    return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+}

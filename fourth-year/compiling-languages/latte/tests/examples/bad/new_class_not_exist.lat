@@ -1,0 +1,4 @@
+int main() {
+    A a = new A;
+    return 1;
+}

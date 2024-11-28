@@ -1,0 +1,333 @@
+.data
+
+.cstr50:
+    .int 42
+    .asciz "ok"
+.cstr51:
+    .int 42
+    .asciz "wrong"
+
+.text
+
+.global main
+
+__default_destructor:
+    movl 4(%esp), %eax
+    push %eax
+    addl $-8, (%esp)
+    call free
+    addl $4, %esp
+    ret
+__array_destructor:
+    movl 4(%esp), %eax
+    push %eax
+    push (%eax)
+    push $0
+    jmp .label1
+.label0:
+    movl 8(%esp), %eax
+    movl (%esp), %ecx
+    leal (%eax,%ecx,4), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jz .label1
+    decl -4(%eax)
+    movl -4(%eax), %ecx
+    test %ecx, %ecx
+    jnz .label1
+    push %eax
+    movl -8(%eax), %eax
+    call *%eax
+    addl $4, %esp
+.label1:
+    incl (%esp)
+    movl 4(%esp), %eax
+    cmpl %eax, (%esp)
+    jle .label0
+    pop %eax
+    pop %eax
+    addl $-8, (%esp)
+    call free
+    pop %eax
+    ret
+main:
+    push %ebp
+    movl %esp, %ebp
+    subl $4, %esp
+    movl $1, %eax
+    movl %eax, -4(%ebp)
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label4
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label6
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label8
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label10
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label12
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label14
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label16
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label18
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label20
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label22
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label24
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label26
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label28
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label30
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label32
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label34
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label36
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label38
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label40
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label42
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label44
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label46
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label48
+    leal -4(%ebp), %eax
+    movl (%eax), %eax
+    test %eax, %eax
+    jnz .label48
+    movl $0, %eax
+    jmp .label49
+.label48:
+    movl $1, %eax
+.label49:
+    test %eax, %eax
+    jnz .label46
+    movl $0, %eax
+    jmp .label47
+.label46:
+    movl $1, %eax
+.label47:
+    test %eax, %eax
+    jnz .label44
+    movl $0, %eax
+    jmp .label45
+.label44:
+    movl $1, %eax
+.label45:
+    test %eax, %eax
+    jnz .label42
+    movl $0, %eax
+    jmp .label43
+.label42:
+    movl $1, %eax
+.label43:
+    test %eax, %eax
+    jnz .label40
+    movl $0, %eax
+    jmp .label41
+.label40:
+    movl $1, %eax
+.label41:
+    test %eax, %eax
+    jnz .label38
+    movl $0, %eax
+    jmp .label39
+.label38:
+    movl $1, %eax
+.label39:
+    test %eax, %eax
+    jnz .label36
+    movl $0, %eax
+    jmp .label37
+.label36:
+    movl $1, %eax
+.label37:
+    test %eax, %eax
+    jnz .label34
+    movl $0, %eax
+    jmp .label35
+.label34:
+    movl $1, %eax
+.label35:
+    test %eax, %eax
+    jnz .label32
+    movl $0, %eax
+    jmp .label33
+.label32:
+    movl $1, %eax
+.label33:
+    test %eax, %eax
+    jnz .label30
+    movl $0, %eax
+    jmp .label31
+.label30:
+    movl $1, %eax
+.label31:
+    test %eax, %eax
+    jnz .label28
+    movl $0, %eax
+    jmp .label29
+.label28:
+    movl $1, %eax
+.label29:
+    test %eax, %eax
+    jnz .label26
+    movl $0, %eax
+    jmp .label27
+.label26:
+    movl $1, %eax
+.label27:
+    test %eax, %eax
+    jnz .label24
+    movl $0, %eax
+    jmp .label25
+.label24:
+    movl $1, %eax
+.label25:
+    test %eax, %eax
+    jnz .label22
+    movl $0, %eax
+    jmp .label23
+.label22:
+    movl $1, %eax
+.label23:
+    test %eax, %eax
+    jnz .label20
+    movl $0, %eax
+    jmp .label21
+.label20:
+    movl $1, %eax
+.label21:
+    test %eax, %eax
+    jnz .label18
+    movl $0, %eax
+    jmp .label19
+.label18:
+    movl $1, %eax
+.label19:
+    test %eax, %eax
+    jnz .label16
+    movl $0, %eax
+    jmp .label17
+.label16:
+    movl $1, %eax
+.label17:
+    test %eax, %eax
+    jnz .label14
+    movl $0, %eax
+    jmp .label15
+.label14:
+    movl $1, %eax
+.label15:
+    test %eax, %eax
+    jnz .label12
+    movl $0, %eax
+    jmp .label13
+.label12:
+    movl $1, %eax
+.label13:
+    test %eax, %eax
+    jnz .label10
+    movl $0, %eax
+    jmp .label11
+.label10:
+    movl $1, %eax
+.label11:
+    test %eax, %eax
+    jnz .label8
+    movl $0, %eax
+    jmp .label9
+.label8:
+    movl $1, %eax
+.label9:
+    test %eax, %eax
+    jnz .label6
+    movl $0, %eax
+    jmp .label7
+.label6:
+    movl $1, %eax
+.label7:
+    test %eax, %eax
+    jnz .label4
+    movl $0, %eax
+    jmp .label5
+.label4:
+    movl $1, %eax
+.label5:
+    test %eax, %eax
+    jz .label2
+    movl $.cstr50, %eax
+    addl $4, %eax
+    push %eax
+    call printString
+    addl $4, %esp
+    jmp .label3
+.label2:
+    movl $.cstr51, %eax
+    addl $4, %eax
+    push %eax
+    call printString
+    addl $4, %esp
+.label3:
+    movl $0, %eax
+    push %eax
+    pop %eax
+    leave
+    ret

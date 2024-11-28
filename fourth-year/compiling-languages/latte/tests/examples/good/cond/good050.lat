@@ -1,0 +1,8 @@
+int main() {
+  if ((2>1 || 3 < 2) && (2>4 && !(4>2))) {
+    printString("Hello");
+  } else {
+    printString("World");
+  }
+  return 1;
+}

@@ -1,0 +1,7 @@
+int main() {
+    return 0;
+}
+
+int f(custom_type a) {
+    return 0;
+}

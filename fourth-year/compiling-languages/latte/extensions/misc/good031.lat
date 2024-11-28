@@ -1,0 +1,35 @@
+
+int main() {
+    int size = 3;
+    int[] arr = new int[size];
+    int i = 0;
+    int a;
+    while (i < size) {
+        int a = 42;
+        arr[i] = i;
+        i++;
+    }
+    while (i < size+2) {
+        boolean a;
+        i++;
+    }
+
+    printString("### for1 ###");
+    for (int i: arr) {
+        printString("##### for2 #####");
+        for (int i: arr) {
+            printString("####### for3 #######");
+            for (int i: arr) {
+                printInt(i);
+            }
+            printString("####### end3 #######");
+            printInt(i);
+        }        
+        printString("##### end2 #####");
+        printInt(i);
+    }
+    printString("### end1 ###");
+    printInt(i);
+
+    return 0;
+}

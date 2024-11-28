@@ -1,0 +1,15 @@
+int main() {
+    A a = new A;
+    boolean b = cast<A,null> == a;
+    if (b) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+
+    return 0;
+}
+
+class A {
+    int a;
+}

@@ -1,0 +1,20 @@
+int main() {
+    A a = new A;
+    a.f();
+    a.s;  
+    a;
+    a;
+    a.s;
+    return 0;
+}
+
+class A {
+    int a;
+    string s;
+    void f() {
+        s = "hello 14 ";
+        s = s + s; 
+        s = s + s + s;
+        printString(s);
+    }
+}

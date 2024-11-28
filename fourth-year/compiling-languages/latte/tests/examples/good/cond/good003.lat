@@ -1,0 +1,12 @@
+int main() {
+    boolean a = true;
+    if (a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a || a) {
+        printString("ok");
+    } else {
+        printString("wrong");
+    }
+
+    return 0;
+}
+
+// expected one common label for true and one for false 

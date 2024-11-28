@@ -1,0 +1,13 @@
+int main() {
+    return 0;
+}
+
+class A {           // offset
+    int a;          
+    string s;       // 8
+    int[] arr;      // 12
+    string s2;      // 16
+    int a2;         
+    boolean b;      
+    int[] arr2;     // 28
+}

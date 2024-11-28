@@ -1,0 +1,5 @@
+int main() {
+    boolean b;
+    b--;
+    return 1;
+}

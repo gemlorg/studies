@@ -1,0 +1,43 @@
+int main() {
+    printString("A a = new A;");
+    A a = new A;
+    printInt(a.a);
+    printString(a.s);
+
+   // invalid, use setter :)
+    a.s = "hi";
+//    a.s = "hello from A";
+    //printInt(a.f());
+    printString(a.s);
+    
+    printString("B b = new B;");
+    B b = new B;
+    printInt(b.b);
+    
+    printString("A ab = new B;");
+    A ab = new B;
+    
+    printString("C c = new C;");
+    C c = new C;
+    c.a = new A;
+    c.a.setS("hi from C.a of type A");
+    printString(c.a.s);
+    c.a.f();
+    return 0;
+}
+
+class A {
+    int a;
+    string s;
+    void setS(string s_) {s = s_;}
+    int f() {printString("f from A"); return 0;}
+}
+
+class B extends A {
+    int b;
+    int f() {return 1;}
+}
+
+class C {
+    A a;
+}

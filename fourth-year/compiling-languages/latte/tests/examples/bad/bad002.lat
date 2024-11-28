@@ -1,0 +1,9 @@
+// Function inside Function
+
+int main() {
+    void f() {
+        return;
+    }
+
+    return 1;
+}

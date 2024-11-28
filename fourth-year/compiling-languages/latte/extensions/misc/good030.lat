@@ -1,0 +1,27 @@
+
+int main() {
+    int[] arr = new int[10];
+    int i = 0;
+    int a;
+    while (i < 10) {
+        int a = 42;
+        arr[i] = i;
+        i++;
+    }
+    while (i < 12) {
+        boolean a;
+        i++;
+    }
+
+    for (int i: arr) {
+        for (int i: arr) {
+            for (int i: arr) {
+                printInt(i);
+            }
+            printInt(i);
+        }        
+        printInt(i);
+    }
+
+    return 0;
+}

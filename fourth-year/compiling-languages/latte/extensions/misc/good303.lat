@@ -1,0 +1,24 @@
+int main() {
+    int size = 10;
+    int[] arr = new int[size];
+    int i = 0;
+    while (i < size) {
+        arr[i] = calculate(i);
+        i++;
+    }
+    for (int i: arr) {
+        printInt(i);
+    }
+    return 0;
+}
+
+
+int calculate(int i) {
+    int[] arr = new int[i+1];
+    int j = 0;
+    while (j <= i) {
+        arr[j] = j;
+        j++;
+    }
+    return arr[i] + 100;
+}

@@ -1,0 +1,21 @@
+int main() {
+    int i = 1;
+    {
+        int i = 10;
+        printInt(i);
+        i++;
+        printInt(i);
+    }
+    {
+        int i = 100;
+        printInt(i);
+        i = i + 1;
+        printInt(i);
+    }
+    {
+        printInt(i);
+    }
+    printInt(i);
+
+    return 0;
+}

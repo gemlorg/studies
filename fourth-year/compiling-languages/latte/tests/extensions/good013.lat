@@ -1,0 +1,27 @@
+int main() {
+    string z = "abc";
+    string z2 = "def";
+    string z3 = z + z2;
+    {
+        string a = "test" + "test2";
+        string b = a + a;
+        {
+           string a = "test" + " a";
+           printString(a);
+           string c = "test" + a + "test2" + a + b;
+
+        printString(a+a);
+        printString(a + (a + a + c) + "hejo" + c + (a + c));
+        
+       a + (a + a + c) + "hejo" + c + (a + c);
+        
+        printString(a + (a + a + c) + "hejo" + c + (a + c));
+        printString(a + (a + a + c) + "hejo" + c + (a + c));
+        printString(a + (a + a + c) + "hejo" + c + (a + c));
+        return 0;
+        }
+        b;
+    }
+    
+    return 0;
+}

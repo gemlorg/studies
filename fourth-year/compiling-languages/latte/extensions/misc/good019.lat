@@ -1,0 +1,21 @@
+int main() {
+    A a = new A;
+    printInt(a.a);
+    printInt(a.c);
+    printInt(a.d);
+    printString(a.s);
+    if (a.b == true) {
+        printString("true");
+    } else {
+        printString("false");
+    }
+    return 0;
+}
+
+class A {
+    int a;
+    int c;
+    boolean b;
+    string s;
+    int d;
+}

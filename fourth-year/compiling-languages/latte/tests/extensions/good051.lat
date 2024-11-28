@@ -1,0 +1,14 @@
+int main() {
+    int[] arr = new int[10];
+    arr[0] = 13;
+    arr[1] = 1;
+    arr[4] = 4;
+    arr[9] = 9;
+    printInt(arr[0]);
+    printInt(arr[9]);
+    printInt(arr.length);
+    for (int i : arr) {
+        printInt(i);
+    }
+    return 0;
+}

@@ -1,0 +1,18 @@
+
+int main() {
+    int i = 0;
+    printString("### while1 ###");
+    while (i < 5) {
+        int a = 0;
+        printString("### while2 ###");
+        while (a < 3) {
+            int i = 0;
+            a++; 
+            printInt(i);
+        }
+        i++;
+        printInt(i);
+    }
+
+    return 0;
+}

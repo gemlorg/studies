@@ -1,0 +1,19 @@
+int main() {
+        A a = new A;
+        A b = a;
+            A c = new A;
+                A x = new A;
+                new A;
+                x.a;
+                a.s;
+
+
+   printString((new A).s);
+                return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+}

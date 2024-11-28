@@ -1,0 +1,12 @@
+int main() {
+    int a1;
+    int a2 = 0;
+    string s1;
+    string s2 = "";
+    string s3 = "hello";
+    boolean b1;
+    boolean b2 = true;
+    boolean b3 = false;
+
+    return 0;
+}

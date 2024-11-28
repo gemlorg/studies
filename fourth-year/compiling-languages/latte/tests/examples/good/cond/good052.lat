@@ -1,0 +1,10 @@
+int main() {
+  int a = 2, b = 1, c = 3, d = 4;
+  boolean cond = (a>b || c < a) && (a>d && !(d>a));
+  if (cond) {
+    printString("Hello");
+  } else {
+    printString("World");
+  }
+  return 1;
+}

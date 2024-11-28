@@ -1,0 +1,11 @@
+int main() {
+    int[] arr = new int[10];
+    int[] arr2;
+    int i = 0;
+    while (i < 10) {
+        arr2 = new int[100];
+        i++;
+    }
+    return 0;
+}
+

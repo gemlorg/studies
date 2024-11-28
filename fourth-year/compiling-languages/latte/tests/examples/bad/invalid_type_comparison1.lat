@@ -1,0 +1,6 @@
+int main() {
+    string s1, s2;
+    int a;
+    a == s1;
+    return 1;
+}

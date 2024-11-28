@@ -1,0 +1,27 @@
+int main() {
+    A a = new A;
+    a.s = "hello";
+    a.s2 = a.s + " there!";
+    a.b = true;
+    a.arr = new int[42];
+    a.a2 = 42;
+    while (a.a2 > 0) {
+        a.a2--;
+        a.arr[a.a2] = a.a2;
+    }
+    while (a.a2 < 42) {
+        printInt(a.arr[a.a2]);
+        a.a2++;
+    }
+    return 0;
+}
+
+class A {           // offset
+    int a;          
+    string s;       // 8
+    int[] arr;      // 12
+    string s2;      // 16
+    int a2;         
+    boolean b;      
+    int[] arr2;     // 28
+}

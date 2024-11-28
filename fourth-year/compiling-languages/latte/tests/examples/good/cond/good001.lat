@@ -1,0 +1,8 @@
+int main() {
+    boolean a = true;
+    boolean b = a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a && a;
+
+    return 0;
+}
+
+// See good001.s for reasonable amount of labels.

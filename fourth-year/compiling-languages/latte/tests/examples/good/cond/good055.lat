@@ -1,0 +1,11 @@
+int main() {
+  int a = 2, b = 1, c = 3, d = 4;
+  return 0;
+}
+
+
+int f(){return 0;}
+int g() {
+  printInt(13);
+  return 0;
+}

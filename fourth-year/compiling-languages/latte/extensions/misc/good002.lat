@@ -1,0 +1,9 @@
+int main() {
+    if ("aaa" != "aab")
+        printInt(42);
+    return 0;
+}
+
+boolean f() {
+    return true;
+}

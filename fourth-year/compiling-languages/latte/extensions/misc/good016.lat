@@ -1,0 +1,22 @@
+int main() {
+    A a = new A;
+    a.f();
+    return 0;
+}
+
+void self() {
+    printString("self function!");
+}
+
+class A {
+    int f() {
+        self();
+        self.f2();
+        return 0;
+    }
+
+    void f2() {
+        printString("f2 method!");
+    }
+}
+

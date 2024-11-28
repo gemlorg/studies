@@ -1,0 +1,11 @@
+int main() {
+    string s1 = "";
+    if (s1 == "") {
+        printString("empty string == null string");
+    } else {
+        error();
+    }
+
+    return 0;
+}
+

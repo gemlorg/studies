@@ -1,0 +1,5 @@
+int main() {
+    string[] arr = new string[5];
+    return 0;
+}
+

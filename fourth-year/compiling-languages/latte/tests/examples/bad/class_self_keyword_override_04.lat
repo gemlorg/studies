@@ -1,0 +1,18 @@
+int main() {
+    return 0;
+}
+ 
+class A {
+    int f() {
+        // issue 1
+        A a = new A;
+        self = a;
+        
+        // issue 2
+        int self = 5;
+        self = 5; 
+        
+        return 0;
+    }
+}
+

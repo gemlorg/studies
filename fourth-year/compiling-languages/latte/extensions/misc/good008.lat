@@ -1,0 +1,8 @@
+int main() {
+    string a = "bb", b = "bb";
+    if (a == b) {
+        a = "ab";
+        printString(a);
+    }
+    return 0;
+}

@@ -1,0 +1,8 @@
+int main() {
+    int[] arr = new int[10];
+    arr[3]++;
+    arr[3]++;
+    printInt(arr[3]);
+    printInt(arr[0]);
+    return 0;
+}
