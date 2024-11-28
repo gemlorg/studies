@@ -84,16 +84,17 @@ executable latc_x86_64
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:
-        base >= 4.14 && < 4.18, 
-        containers,
-        mtl,
-        lens,
-        text,
-        filepath,
-        process,
-        llvm-hs == 9.0.0,
-        llvm-hs-pure == 9.0.0
+    build-depends:   
+          base          >=4.7   && <4.17
+        , llvm-hs-pure  >=9.0   && <9.1
+        , base >= 4.3 && <4.18
+        , containers
+        , mtl 
+        , lens
+        , text
+        , filepath
+        , process
+        , array
 
     -- Directories containing source files.
     hs-source-dirs:   src
