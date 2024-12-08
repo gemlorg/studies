@@ -6,7 +6,8 @@ module Compiler.Environment where
 
 import           Grammar.Abs
 
-import           Control.Lens
+import           Lens.Micro
+import           Lens.Micro.TH
 import qualified Data.Map     as Map
 
 import           Data.Maybe
@@ -23,13 +24,11 @@ data Env = Env
   } deriving (Show, Eq)
 
 -- compile result (Ident, T.Text)
-type CompileRes = [T.Text]
+type CompileRes = T.Text
 
 dummyLoc :: Location 
 dummyLoc = -1
 
-dummy ::  CompileRes
-dummy = []
 
 makeLenses ''Env
 

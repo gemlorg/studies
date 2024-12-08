@@ -17,9 +17,9 @@ instance Show e => Show (TracedException e) where
     | pos == NoPos = concat ["error: ", show e]
     | otherwise = concat ["error: ", show e, " at ", showPos pos]
 
-type RuntimeException = TracedException RuntimeException'
+type CompileException = TracedException CompileException'
 
-data RuntimeException'
+data CompileException'
   = DivideByZeroException
   | InvalidStepException
 
@@ -41,9 +41,11 @@ data StaticException'
   | InvalidIntRangeException Integer
   | InvalidMainTypeException RawType
   | VoidArgumentException Ident
+  | VoidExprException 
+  | NoBlockDeclException
   | ShowException String
 
-instance Show RuntimeException' where
+instance Show CompileException' where
   show DivideByZeroException = "division by zero"
   show InvalidStepException  = "step has to be non-zero"
 
@@ -73,3 +75,5 @@ instance Show StaticException' where
   show (InvalidMainTypeException typ) = "invalid main function type: " ++ show typ
   show (VoidArgumentException name) = "void argument: " ++ showIdent name 
   show (ShowException s) = s
+  show VoidExprException = "void function shoudln't return an expression"
+  show NoBlockDeclException = "declaration outside of a block"

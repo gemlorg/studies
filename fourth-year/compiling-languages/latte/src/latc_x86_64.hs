@@ -13,6 +13,7 @@ import           Grammar.Abs
 import           Grammar.Par         (myLexer, pProgram)
 import Control.Exception (try, catch)
 import          Typechecker.Typechecker (typeCheck)
+import          Compiler.Compiler    (compileTree)
 
 
 perror :: Show a => a -> IO b
@@ -54,7 +55,18 @@ compileAndPrint path = do
           case typeCheck program of 
             Left err -> perror err
             Right _ -> do
-              noerror
+              res <- compileTree program
+              case res of 
+                Left err -> perror err
+                Right res -> do 
+                  let llFile = replaceExtension path "ll"
+                  let bcFile = replaceExtension path "bc"
+                  let execFile = replaceExtension path ""
+                  -- flush results 
+                  TIO.writeFile llFile  res
+                  readProcess "llvm-link" ["-o", bcFile, llFile, "./lib/runtime.ll"] ""
+                  readProcess "gcc" ["-o", execFile, bcFile] ""
+                  noerror
           -- case compileTree program of
           --   Left err -> perror err
           --   Right res -> do

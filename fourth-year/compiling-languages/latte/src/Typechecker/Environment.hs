@@ -9,7 +9,8 @@ import qualified Data.Map      as Map
 import           Grammar.Abs
 import           Prelude
 
-import           Control.Lens
+import           Lens.Micro
+import           Lens.Micro.TH
 
 
 data Env = Env
@@ -29,14 +30,14 @@ updateTypes = foldl (\env (i, t) -> updateType env i t)
 
 
 updateType :: Env -> Ident -> RawType -> Env
--- updateType Env {..} name newType = Env {_types = Map.insert name newType _types, _returnFlag = _returnFlag}
-updateType env name newType = env & ((types . at name) ?~ newType)
+updateType Env {..} name newType = Env {_types = Map.insert name newType _types, _returnFlag = _returnFlag}
+-- updateType env name newType = env & ((types . at name) ?~ newType)
 
 
 
 getType :: Env -> Ident -> Maybe RawType
--- getType Env {..} name = Map.lookup name _types
-getType env name = env ^. (types . at name)
+getType Env {..} name = Map.lookup name _types
+-- getType env name = env ^. (types . at name)
 
 returnStatementOccured :: Env -> Env
 returnStatementOccured Env {..} = Env {_types = _types, _returnFlag = True}

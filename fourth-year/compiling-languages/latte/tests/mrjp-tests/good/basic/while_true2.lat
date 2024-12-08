@@ -8,4 +8,5 @@ int main() {
         else
             printString("jeszcze raz");
     }
+    return 0;
 }

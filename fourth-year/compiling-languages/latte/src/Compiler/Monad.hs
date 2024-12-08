@@ -4,6 +4,7 @@ import           Control.Monad.Except
 import           Control.Monad.State
 import           Compiler.Types
 import           Compiler.Environment
+import           qualified LLVM.AST as AST 
 
 
 type CompileMonad = CompileMonad' CompileRes

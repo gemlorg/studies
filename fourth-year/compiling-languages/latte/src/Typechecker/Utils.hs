@@ -127,6 +127,9 @@ getVarType position name env =
     Just t  -> pure t
     Nothing -> throwError $ Exception (UndefinedSymbolException name) position
 
+assertNotDecl :: Stmt -> TypecheckerMonad
+assertNotDecl (Decl pos _ _) = throwError $ Exception (NoBlockDeclException) pos
+assertNotDecl _              = pure ()
 areUniqueArgs :: [Arg] -> Bool
 areUniqueArgs arguments = do
   let sortedNames = sort $ map getArgumentName arguments

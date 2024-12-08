@@ -15,13 +15,16 @@ import Text.Printf (printf)
 import qualified Data.Text.IO as TIO
 import qualified Data.Map as Map  
 
-import           Compiler.Types
+import         Common.Exception
 import           Compiler.Monad
 import System.FilePath
 import           Compiler.Environment
 
+import           Compiler.IR.IR
 import System.Process
 
+import Compiler.IR.Pretty (ppllvm) -- Import pretty-printer
+import qualified Data.Text.Lazy
 -- compileAndPrint :: String -> IO ()
 -- compileAndPrint path = do
 --   s <- readFile path
@@ -43,10 +46,12 @@ import System.Process
 --   hPrint stderr s
 --   exitFailure
 
--- compileTree :: Program -> IO (Either CompileException CompileRes)
--- compileTree program = do
---   runExceptT $ evalStateT (compile program) emptyEnv
-  
+compileTree :: Program -> IO (Either CompileException CompileRes)
+compileTree program = do
+    res  <- getIR program
+    case res of 
+        Left e -> pure $ Left e
+        Right llvm ->  pure $ Right $ Data.Text.Lazy.toStrict (ppllvm llvm)
 
 -- buildProgram :: Program -> [T.Text] -> String -> [T.Text]
 

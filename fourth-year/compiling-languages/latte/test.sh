@@ -4,9 +4,10 @@
 shopt -s extglob
 bad_tests_dir1="tests/examples/bad/*"
 bad_tests_dir2="tests/lattests/bad/*"
-
+bad_tests_dir3="tests/mrjp-tests/bad/*/*"
 good_tests_dir1="tests/examples/good/*/*"
 good_tests_dir2="tests/lattests/good/*"
+good_tests_dir3="tests/mrjp-tests/good/basic/*"
 
 extension_tests_dir1="tests/lattests/extensions/*/*"
 
@@ -66,27 +67,27 @@ function run_tests_in {
         if [ $(ls -l ${file%.lat}".input" 2>/dev/null | wc -l) == 1 ]; then
           DIFF=$(diff <($exec_file <${file%.lat}".input") $outfile)
           if [ "$DIFF" != "" ]; then
-            echo -e "${RED}TEST FAILED FOR ${file}${NC}"
+            echo -e "${RED}TEST{1} FAILED FOR ${file}${NC}"
           else
             diff <(cat ${file%.lat}".input" | $exec_file) <(cat $outfile)
             if [ "$?" -eq $2 ]; then
               ((runtime_ok++))
               echo -e "${GREEN}OK${NC}"
             else
-              echo -e "${RED}TEST FAILED FOR ${file}${NC}"
+              echo -e "${RED}TEST{2} FAILED FOR ${file}${NC}"
             fi
           fi
         else
           DIFF=$(diff <($exec_file) $outfile)
           if [ "$DIFF" != "" ]; then
-            echo -e "${RED}TEST FAILED FOR ${file}${NC}"
+            echo -e "${RED}TEST{3} FAILED FOR ${file}${NC}"
           else
             diff <($exec_file) $outfile
             if [ "$?" -eq $2 ]; then
               ((runtime_ok++))
               echo -e "${GREEN}OK${NC}"
             else
-              echo -e "${RED}TEST FAILED FOR ${file}${NC}"
+              echo -e "${RED}TEST{4} FAILED FOR ${file}${NC}"
             fi
           fi
         fi
@@ -110,12 +111,15 @@ function run_tests_in {
 
 generate "$bad_tests_dir1" 1
 generate "$bad_tests_dir2" 1
+generate "$bad_tests_dir3" 1
 generate "$good_tests_dir1" 0
 generate "$good_tests_dir2" 0
+generate "$good_tests_dir3" 0
 # generate "$extension_tests_dir1" 0
 
-# run_tests_in "$good_tests_dir1" 0
-# run_tests_in "$good_tests_dir2" 0
+run_tests_in "$good_tests_dir1" 0
+run_tests_in "$good_tests_dir2" 0
+run_tests_in "$good_tests_dir3" 0
 # run_tests_in "$extension_tests_dir1" 0
 
 echo "total tests: $total_tests"

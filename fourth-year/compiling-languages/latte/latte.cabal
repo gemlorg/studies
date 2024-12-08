@@ -44,6 +44,8 @@ maintainer:         gosha10goshalol@gmail.com
 -- copyright:
 build-type:         Simple
 
+compiler:           ghc-9.0.2
+
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
 extra-doc-files:    CHANGELOG.md
 
@@ -73,6 +75,12 @@ executable latc_x86_64
         Compiler.Environment
         Compiler.Compiler
         Compiler.Monad
+        Compiler.IR.IR 
+        Compiler.IR.Monad 
+        Compiler.IR.Pretty
+        Compiler.IR.Environment
+        Compiler.IR.Utils
+
         -- Compiler.Utils
         Compiler.Types
         Typechecker.Environment
@@ -90,11 +98,18 @@ executable latc_x86_64
         , base >= 4.3 && <4.18
         , containers
         , mtl 
-        , lens
+        , microlens
+        , microlens-th
         , text
         , filepath
         , process
         , array
+        , bytestring
+        , tasty
+        , tasty-hunit
+        , tasty-golden
+        , tasty-hspec
+        , prettyprinter
 
     -- Directories containing source files.
     hs-source-dirs:   src

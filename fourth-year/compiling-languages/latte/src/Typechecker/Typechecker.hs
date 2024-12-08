@@ -123,6 +123,7 @@ instance Typechecker Stmt where
     assertVarType position name RTInt
 
   checkTypeM (Just expectedReturnType) (Ret position returnExpr) = do
+    when (expectedReturnType == RTVoid) $ throwError $ Exception  VoidExprException position
     env <- get
     case runExpr env returnExpr of
       Right etype    -> assertTypeC position etype expectedReturnType
@@ -143,6 +144,7 @@ instance Typechecker Stmt where
     throwError $ Exception ReturnOutOfScopeException position
 
   checkTypeM expectedReturnType (Cond position condition trueBlock) = do
+    assertNotDecl trueBlock
     env <- get
     case runExpr env condition of
       Right etype    -> assertTypeC position etype RTBool
@@ -155,6 +157,8 @@ instance Typechecker Stmt where
       _         -> put $ env
 
   checkTypeM expectedReturnType (CondElse position cond trueBlock falseBlock) = do
+    assertNotDecl trueBlock
+    assertNotDecl falseBlock
     env <- get
     case runExpr env cond of
       Right etype    -> assertTypeC position etype RTBool
@@ -172,13 +176,15 @@ instance Typechecker Stmt where
       _         -> put $ setRetunFlag env (retval' && retval'')
 
   checkTypeM expectedReturnType (While position cond block) = do
+    assertNotDecl block
     env <- get
     let retval = hasReturnStatementOccured env
     case runExpr env cond of
       Right etype    -> assertTypeC position etype RTBool
       Left exception -> throwError exception
     checkTypeM expectedReturnType block
-    put $ setRetunFlag env retval
+    unless (isTrue cond == Just True)
+      $ put $ setRetunFlag env retval
 
   checkTypeM _ (SExp position expr) = do
     env <- get
@@ -217,15 +223,21 @@ instance Typegetter Expr where
     assertTypeG position t1 RTInt
     assertTypeG position t2 RTInt
     pure RTInt
-  getTypeM (EAdd position expr1 _ expr2) = do
+  getTypeM (EAdd position expr1 op expr2) = do
     t1 <- getTypeM expr1
     t2 <- getTypeM expr2
-    if t1 == RTString && t2 == RTString
-      then pure RTString
-      else do
-      assertTypeG position t1 RTInt
-      assertTypeG position t2 RTInt
-      pure RTInt
+    case op of 
+      (Plus _) -> do
+        if t1 == RTString && t2 == RTString
+          then pure RTString
+          else do
+          assertTypeG position t1 RTInt
+          assertTypeG position t2 RTInt
+          pure RTInt
+      (Minus _) -> do
+        assertTypeG position t1 RTInt
+        assertTypeG position t2 RTInt
+        pure RTInt
 
   getTypeM (ERel position expr1 op expr2) = do
     t1 <- getTypeM expr1

@@ -23,6 +23,11 @@ readStringSignature = (Ident "readString", RTFun RTString [])
 mainSignature :: RVariable
 mainSignature = (Ident "main", RTFun RTInt [])
 
+concatStringsSignature :: RVariable
+concatStringsSignature = (Ident "_concatStrings", RTFun RTString [RTString, RTString])
+
+compareStringsSignature :: RVariable
+compareStringsSignature = (Ident "_compareStrings", RTFun RTInt [RTString, RTString])
 
 predifinedFunctions :: [RVariable]
 predifinedFunctions =
@@ -32,6 +37,8 @@ predifinedFunctions =
   , readIntSignature
   , readStringSignature
   ]
+predifinedFunctionsInternal :: [RVariable]
+predifinedFunctionsInternal = predifinedFunctions ++ [concatStringsSignature, compareStringsSignature]
 
 data RawType
   = RTInt

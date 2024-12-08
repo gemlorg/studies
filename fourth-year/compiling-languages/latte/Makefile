@@ -1,5 +1,5 @@
 TARGET = ./latc_x86_64
-
+TEST_DIR = ./tests
 .PHONY: build 
 
 build:
@@ -9,7 +9,22 @@ build:
 .PHONY: test
 test: 
 	./test.sh $(TARGET)
-.PHONY: clean
-clean:
+.PHONY: test clean clean-target clean-tests
+
+# Test target
+test:
+	./test.sh $(TARGET)
+
+# Clean only the target files
+clean-target:
 	cabal clean
-	rm ./latc_x86_64
+	rm -f ./latc_x86_64
+
+# Clean only the test-related files
+clean-tests:
+	find $(TEST_DIR) -type f \( -name "*.ll" -o -name "*.bc" -o ! -name "*.*" \) -exec rm -f {} +
+
+# General clean (invokes both clean-target and clean-tests)
+clean: clean-target clean-tests
+	 
+
