@@ -1,0 +1,24 @@
+[package]
+name = "lab-03"
+version = "0.3.0"
+authors = ["Filip Plata <fp371335@students.mimuw.edu.pl>", "Mateusz Banaszek <m.banaszek@mimuw.edu.pl", "Maciej Matraszek <m.matraszek@mimuw.edu.pl"]
+edition = "2021"
+
+[dependencies]
+# This is how we add dependencies to our projects.
+# There could be also optional dependencies for fine-grained conditional compilation.
+crossbeam-channel = "0.5.13"
+rand = "0.8.5"
+
+[dev-dependencies]
+# These dependecies are only available, when the code is gated with `#[cfg(test)]`.
+ntest = "0.9.3"
+
+[[bin]]
+name = "lab03"
+path = "main.rs"
+
+[lints.rust]
+# We can choose project-wide lints either in `main.rs/lib.rs` with `#![..]` syntax,
+# or in cargo under the `[lints]` scope.
+unsafe_code = "forbid"
