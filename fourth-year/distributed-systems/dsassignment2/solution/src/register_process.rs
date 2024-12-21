@@ -34,7 +34,8 @@ pub(crate) mod register_process_impl {
             RegisterCommand::System(cmd) => cmd.header.sector_idx,
         }
     }
-    static NUM_WORKERS: usize = 30;
+    static NUM_WORKERS: usize = 50;
+    static MIN_WORKERS: usize = 4;
     #[derive(Clone)]
     struct InstanceState {
         config: Configuration,
@@ -89,7 +90,9 @@ pub(crate) mod register_process_impl {
                 worker_map,
                 worker_handles,
                 n_processes,
-                active_workers: Arc::new(Semaphore::new(NUM_WORKERS as usize)),
+                active_workers: Arc::new(Semaphore::new(
+                    (NUM_WORKERS / n_processes as usize).max(MIN_WORKERS),
+                )),
             }
         }
 

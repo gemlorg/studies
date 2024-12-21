@@ -15,8 +15,9 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::task::JoinHandle;
 
-#[tokio::test]
+#[tokio::test(flavor = "multi_thread", worker_threads = 3)]
 #[timeout(9000)]
+// #[tokio::main(flavor = "multi_thread", worker_threads = 3)]
 async fn stress_test() {
     let _ = env_logger::builder().is_test(true).try_init();
 
