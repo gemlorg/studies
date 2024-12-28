@@ -1,0 +1,24 @@
+[package]
+name = "lab-06"
+version = "0.2.0"
+authors = ["Wojciech Ciszewski <wc385540@students.mimuw.edu.pl>", "Filip Plata <fp371335@students.mimuw.edu.pl>", "Mateusz Banaszek <m.banaszek@mimuw.edu.pl"]
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1"
+tokio = { version = "1.41", features = ["full"] }
+sha2 = "0.10"
+base64 = "0.22"
+
+[dev-dependencies]
+ntest = "0.9"
+tempfile = "3.14"
+log = "0.4"
+
+[lib]
+name = "lab_06"
+path = "solution.rs"
+
+[[bin]]
+name = "lab06"
+path = "main.rs"
