@@ -1,0 +1,22 @@
+[package]
+name = "lab-13"
+version = "0.1.0"
+authors = ["Konrad Iwanicki <iwanicki@mimuw.edu.pl>"]
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1"
+bitvec = "1.0"
+env_logger = "0.11"
+module_system = { path = "../dsassignment1/solution/", package = "assignment-1-solution" }
+log = "0.4"
+rand = "0.8"
+tokio = {version = "1.43", features = ["full"] }
+uuid = { version = "1.11", features = ["v4"] }
+
+[dev-dependencies]
+ntest = "0.9"
+
+[[bin]]
+name = "lab13"
+path = "main.rs"
