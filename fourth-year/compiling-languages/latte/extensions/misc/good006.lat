@@ -1,7 +1,0 @@
-int main() {
-    boolean b = true; 
-    if (b) {
-        int a = 42;
-    }
-    return 0;
-}

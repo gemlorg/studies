@@ -1,9 +1,0 @@
-// Just main
-
-int main() {
-    return 0;
-}
-
-boolean f() {
-    return true;
-}

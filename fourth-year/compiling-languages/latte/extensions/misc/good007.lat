@@ -1,7 +1,0 @@
-int main() {
-    int a = 7, b = 7;
-    if (a == b) {
-        a = 42;
-    }
-    return 0;
-}
