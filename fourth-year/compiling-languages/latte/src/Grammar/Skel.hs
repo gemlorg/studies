@@ -25,7 +25,22 @@ transProgram x = case x of
 
 transTopDef :: Show a => Grammar.Abs.TopDef' a -> Result
 transTopDef x = case x of
+  Grammar.Abs.TopClassDef _ classdef -> failure x
+  Grammar.Abs.TopClassFnDef _ fndef -> failure x
+
+transFnDef :: Show a => Grammar.Abs.FnDef' a -> Result
+transFnDef x = case x of
   Grammar.Abs.FnDef _ type_ ident args block -> failure x
+
+transClassMember :: Show a => Grammar.Abs.ClassMember' a -> Result
+transClassMember x = case x of
+  Grammar.Abs.ClassField _ type_ ident -> failure x
+  Grammar.Abs.ClassMethod _ fndef -> failure x
+
+transClassDef :: Show a => Grammar.Abs.ClassDef' a -> Result
+transClassDef x = case x of
+  Grammar.Abs.ClassDef _ ident classmembers -> failure x
+  Grammar.Abs.ClassExtDef _ ident1 ident2 classmembers -> failure x
 
 transArg :: Show a => Grammar.Abs.Arg' a -> Result
 transArg x = case x of
@@ -40,14 +55,15 @@ transStmt x = case x of
   Grammar.Abs.Empty _ -> failure x
   Grammar.Abs.BStmt _ block -> failure x
   Grammar.Abs.Decl _ type_ items -> failure x
-  Grammar.Abs.Ass _ ident expr -> failure x
-  Grammar.Abs.Incr _ ident -> failure x
-  Grammar.Abs.Decr _ ident -> failure x
+  Grammar.Abs.Ass _ expr1 expr2 -> failure x
+  Grammar.Abs.Incr _ expr -> failure x
+  Grammar.Abs.Decr _ expr -> failure x
   Grammar.Abs.Ret _ expr -> failure x
   Grammar.Abs.VRet _ -> failure x
   Grammar.Abs.Cond _ expr stmt -> failure x
   Grammar.Abs.CondElse _ expr stmt1 stmt2 -> failure x
   Grammar.Abs.While _ expr stmt -> failure x
+  Grammar.Abs.For _ type_ ident expr stmt -> failure x
   Grammar.Abs.SExp _ expr -> failure x
 
 transItem :: Show a => Grammar.Abs.Item' a -> Result
@@ -57,14 +73,21 @@ transItem x = case x of
 
 transType :: Show a => Grammar.Abs.Type' a -> Result
 transType x = case x of
+  Grammar.Abs.Class _ ident -> failure x
   Grammar.Abs.Int _ -> failure x
   Grammar.Abs.Str _ -> failure x
   Grammar.Abs.Bool _ -> failure x
   Grammar.Abs.Void _ -> failure x
+  Grammar.Abs.Array _ type_ -> failure x
   Grammar.Abs.Fun _ type_ types -> failure x
 
 transExpr :: Show a => Grammar.Abs.Expr' a -> Result
 transExpr x = case x of
+  Grammar.Abs.ENewObject _ type_ -> failure x
+  Grammar.Abs.ENewArray _ type_ expr -> failure x
+  Grammar.Abs.EMember _ expr ident -> failure x
+  Grammar.Abs.EMemberCall _ expr ident exprs -> failure x
+  Grammar.Abs.EArrGet _ expr1 expr2 -> failure x
   Grammar.Abs.EVar _ ident -> failure x
   Grammar.Abs.ELitInt _ integer -> failure x
   Grammar.Abs.ELitTrue _ -> failure x

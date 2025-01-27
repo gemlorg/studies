@@ -1,0 +1,8 @@
+class Stack {}
+
+int main() {
+   Stack s = new Stack;
+   Stack z = new Stack; 
+   s = z;
+   return 0;
+}

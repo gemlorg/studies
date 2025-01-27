@@ -145,11 +145,30 @@ instance Print (Grammar.Abs.Program' a) where
 
 instance Print (Grammar.Abs.TopDef' a) where
   prt i = \case
+    Grammar.Abs.TopClassDef _ classdef -> prPrec i 0 (concatD [prt 0 classdef])
+    Grammar.Abs.TopClassFnDef _ fndef -> prPrec i 0 (concatD [prt 0 fndef])
+
+instance Print (Grammar.Abs.FnDef' a) where
+  prt i = \case
     Grammar.Abs.FnDef _ type_ id_ args block -> prPrec i 0 (concatD [prt 0 type_, prt 0 id_, doc (showString "("), prt 0 args, doc (showString ")"), prt 0 block])
 
 instance Print [Grammar.Abs.TopDef' a] where
   prt _ [] = concatD []
   prt _ [x] = concatD [prt 0 x]
+  prt _ (x:xs) = concatD [prt 0 x, prt 0 xs]
+
+instance Print (Grammar.Abs.ClassMember' a) where
+  prt i = \case
+    Grammar.Abs.ClassField _ type_ id_ -> prPrec i 0 (concatD [prt 0 type_, prt 0 id_, doc (showString ";")])
+    Grammar.Abs.ClassMethod _ fndef -> prPrec i 0 (concatD [prt 0 fndef])
+
+instance Print (Grammar.Abs.ClassDef' a) where
+  prt i = \case
+    Grammar.Abs.ClassDef _ id_ classmembers -> prPrec i 0 (concatD [doc (showString "class"), prt 0 id_, doc (showString "{"), prt 0 classmembers, doc (showString "}")])
+    Grammar.Abs.ClassExtDef _ id_1 id_2 classmembers -> prPrec i 0 (concatD [doc (showString "class"), prt 0 id_1, doc (showString "extends"), prt 0 id_2, doc (showString "{"), prt 0 classmembers, doc (showString "}")])
+
+instance Print [Grammar.Abs.ClassMember' a] where
+  prt _ [] = concatD []
   prt _ (x:xs) = concatD [prt 0 x, prt 0 xs]
 
 instance Print (Grammar.Abs.Arg' a) where
@@ -174,14 +193,15 @@ instance Print (Grammar.Abs.Stmt' a) where
     Grammar.Abs.Empty _ -> prPrec i 0 (concatD [doc (showString ";")])
     Grammar.Abs.BStmt _ block -> prPrec i 0 (concatD [prt 0 block])
     Grammar.Abs.Decl _ type_ items -> prPrec i 0 (concatD [prt 0 type_, prt 0 items, doc (showString ";")])
-    Grammar.Abs.Ass _ id_ expr -> prPrec i 0 (concatD [prt 0 id_, doc (showString "="), prt 0 expr, doc (showString ";")])
-    Grammar.Abs.Incr _ id_ -> prPrec i 0 (concatD [prt 0 id_, doc (showString "++"), doc (showString ";")])
-    Grammar.Abs.Decr _ id_ -> prPrec i 0 (concatD [prt 0 id_, doc (showString "--"), doc (showString ";")])
+    Grammar.Abs.Ass _ expr1 expr2 -> prPrec i 0 (concatD [prt 0 expr1, doc (showString "="), prt 0 expr2, doc (showString ";")])
+    Grammar.Abs.Incr _ expr -> prPrec i 0 (concatD [prt 0 expr, doc (showString "++"), doc (showString ";")])
+    Grammar.Abs.Decr _ expr -> prPrec i 0 (concatD [prt 0 expr, doc (showString "--"), doc (showString ";")])
     Grammar.Abs.Ret _ expr -> prPrec i 0 (concatD [doc (showString "return"), prt 0 expr, doc (showString ";")])
     Grammar.Abs.VRet _ -> prPrec i 0 (concatD [doc (showString "return"), doc (showString ";")])
     Grammar.Abs.Cond _ expr stmt -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt])
     Grammar.Abs.CondElse _ expr stmt1 stmt2 -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt1, doc (showString "else"), prt 0 stmt2])
     Grammar.Abs.While _ expr stmt -> prPrec i 0 (concatD [doc (showString "while"), doc (showString "("), prt 0 expr, doc (showString ")"), prt 0 stmt])
+    Grammar.Abs.For _ type_ id_ expr stmt -> prPrec i 0 (concatD [doc (showString "for"), doc (showString "("), prt 0 type_, prt 0 id_, doc (showString ":"), prt 0 expr, doc (showString ")"), prt 0 stmt])
     Grammar.Abs.SExp _ expr -> prPrec i 0 (concatD [prt 0 expr, doc (showString ";")])
 
 instance Print (Grammar.Abs.Item' a) where
@@ -196,10 +216,12 @@ instance Print [Grammar.Abs.Item' a] where
 
 instance Print (Grammar.Abs.Type' a) where
   prt i = \case
+    Grammar.Abs.Class _ id_ -> prPrec i 0 (concatD [prt 0 id_])
     Grammar.Abs.Int _ -> prPrec i 0 (concatD [doc (showString "int")])
     Grammar.Abs.Str _ -> prPrec i 0 (concatD [doc (showString "string")])
     Grammar.Abs.Bool _ -> prPrec i 0 (concatD [doc (showString "boolean")])
     Grammar.Abs.Void _ -> prPrec i 0 (concatD [doc (showString "void")])
+    Grammar.Abs.Array _ type_ -> prPrec i 0 (concatD [prt 0 type_, doc (showString "[]")])
     Grammar.Abs.Fun _ type_ types -> prPrec i 0 (concatD [prt 0 type_, doc (showString "("), prt 0 types, doc (showString ")")])
 
 instance Print [Grammar.Abs.Type' a] where
@@ -209,6 +231,11 @@ instance Print [Grammar.Abs.Type' a] where
 
 instance Print (Grammar.Abs.Expr' a) where
   prt i = \case
+    Grammar.Abs.ENewObject _ type_ -> prPrec i 6 (concatD [doc (showString "new"), prt 0 type_])
+    Grammar.Abs.ENewArray _ type_ expr -> prPrec i 6 (concatD [doc (showString "new"), prt 0 type_, doc (showString "["), prt 0 expr, doc (showString "]")])
+    Grammar.Abs.EMember _ expr id_ -> prPrec i 6 (concatD [prt 6 expr, doc (showString "."), prt 0 id_])
+    Grammar.Abs.EMemberCall _ expr id_ exprs -> prPrec i 6 (concatD [prt 6 expr, doc (showString "."), prt 0 id_, doc (showString "("), prt 0 exprs, doc (showString ")")])
+    Grammar.Abs.EArrGet _ expr1 expr2 -> prPrec i 6 (concatD [prt 6 expr1, doc (showString "["), prt 0 expr2, doc (showString "]")])
     Grammar.Abs.EVar _ id_ -> prPrec i 6 (concatD [prt 0 id_])
     Grammar.Abs.ELitInt _ n -> prPrec i 6 (concatD [prt 0 n])
     Grammar.Abs.ELitTrue _ -> prPrec i 6 (concatD [doc (showString "true")])

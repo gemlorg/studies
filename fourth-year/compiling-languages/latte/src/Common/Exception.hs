@@ -44,6 +44,10 @@ data StaticException'
   | VoidExprException 
   | NoBlockDeclException
   | ShowException String
+  | NoSuchClassException Ident
+  | ExpectedClassException RawType
+  | NotArrayException RawType
+  
 
 instance Show CompileException' where
   show DivideByZeroException = "division by zero"
@@ -77,3 +81,6 @@ instance Show StaticException' where
   show (ShowException s) = s
   show VoidExprException = "void function shoudln't return an expression"
   show NoBlockDeclException = "declaration outside of a block"
+  show (NoSuchClassException name) = "no such class: " ++ showIdent name
+  show (ExpectedClassException typ) = "expected class, got: " ++ show typ
+  show (NotArrayException typ) = "expected array, got: " ++ show typ

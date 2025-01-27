@@ -1,23 +1,19 @@
-module Compiler.IR.Utils where 
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
+{-# LANGUAGE RecordWildCards #-}
+module Compiler.IR.Utils where
 
 import           Common.RTypes
 
-import           Lens.Micro
-import qualified Data.Map     as Map
 
 import           Data.Maybe
 import           Prelude
-import qualified Data.Text as T
 import LLVM.AST hiding (Type)
 import qualified LLVM.AST.Type as AST
 import           Grammar.Abs
--- convertType :: RawType -> AST.Type
--- convertType RTInt = AST.i32
-
--- import LLVM.AST
 import LLVM.AST.Global
+import qualified LLVM.AST.Type
+import LLVM.AST.AddrSpace
 
--- import LLVM.AST.Type (i32, ptr)
 
 -- Function declarations
 printIntDecl :: Definition
@@ -68,9 +64,26 @@ compareStringsDecl = GlobalDefinition $ functionDefaults
   , parameters  = ([Parameter (AST.ptr AST.i8) (UnName 0) [], Parameter (AST.ptr AST.i8) (UnName 1) []], False)
   , returnType  = AST.i32
   }
-predifinedDecl :: [Definition]
-predifinedDecl = [printIntDecl, printStringDecl, errorDecl, readIntDecl, readStringDecl, concatStringsDecl, compareStringsDecl]
+  
+mallocDecl :: Definition
+mallocDecl = GlobalDefinition $ functionDefaults
+  { name        = mkName "_malloc"
+  , parameters  = ([Parameter AST.i32 (UnName 0) []], False)
+  , returnType  = AST.ptr AST.i8
+  }
+countDecl :: Definition 
+countDecl = GlobalDefinition $ functionDefaults
+  { name        = mkName "_count_arr_length"
+  , parameters  = ([Parameter (AST.ptr AST.i8) (UnName 0) [], Parameter AST.i32 (UnName 1) []], False)
+  , returnType  = AST.i32
+  }
 
+
+predifinedDecl :: [Definition]
+predifinedDecl = [printIntDecl, printStringDecl, errorDecl, readIntDecl, readStringDecl, concatStringsDecl, compareStringsDecl, mallocDecl, countDecl]
+
+ioDecls :: [Definition]
+ioDecls = [printIntDecl, printStringDecl, errorDecl, readIntDecl, readStringDecl]
 
 
 astPredifinedFunctions :: [(Name, RawType)]
@@ -79,21 +92,17 @@ astPredifinedFunctions = map (\(Ident s, t) -> (mkName s, t)) predifinedFunction
 astFromIdent :: Ident -> Name
 astFromIdent (Ident s) = mkName s
 
-astFromArgs:: [Arg] -> ([Parameter], Bool)
-astFromArgs args = (map astFromArg args, False)
+astFromArgs:: [Arg] -> [Parameter]
+astFromArgs args = map astFromArg args
 
 astFromArg :: Arg -> Parameter
 astFromArg (Arg _ t i) = Parameter (astFromType t) (astFromIdent i) []
 
--- astFromType :: Type -> AST.Type
--- astFromType (Int _) = AST.i32
--- astFromType (Str _) = AST.ptr AST.i8
--- astFromType (Bool _) = AST.i1
--- astFromType (Void _) = AST.void
--- astFromType (Fun _ returnType argumentsTypes) = AST.FunctionType (astFromType returnType) (map astFromType argumentsTypes) False
 
-astFromType :: Type -> AST.Type 
+astFromType :: Type -> AST.Type
 astFromType t = astFromRType (fromType t)
+arrIdent :: Ident 
+arrIdent = Ident "_arr"
 
 astFromRType :: RawType -> AST.Type
 astFromRType RTInt = AST.i32
@@ -101,6 +110,12 @@ astFromRType RTString = AST.ptr AST.i8
 astFromRType RTBool = AST.i1
 astFromRType RTVoid = AST.void
 astFromRType (RTFun returnType argsTypes) = AST.FunctionType (astFromRType returnType) (map astFromRType argsTypes) False
+astFromRType (RTClass ident) = getClassType ident
+astFromRType (RTArr _ ) = getClassType arrIdent
+
+getClassType :: Ident -> LLVM.AST.Type.Type
+getClassType id = do
+  PointerType (NamedTypeReference $ astFromIdent id) (AddrSpace 0)
 
 
 astAlloc :: Name -> RawType -> Named Instruction

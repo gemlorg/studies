@@ -1,6 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Compiler.IR.Environment where
 
@@ -14,25 +15,21 @@ import           Data.Maybe
 import           Prelude
 import qualified Data.Text as T
 import LLVM.AST hiding (Type)
-import qualified LLVM.AST.Type as AST
-import LLVM.AST (Operand(..))
 import qualified LLVM.AST.Constant as C
-import LLVM.AST.Type (i32)
 import          Common.RTypes
 import          Compiler.IR.Utils
-import LLVM.IRBuilder (add)
 import LLVM.AST.CallingConvention (CallingConvention(C))
+import qualified LLVM.AST.Type
+import Data.List (find)
+import Compiler.Optimizer.Optimizer (nameToString)
 type Location = Integer
 
 type ExpMap = Map.Map Expr Location
 
-data Value = VInt Integer
-            | VFalse
-            | VTrue
-            | VReference Name RawType
-  deriving (Show, Eq)
 
 
+type ClassField = (Name, RawType, Int)
+type ClassMethod = (Ident , Name, RawType, [RawType], Int)
 data Env = Env
   { 
      _loc   :: Map.Map Ident Location 
@@ -42,13 +39,18 @@ data Env = Env
   , _returnFlag :: Bool
   , _instrAcc :: [Named Instruction]
   , _cVarId :: Integer
+  , _cGlobalId :: Integer
   , _cBlockId :: Integer
   , _globalDefs :: [Definition]
+  , _classDefs :: [Definition]
   , _pBlocks :: [BasicBlock]
   , _nextLoc :: Location 
+  , _classFields :: Map.Map (Name) [ClassField]
+  , _classMethods :: Map.Map (Name) [ClassMethod]
+  , _currentClass :: Maybe (Name)
+  , _currentReturnType :: RawType
   } deriving (Show, Eq)
 
--- compile result (Ident, T.Text)
 type CompileRes = [T.Text]
 
 dummyLoc :: Location
@@ -68,12 +70,14 @@ insertIdents idents env = foldl (\acc (i, v) -> insertIdent i v acc) env idents
 
 emptyEnv :: Env
 emptyEnv = insertIdents identNamePredif  Env { _loc = Map.empty, _nextLoc = 0, _store = Map.empty,
-  _currentBlockName = mkName "entry", _instrAcc = [], _cVarId = 0, _cBlockId = 0, _globalDefs = [], _emptyStringName = Nothing, _returnFlag = False, _pBlocks = []}
+  _currentBlockName = mkName "entry", _instrAcc = [], _cVarId = 0, _cBlockId = 0, _globalDefs = [], _emptyStringName = Nothing, _returnFlag = False, _pBlocks = [], _classDefs = [], _classFields = Map.empty, _classMethods = Map.empty, 
+  _currentClass = Nothing, _cGlobalId = 0, _currentReturnType = RTVoid}
 
-updateIdent :: Ident -> Value -> Env -> Env 
-updateIdent id val env = do
-  let l = fromJust $  Map.lookup id (env ^. loc)
-  env & store %~ Map.insert l val
+
+
+
+getNextVarEnv :: Env -> (Name, Env)
+getNextVarEnv env = (mkName $ "_v" ++ show ((env ^. cVarId) + 1), env & cVarId %~ (+1))
 
 getNexLoc :: Env -> (Location, Env) 
 getNexLoc env = (env ^. nextLoc, env & nextLoc %~ (+1)) 
@@ -83,10 +87,12 @@ insertIdent id val env = do
   newEnv & loc %~ Map.insert id l
     & store %~ Map.insert l val 
   
-lookupIdent :: Ident -> Env -> Value 
-lookupIdent id env = do
-  let l = fromJust $  Map.lookup id (env ^. loc)
-  fromJust $ Map.lookup l (env ^. store)
+insertIdentLoc :: Ident -> Env -> Env 
+insertIdentLoc id env = do
+  let (l, newEnv) = getNexLoc env
+  newEnv & loc %~ Map.insert id l
+
+
 
 insertArgs :: [Arg] -> Env -> Env
 insertArgs args env = foldl (flip insertArg) env args
@@ -116,6 +122,8 @@ vOp VFalse  = ConstantOperand (C.Int 1 0)
 vOp VTrue  = ConstantOperand (C.Int 1 1)
 vOp (VReference id typ)  = LocalReference (astFromRType typ) id
 
+iOp :: Integer -> Operand
+iOp i = ConstantOperand (C.Int 32 i)
 toName :: Value -> Maybe Name
 toName (VReference n _ ) = Just n
 toName _ = Nothing
@@ -126,8 +134,6 @@ astIntOp i = ConstantOperand (C.Int 32  i)
 astBoolOp :: Bool -> Operand
 astBoolOp b = ConstantOperand (C.Int 1 (if b then 1 else 0))
 
-retCall :: Value -> Named Terminator
-retCall val  = Do $ LLVM.AST.Ret (Just $ vOp val) []
 
 vretCall :: Named Terminator
 vretCall = Do $ LLVM.AST.Ret Nothing []
@@ -138,30 +144,6 @@ stringCastCall i j env = do
   env
     & instrAcc %~ (++ [i := BitCast j (astFromRType RTString) []])
 
-funcCall :: Name -> Ident -> [Operand] -> Env -> Env
-funcCall i ident args env = do
-  let fValue = lookupIdent ident env
-
-  let ftype = getVType fValue
-
-  let call = Call {
-    tailCallKind = Nothing,
-    callingConvention = C,
-    returnAttributes = [],
-    function = Right $ ConstantOperand $ C.GlobalReference (astFromRType ftype) (mkName $ fromIdent ident),
-    arguments = zip args (repeat []),
-    functionAttributes = [],
-    metadata = []
-  }
-  let returnType = getReturnType $ ftype
-  let namedCall = if returnType == RTVoid then Do call else i := call
-  env
-    & instrAcc %~ (++ [namedCall])
-    -- return of function is stored in i
-  where
-    getVType (VReference _ t) = t
-    getVType _ = error "Not a function"
-    fromIdent (Ident s) = s
 
 truncCall :: Name -> RawType -> Operand -> Env -> Env
 truncCall i typ op env = do
@@ -176,7 +158,7 @@ getReturnType (RTFun returnType _) = returnType
 getReturnType _ = error "Not a function type"
 
 binOpCall :: Name -> RawType -> (Operand -> Operand -> InstructionMetadata -> Instruction) -> Operand -> Operand -> Env -> Env
-binOpCall name typ i op1 op2 env = do
+binOpCall name _ i op1 op2 env = do
   env
   & instrAcc %~ (++ [name := i op1 op2 []])
 

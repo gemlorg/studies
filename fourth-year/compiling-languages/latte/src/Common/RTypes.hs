@@ -1,6 +1,7 @@
 module Common.RTypes where
 
 import           Grammar.Abs
+import LLVM.AST (Name)
 
 
 type RVariable = (Ident, RawType)
@@ -28,6 +29,11 @@ concatStringsSignature = (Ident "_concatStrings", RTFun RTString [RTString, RTSt
 
 compareStringsSignature :: RVariable
 compareStringsSignature = (Ident "_compareStrings", RTFun RTInt [RTString, RTString])
+mallocSignature :: RVariable
+mallocSignature = (Ident "_malloc", RTFun RTString [RTInt])
+
+countSignature :: RVariable
+countSignature = (Ident "_count_arr_length", RTFun RTInt [RTString, RTInt])
 
 predifinedFunctions :: [RVariable]
 predifinedFunctions =
@@ -36,9 +42,10 @@ predifinedFunctions =
   , errorSignature
   , readIntSignature
   , readStringSignature
+
   ]
 predifinedFunctionsInternal :: [RVariable]
-predifinedFunctionsInternal = predifinedFunctions ++ [concatStringsSignature, compareStringsSignature]
+predifinedFunctionsInternal = predifinedFunctions ++ [concatStringsSignature, compareStringsSignature , mallocSignature]
 
 data RawType
   = RTInt
@@ -46,7 +53,16 @@ data RawType
   | RTBool
   | RTVoid
   | RTFun RawType [RawType] 
+  | RTClass Ident
+  | RTArr RawType 
   deriving (Ord)
+
+data Value = VInt Integer
+            | VFalse
+            | VTrue
+            | VReference Name RawType
+
+  deriving (Show, Eq, Ord)
 
 instance Eq RawType where
   RTInt == RTInt = True
@@ -55,6 +71,8 @@ instance Eq RawType where
   RTVoid == RTVoid = True
   (RTFun args1 returnType1) == (RTFun args2 returnType2) =
     args1 == args2 && returnType1 == returnType2
+  (RTClass ident1) == (RTClass ident2) = ident1 == ident2
+  (RTArr t1) == (RTArr t2 ) = t1 == t2
   _ == _ = False
 
 instance Show RawType where
@@ -64,6 +82,8 @@ instance Show RawType where
   show RTVoid = "void"
   show (RTFun argsTypes returnType) =
     concat [ show returnType, "(", show argsTypes, ")"]
+  show (RTClass ident) = show ident
+  show (RTArr t ) = show t ++ "[]"
 
 fromType :: Type -> RawType
 fromType (Int _) = RTInt
@@ -75,6 +95,11 @@ fromType (Fun _ returnType argumentsTypes) =
   where
     rawArgumentsTypes = map fromType argumentsTypes
     rawReturnType = fromType returnType
+fromType (Class _ ident) = RTClass ident
+fromType (Array _ t) = RTArr (fromType t) 
+
+
+
 
 fromFunction ::  Type -> [Arg]   -> RawType
 fromFunction returnType arguments = RTFun rawReturnType rawArgumentsTypes

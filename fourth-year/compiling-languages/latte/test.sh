@@ -8,8 +8,10 @@ bad_tests_dir3="tests/mrjp-tests/bad/*/*"
 good_tests_dir1="tests/examples/good/*/*"
 good_tests_dir2="tests/lattests/good/*"
 good_tests_dir3="tests/mrjp-tests/good/basic/*"
+good_tests_dir5="tests/extensions/*"
 
 extension_tests_dir1="tests/lattests/extensions/*/*"
+
 
 program_path=$1
 
@@ -115,12 +117,14 @@ generate "$bad_tests_dir3" 1
 generate "$good_tests_dir1" 0
 generate "$good_tests_dir2" 0
 generate "$good_tests_dir3" 0
-# generate "$extension_tests_dir1" 0
+generate "$good_tests_dir5" 0
+generate "$extension_tests_dir1" 0
 
 run_tests_in "$good_tests_dir1" 0
 run_tests_in "$good_tests_dir2" 0
 run_tests_in "$good_tests_dir3" 0
-# run_tests_in "$extension_tests_dir1" 0
+run_tests_in "$good_tests_dir5" 0
+run_tests_in "$extension_tests_dir1" 0
 
 echo "total tests: $total_tests"
 echo "total ok: $total_ok"

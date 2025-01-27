@@ -12,25 +12,32 @@ class Node {
 }
 
 class Stack {
-  Node head;
+  Node front;
+  Node rear;
+  int size;
 
-  void push(Shape c) {
-    Node newHead = new Node;
-    newHead.setElem(c);
-    newHead.setNext(head);
-    head = newHead;
+  boolean isEmpty () { return size == 0; }
+
+  void push (Shape x) {
+    Node last = new Node;
+    last.setElem(x);
+    if (size == 0)
+      front = last;
+    else
+      rear.setNext(last);
+    rear = last;
+    size++;
   }
 
-  boolean isEmpty() {
-    return head==cast<Node,null>;
-  }
-
-  Shape top() {
-    return head.getElem();
-  }
+  Shape top () { return front.getElem(); }
 
   void pop() {
-    head = head.getNext();
+    size--;
+    front = front.getNext();
+  }
+
+  int size () {
+    return size;
   }
 }
 
@@ -61,6 +68,7 @@ class Square extends Rectangle {
     printString("I'm really a square");
   }
 }
+
 
 int main() {
   Stack stk = new Stack;

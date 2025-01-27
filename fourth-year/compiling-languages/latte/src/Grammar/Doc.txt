@@ -30,17 +30,19 @@ except ``"`` unless preceded by ``\``.
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in grammar are the following:
-  | ``boolean`` | ``else`` | ``false`` | ``if``
-  | ``int`` | ``return`` | ``string`` | ``true``
+  | ``boolean`` | ``class`` | ``else`` | ``extends``
+  | ``false`` | ``for`` | ``if`` | ``int``
+  | ``new`` | ``return`` | ``string`` | ``true``
   | ``void`` | ``while`` |  |
 
 The symbols used in grammar are the following:
-  | ( | ) | , | {
-  | } | ; | = | ++
-  | -- | - | ! | &&
-  | || | + | * | /
-  | % | < | <= | >
-  | >= | == | != |
+  | ( | ) | ; | {
+  | } | , | = | ++
+  | -- | : | [] | [
+  | ] | . | - | !
+  | && | || | + | *
+  | / | % | < | <=
+  | > | >= | == | !=
 
 ===Comments===
 Single-line comments begin with #, //.Multiple-line comments are  enclosed with /* and */.
@@ -52,9 +54,17 @@ and **eps** (empty rule) belong to the BNF notation.
 All other symbols are terminals.
 
   | //Program// | -> | //[TopDef]//
-  | //TopDef// | -> | //Type// //Ident// ``(`` //[Arg]// ``)`` //Block//
+  | //TopDef// | -> | //ClassDef//
+  |  |  **|**  | //FnDef//
+  | //FnDef// | -> | //Type// //Ident// ``(`` //[Arg]// ``)`` //Block//
   | //[TopDef]// | -> | //TopDef//
   |  |  **|**  | //TopDef// //[TopDef]//
+  | //ClassMember// | -> | //Type// //Ident// ``;``
+  |  |  **|**  | //FnDef//
+  | //ClassDef// | -> | ``class`` //Ident// ``{`` //[ClassMember]// ``}``
+  |  |  **|**  | ``class`` //Ident// ``extends`` //Ident// ``{`` //[ClassMember]// ``}``
+  | //[ClassMember]// | -> | **eps**
+  |  |  **|**  | //ClassMember// //[ClassMember]//
   | //Arg// | -> | //Type// //Ident//
   | //[Arg]// | -> | **eps**
   |  |  **|**  | //Arg//
@@ -65,27 +75,35 @@ All other symbols are terminals.
   | //Stmt// | -> | ``;``
   |  |  **|**  | //Block//
   |  |  **|**  | //Type// //[Item]// ``;``
-  |  |  **|**  | //Ident// ``=`` //Expr// ``;``
-  |  |  **|**  | //Ident// ``++`` ``;``
-  |  |  **|**  | //Ident// ``--`` ``;``
+  |  |  **|**  | //Expr// ``=`` //Expr// ``;``
+  |  |  **|**  | //Expr// ``++`` ``;``
+  |  |  **|**  | //Expr// ``--`` ``;``
   |  |  **|**  | ``return`` //Expr// ``;``
   |  |  **|**  | ``return`` ``;``
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Stmt//
   |  |  **|**  | ``if`` ``(`` //Expr// ``)`` //Stmt// ``else`` //Stmt//
   |  |  **|**  | ``while`` ``(`` //Expr// ``)`` //Stmt//
+  |  |  **|**  | ``for`` ``(`` //Type// //Ident// ``:`` //Expr// ``)`` //Stmt//
   |  |  **|**  | //Expr// ``;``
   | //Item// | -> | //Ident//
   |  |  **|**  | //Ident// ``=`` //Expr//
   | //[Item]// | -> | //Item//
   |  |  **|**  | //Item// ``,`` //[Item]//
-  | //Type// | -> | ``int``
+  | //Type// | -> | //Ident//
+  |  |  **|**  | ``int``
   |  |  **|**  | ``string``
   |  |  **|**  | ``boolean``
   |  |  **|**  | ``void``
+  |  |  **|**  | //Type// ``[]``
   | //[Type]// | -> | **eps**
   |  |  **|**  | //Type//
   |  |  **|**  | //Type// ``,`` //[Type]//
-  | //Expr6// | -> | //Ident//
+  | //Expr6// | -> | ``new`` //Type//
+  |  |  **|**  | ``new`` //Type// ``[`` //Expr// ``]``
+  |  |  **|**  | //Expr6// ``.`` //Ident//
+  |  |  **|**  | //Expr6// ``.`` //Ident// ``(`` //[Expr]// ``)``
+  |  |  **|**  | //Expr6// ``[`` //Expr// ``]``
+  |  |  **|**  | //Ident//
   |  |  **|**  | //Integer//
   |  |  **|**  | ``true``
   |  |  **|**  | ``false``

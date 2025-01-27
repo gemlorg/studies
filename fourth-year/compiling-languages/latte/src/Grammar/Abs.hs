@@ -23,7 +23,23 @@ data Program' a = Program a [TopDef' a]
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type TopDef = TopDef' BNFC'Position
-data TopDef' a = FnDef a (Type' a) Ident [Arg' a] (Block' a)
+data TopDef' a
+    = TopClassDef a (ClassDef' a) | TopClassFnDef a (FnDef' a)
+  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
+
+type FnDef = FnDef' BNFC'Position
+data FnDef' a = FnDef a (Type' a) Ident [Arg' a] (Block' a)
+  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
+
+type ClassMember = ClassMember' BNFC'Position
+data ClassMember' a
+    = ClassField a (Type' a) Ident | ClassMethod a (FnDef' a)
+  deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
+
+type ClassDef = ClassDef' BNFC'Position
+data ClassDef' a
+    = ClassDef a Ident [ClassMember' a]
+    | ClassExtDef a Ident Ident [ClassMember' a]
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Arg = Arg' BNFC'Position
@@ -39,14 +55,15 @@ data Stmt' a
     = Empty a
     | BStmt a (Block' a)
     | Decl a (Type' a) [Item' a]
-    | Ass a Ident (Expr' a)
-    | Incr a Ident
-    | Decr a Ident
+    | Ass a (Expr' a) (Expr' a)
+    | Incr a (Expr' a)
+    | Decr a (Expr' a)
     | Ret a (Expr' a)
     | VRet a
     | Cond a (Expr' a) (Stmt' a)
     | CondElse a (Expr' a) (Stmt' a) (Stmt' a)
     | While a (Expr' a) (Stmt' a)
+    | For a (Type' a) Ident (Expr' a) (Stmt' a)
     | SExp a (Expr' a)
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
@@ -56,12 +73,23 @@ data Item' a = NoInit a Ident | Init a Ident (Expr' a)
 
 type Type = Type' BNFC'Position
 data Type' a
-    = Int a | Str a | Bool a | Void a | Fun a (Type' a) [Type' a]
+    = Class a Ident
+    | Int a
+    | Str a
+    | Bool a
+    | Void a
+    | Array a (Type' a)
+    | Fun a (Type' a) [Type' a]
   deriving (C.Eq, C.Ord, C.Show, C.Read, C.Functor, C.Foldable, C.Traversable)
 
 type Expr = Expr' BNFC'Position
 data Expr' a
-    = EVar a Ident
+    = ENewObject a (Type' a)
+    | ENewArray a (Type' a) (Expr' a)
+    | EMember a (Expr' a) Ident
+    | EMemberCall a (Expr' a) Ident [Expr' a]
+    | EArrGet a (Expr' a) (Expr' a)
+    | EVar a Ident
     | ELitInt a Integer
     | ELitTrue a
     | ELitFalse a
@@ -112,7 +140,22 @@ instance HasPosition Program where
 
 instance HasPosition TopDef where
   hasPosition = \case
+    TopClassDef p _ -> p
+    TopClassFnDef p _ -> p
+
+instance HasPosition FnDef where
+  hasPosition = \case
     FnDef p _ _ _ _ -> p
+
+instance HasPosition ClassMember where
+  hasPosition = \case
+    ClassField p _ _ -> p
+    ClassMethod p _ -> p
+
+instance HasPosition ClassDef where
+  hasPosition = \case
+    ClassDef p _ _ -> p
+    ClassExtDef p _ _ _ -> p
 
 instance HasPosition Arg where
   hasPosition = \case
@@ -135,6 +178,7 @@ instance HasPosition Stmt where
     Cond p _ _ -> p
     CondElse p _ _ _ -> p
     While p _ _ -> p
+    For p _ _ _ _ -> p
     SExp p _ -> p
 
 instance HasPosition Item where
@@ -144,14 +188,21 @@ instance HasPosition Item where
 
 instance HasPosition Type where
   hasPosition = \case
+    Class p _ -> p
     Int p -> p
     Str p -> p
     Bool p -> p
     Void p -> p
+    Array p _ -> p
     Fun p _ _ -> p
 
 instance HasPosition Expr where
   hasPosition = \case
+    ENewObject p _ -> p
+    ENewArray p _ _ -> p
+    EMember p _ _ -> p
+    EMemberCall p _ _ _ -> p
+    EArrGet p _ _ -> p
     EVar p _ -> p
     ELitInt p _ -> p
     ELitTrue p -> p

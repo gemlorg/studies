@@ -4,11 +4,12 @@ int main () {
   c.incr();
   c.incr();
   c.incr();
-  int x = c.value();
-  printInt(x);
+  printInt(c.value());
   return 0;
 }
+class Node {
 
+}
 class Counter {
   int val;
 

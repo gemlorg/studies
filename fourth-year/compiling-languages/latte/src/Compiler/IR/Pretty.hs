@@ -8,6 +8,8 @@
 {-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
 {-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}
 {-# LANGUAGE RecordWildCards, FlexibleInstances #-}
+
+-- TAKEN FROM ELSEWHERE. NOT WRITTEN BY ME
 module Compiler.IR.Pretty (
   ppllvm,
   ppll,
@@ -167,7 +169,7 @@ getElementPtrType _ _ = error "Expecting aggregate type. (Malformed AST)"
 
 getElementType :: Type -> Type
 getElementType (PointerType t _) = t
-getElementType _ = error $ "Expecting pointer type. (Malformed AST)"
+getElementType p = error $ "Expecting pointer type. (Malformed AST)" ++ show p
 
 extractValueType :: [Word32] -> Type -> Type
 extractValueType [] ty = ty
@@ -654,7 +656,7 @@ instance Pretty Instruction where
       where
         argTy = case typeOf address of
           PointerType argTy_ _ -> argTy_
-          _ -> error "invalid load of non-pointer type. (Malformed AST)"
+          p -> error$  "invalid load of non-pointer type. (Malformed AST)"  ++ show p
     Phi {..}    -> "phi" <+> pretty type' <+> commas (fmap phiIncoming incomingValues) <+> ppInstrMeta metadata
 
     ICmp {..}   -> "icmp" <+> pretty iPredicate <+> ppTyped operand0 `cma` pretty operand1 <+> ppInstrMeta metadata
@@ -1420,7 +1422,7 @@ ppNullInitializer PointerType {..} = "zeroinitializer"
 ppNullInitializer StructureType {..} = "zeroinitializer"
 ppNullInitializer FunctionType {..} = "zeroinitializer"
 ppNullInitializer ArrayType {..} = "zeroinitializer"
-ppNullInitializer _ = error "Non-pointer argument. (Malformed AST)"
+ppNullInitializer p  = error $ "Non-pointer argument. (Malformed AST)" ++ show p
 
 ppCall :: Instruction -> Doc ann
 ppCall Call { function = Right f,..}

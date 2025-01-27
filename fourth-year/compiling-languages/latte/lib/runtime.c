@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// TAKEN FROM ELSEWHERE. NOT WRITTEN BY ME
 void error() {
   fprintf(stderr, "runtime error\n");
   exit(1);
@@ -133,4 +134,23 @@ void __incr_ref_counter(void *memory_loc) {
     int *ref_counter = p - 1;
     (*ref_counter)++;
   }
+}
+// define i8* @_malloc(i32 %size) {
+//   %res = call i8* @malloc(i32 %size)
+//   ret i8* %res
+// }
+void *_malloc(int size) {
+  int *result = malloc(size);
+  // memset to 0 
+  memset(result, 0, size);
+  return result;
+}
+
+int _count_arr_length(void *arr, int elem_size) {
+  if (arr == NULL) {
+    return 0;
+  }
+  int *p = (int *)arr;
+  int *length = p - 1;
+  return *length / elem_size;
 }

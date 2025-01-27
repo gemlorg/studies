@@ -4,9 +4,19 @@ entrypoints Program ;
 
 Program.   Program ::= [TopDef] ;
 
-FnDef.	   TopDef ::= Type Ident "(" [Arg] ")" Block ;
+TopClassDef. 	TopDef 		::= ClassDef;
+TopClassFnDef.	   TopDef ::= FnDef;
+FnDef. FnDef ::= Type Ident "(" [Arg] ")" Block ;
 
 separator nonempty TopDef "" ;
+
+ClassField.     ClassMember     ::= Type Ident ";";
+ClassMethod.    ClassMember     ::= FnDef;
+
+ClassDef.       ClassDef 	::= "class" Ident "{" [ClassMember] "}" ;
+ClassExtDef.    ClassDef 	::= "class" Ident "extends" Ident "{" [ClassMember] "}" ;
+
+separator ClassMember "" ;
 
 Arg. 	   Arg ::= Type Ident;
 
@@ -30,11 +40,11 @@ Init.      Item ::= Ident "=" Expr ;
 
 separator nonempty Item "," ;
 
-Ass.       Stmt ::= Ident "=" Expr  ";" ;
+Ass.       Stmt ::= Expr "=" Expr  ";" ;
 
-Incr.      Stmt ::= Ident "++"  ";" ;
+Incr.      Stmt ::= Expr "++"  ";" ;
 
-Decr.      Stmt ::= Ident "--"  ";" ;
+Decr.      Stmt ::= Expr "--"  ";" ;
 
 Ret.       Stmt ::= "return" Expr ";" ;
 
@@ -46,10 +56,13 @@ CondElse.  Stmt ::= "if" "(" Expr ")" Stmt "else" Stmt  ;
 
 While.     Stmt ::= "while" "(" Expr ")" Stmt ;
 
+For.       Stmt 	::= "for" "(" Type Ident ":" Expr ")" Stmt ;
+
 SExp.      Stmt ::= Expr  ";" ;
 
 -- Types ---------------------------------------------------
 
+Class.          Type    ::= Ident ;
 Int.       Type ::= "int" ;
 
 Str.       Type ::= "string" ;
@@ -57,12 +70,20 @@ Str.       Type ::= "string" ;
 Bool.      Type ::= "boolean" ;
 
 Void.      Type ::= "void" ;
+Array.     Type ::= Type "[]" ;
 
 internal   Fun. Type ::= Type "(" [Type] ")" ;
 
 separator  Type "," ;
 
 -- Expressions ---------------------------------------------
+
+ENewObject.	Expr6 	::= "new" Type ;
+ENewArray. Expr6 ::= "new" Type "[" Expr "]" ;
+
+EMember.	 Expr6 	::= Expr6 "." Ident ;
+EMemberCall. Expr6 	::= Expr6 "." Ident "(" [Expr] ")"  ;
+EArrGet. 	Expr6   ::= Expr6 "[" Expr "]";
 
 EVar.      Expr6 ::= Ident ;
 
@@ -75,6 +96,7 @@ ELitFalse. Expr6 ::= "false" ;
 EApp.      Expr6 ::= Ident "(" [Expr] ")" ;
 
 EString.   Expr6 ::= String ;
+
 
 Neg.       Expr5 ::= "-" Expr6 ;
 

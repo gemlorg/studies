@@ -13,33 +13,30 @@ class Node {
 class IntQueue {
   Node front;
   Node rear;
+  int size;
 
-  boolean isEmpty () { return front == cast<Node,null>; }
+  boolean isEmpty () { return size == 0; }
 
   void insert (int x) {
     Node last = new Node;
     last.setElem(x);
-    if (self.isEmpty())
+    if (size == 0)
       front = last;
     else 
       rear.setNext(last);
     rear = last;
+    size++;
   }
 
   int first () { return front.getElem(); }
 
   void rmFirst () {
+    size--;
     front = front.getNext();
   }
 
   int size () {
-      Node n = front;
-      int res = 0;
-      while (n != cast<Node,null>) {
-        n = n.getNext();
-        res++;
-      }
-     return res;
+    return size;
   }
 }
 
@@ -51,10 +48,11 @@ int main () {
   IntQueue q = new IntQueue;
   q.insert(f(3));
   q.insert(5);
-  q.insert(7);
   printInt(q.first());
-  q.rmFirst();
   printInt(q.size());
+  q.rmFirst();
+
+  printInt(q.first());
   return 0;
 }
 

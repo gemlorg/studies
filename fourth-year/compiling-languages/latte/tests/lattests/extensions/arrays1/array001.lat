@@ -6,6 +6,7 @@ int main() {
      a[j] = j;
      j++;
   }
+
   for (int x : a) 
      printInt(x);
 

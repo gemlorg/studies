@@ -15,7 +15,9 @@ import           Typechecker.Environment
 import           Typechecker.Monad
 
 import           Prelude
-import Control.Exception (assert, throw)
+import Lens.Micro
+import qualified Data.Map as Map
+import Data.Maybe
 
 getArgumentsWithTypes :: [Arg] -> [RVariable]
 getArgumentsWithTypes = map getArgumentWithType
@@ -40,22 +42,40 @@ isFunctionType _      = False
 
 
 assertTypeG :: BNFC'Position -> RawType -> RawType -> EmptyTypegetterMonad
-assertTypeG pos t1 t2 =
-  if t1 == t2
+assertTypeG pos t1 t2 = do
+  ext <-extends t2 t1
+  if t1 == t2 || ext
     then pure ()
     else throwError $ Exception (InvalidTypeException t2 t1) pos
+  where extends (RTClass name) (RTClass name') = do
+          env <- ask
+          -- use map lookup 
+          pure $ case Map.lookup name (env ^. extMap) of
+            Just name'' -> name' == name''
+            Nothing -> False
+        extends _ _ = pure $ False
+
 
 assertNotFunctionG :: BNFC'Position -> RawType -> EmptyTypegetterMonad
 assertNotFunctionG pos t =
-  if isFunctionRawType t
-    then throwError $ Exception (InvalidTypeException t RTVoid) pos
-    else pure ()
+  when (isFunctionRawType t) $ throwError $ Exception (InvalidTypeException t RTVoid) pos
 
 assertTypeC :: BNFC'Position -> RawType -> RawType -> TypecheckerMonad
-assertTypeC pos t1 t2 =
-  if t1 == t2
+assertTypeC pos t1 t2 = do
+  ext <- extends t1 t2
+  if t1 == t2 || ext
     then pure ()
-    else throwError $ Exception (InvalidTypeException t2 t1) pos
+    else do 
+      throwError $ Exception (InvalidTypeException t2 t1) pos
+    where extends (RTClass name) (RTClass name') = do
+            env <- get
+            -- use map lookup 
+            case Map.lookup name (env ^. extMap) of
+              Just name'' -> do    
+                ext2 <- extends (RTClass name'') (RTClass name')
+                pure $ name' == name''  || ext2
+              Nothing -> pure False
+          extends _ _ = (pure False)
 
 assertVarExistsG :: BNFC'Position -> Ident -> TypegetterMonad
 assertVarExistsG pos name = do
@@ -66,25 +86,28 @@ assertVarExistsG pos name = do
 
 assertDeclType:: BNFC'Position -> Type -> TypecheckerMonad
 assertDeclType pos t = case fromType t of
-  RTVoid -> throwError $ Exception (InvalidDeclException) pos
-  RTFun _ _ -> throwError $ Exception (InvalidDeclException) pos
-  _         -> pure ()
+  RTVoid -> throwError $ Exception InvalidDeclException pos
+  RTFun _ _ -> throwError $ Exception InvalidDeclException pos
+  _         -> assertTypeExists pos $ fromType t
 
 assertMain :: Env -> TypecheckerMonad
-assertMain env = 
+assertMain env =
   let (name, typ) = mainSignature
   in case getType env name of
-    Just t  -> if t == typ then 
-      pure () else 
-        throwError $ Exception (InvalidMainTypeException t) (NoPos)
-    Nothing -> throwError $ Exception (NoMainException) (NoPos)
+    Just t  -> if t == typ then
+      pure () else
+        throwError $ Exception (InvalidMainTypeException t) NoPos
+    Nothing -> throwError $ Exception NoMainException NoPos
 
+assertGetArrTypeG :: BNFC'Position -> RawType -> TypegetterMonad
+assertGetArrTypeG pos (RTArr t ) = pure t
+assertGetArrTypeG pos t = throwError $ Exception (NotArrayException t) pos
 assertIntRange :: BNFC'Position -> Integer -> TypegetterMonad
-assertIntRange pos i = 
+assertIntRange pos i =
   if i >= minBound32 && i <= maxBound32
     then pure RTInt
     else throwError $ Exception (InvalidIntRangeException i) pos
-  where 
+  where
     minBound32 = 2^(31 :: Integer) * (-1)
     maxBound32 = 2^(31 :: Integer) - 1
 
@@ -92,18 +115,63 @@ isFunctionRawType :: RawType -> Bool
 isFunctionRawType RTFun {} = True
 isFunctionRawType _        = False
 
-assertVarNotExists :: BNFC'Position -> Ident -> TypecheckerMonad 
+assertVarNotExists :: BNFC'Position -> Ident -> TypecheckerMonad
 assertVarNotExists pos name = do
   env <- get
   case getType env name of
     Just _  -> throwError $ Exception (SymbolAlreadyDefinedException name) pos
-    Nothing -> pure ()
+    Nothing -> case env ^. currentClass of
+      Just className -> do
+        members <- getMembers' className pos
+        if name `elem` map fst members
+          then throwError $ Exception (SymbolAlreadyDefinedException name) pos
+          else pure ()
+      Nothing -> pure ()
+    where getMembers' typ pos = do
+            env <- get
+            case Map.lookup typ (env ^. classFields) of
+              Just members -> pure members
+              Nothing -> throwError $ Exception (NoSuchClassException name) pos
 
 assertUniueArgs :: BNFC'Position -> [Arg] -> TypecheckerMonad
-assertUniueArgs pos args = 
+assertUniueArgs pos args =
   if areUniqueArgs args
     then pure ()
     else throwError $ Exception (ArgDuplicateException args) pos
+
+assertValidClassType ::  ClassMember -> TypecheckerMonad
+assertValidClassType  (ClassField pos t _) = case fromType t of
+  RTClass _ -> pure ()
+  RTInt    -> pure ()
+  RTBool  -> pure ()
+  RTString -> pure ()
+  RTArr _  -> pure ()
+  _         -> throwError $ Exception (InvalidDeclException) pos
+
+assertValidClassType _ = pure ()
+
+assertFieldTypesExist :: BNFC'Position -> Ident -> TypecheckerMonad
+assertFieldTypesExist pos id = do
+  env <- get
+  let fields = fromJust $ Map.lookup id (env ^. classFields)
+  mapM_ (\(_, t) -> assertTypeExists pos t) fields
+
+assertTypeExists :: BNFC'Position -> RawType -> TypecheckerMonad
+assertTypeExists pos (RTClass name) = do
+  env <- get
+  case Map.lookup name (env ^. classFields) of
+    Just _  -> pure ()
+    Nothing -> throwError $ Exception (NoSuchClassException name) pos
+assertTypeExists _ _ = pure ()
+
+
+assertTypeExists' :: BNFC'Position -> RawType -> TypegetterMonad' ()
+assertTypeExists' pos (RTClass name) = do
+  env <- ask
+  case Map.lookup name (env ^. classFields) of
+    Just _  -> pure ()
+    Nothing -> throwError $ Exception (NoSuchClassException name) pos
+assertTypeExists' _ _ = pure ()
 
 assertVarType :: BNFC'Position -> Ident -> RawType  -> TypecheckerMonad
 assertVarType pos name t = do
@@ -112,23 +180,33 @@ assertVarType pos name t = do
     Just t' -> assertTypeC pos t t'
     Nothing -> throwError $ Exception (UndefinedSymbolException name) pos
 
-assertNotVoidArgs :: BNFC'Position -> [Arg] -> TypecheckerMonad 
-assertNotVoidArgs _ args = 
-  mapM_ (assertNotVoid ) args
+assertNotVoidArgs :: BNFC'Position -> [Arg] -> TypecheckerMonad
+assertNotVoidArgs _ = mapM_ assertNotVoid
 
-assertNotVoid :: Arg -> TypecheckerMonad 
-assertNotVoid (Arg pos t name) = 
-  if fromType t == RTVoid
-    then throwError $ Exception (VoidArgumentException name) pos
-    else pure ()
+assertNotVoid :: Arg -> TypecheckerMonad
+assertNotVoid (Arg pos t name) =
+  when (fromType t == RTVoid) $ throwError $ Exception (VoidArgumentException name) pos
 getVarType :: BNFC'Position -> Ident -> Env -> Either StaticException RawType
-getVarType position name env =
-  case getType env name of
-    Just t  -> pure t
-    Nothing -> throwError $ Exception (UndefinedSymbolException name) position
+getVarType position name env = do
+  let currClass = env ^. currentClass
+  case currClass of
+    Just className -> do
+      let fields = fromJust $ Map.lookup className (env ^. classFields)
+      case lookup name fields of
+        Just t -> pure t
+        Nothing ->do
+          -- error $ "looking up: " ++ show name ++ " in class " ++ show className ++ " fields: " ++ unwords (map (\(Ident name, t) -> name) fields)
+          case getType env name of
+            Just t  -> pure t
+            Nothing -> throwError $ Exception (UndefinedSymbolException name) position
+        --  throwError $ Exception (UndefinedSymbolException name) position
+    Nothing -> do
+      case getType env name of
+        Just t  -> pure t
+        Nothing -> throwError $ Exception (UndefinedSymbolException name) position
 
 assertNotDecl :: Stmt -> TypecheckerMonad
-assertNotDecl (Decl pos _ _) = throwError $ Exception (NoBlockDeclException) pos
+assertNotDecl (Decl pos _ _) = throwError $ Exception NoBlockDeclException pos
 assertNotDecl _              = pure ()
 areUniqueArgs :: [Arg] -> Bool
 areUniqueArgs arguments = do

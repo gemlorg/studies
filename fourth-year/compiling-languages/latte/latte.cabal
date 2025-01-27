@@ -55,12 +55,12 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
-executable latc_x86_64
+executable latc_llvm
     -- Import common warning flags.
     import:           warnings
 
     -- .hs or .lhs file containing the Main module.
-    main-is:          latc_x86_64.hs
+    main-is:          latc_llvm.hs
 
     -- Modules included in this executable, other than Main.
     other-modules:
@@ -72,17 +72,18 @@ executable latc_x86_64
         Common.Exception
         Common.GrammarUtils
         Common.RTypes
-        Compiler.Environment
         Compiler.Compiler
-        Compiler.Monad
         Compiler.IR.IR 
         Compiler.IR.Monad 
         Compiler.IR.Pretty
         Compiler.IR.Environment
         Compiler.IR.Utils
+        Compiler.Optimizer.Optimizer
+        Compiler.Optimizer.Monad
+        Compiler.Optimizer.Environment
+
 
         -- Compiler.Utils
-        Compiler.Types
         Typechecker.Environment
         Typechecker.Monad
         Typechecker.Typechecker
@@ -105,11 +106,12 @@ executable latc_x86_64
         , process
         , array
         , bytestring
-        , tasty
+        , tasty < 1.4
         , tasty-hunit
         , tasty-golden
         , tasty-hspec
         , prettyprinter
+
 
     -- Directories containing source files.
     hs-source-dirs:   src

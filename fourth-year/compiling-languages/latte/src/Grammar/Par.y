@@ -35,27 +35,36 @@ import Grammar.Lex
   ','       { PT _ (TS _ 10) }
   '-'       { PT _ (TS _ 11) }
   '--'      { PT _ (TS _ 12) }
-  '/'       { PT _ (TS _ 13) }
-  ';'       { PT _ (TS _ 14) }
-  '<'       { PT _ (TS _ 15) }
-  '<='      { PT _ (TS _ 16) }
-  '='       { PT _ (TS _ 17) }
-  '=='      { PT _ (TS _ 18) }
-  '>'       { PT _ (TS _ 19) }
-  '>='      { PT _ (TS _ 20) }
-  'boolean' { PT _ (TS _ 21) }
-  'else'    { PT _ (TS _ 22) }
-  'false'   { PT _ (TS _ 23) }
-  'if'      { PT _ (TS _ 24) }
-  'int'     { PT _ (TS _ 25) }
-  'return'  { PT _ (TS _ 26) }
-  'string'  { PT _ (TS _ 27) }
-  'true'    { PT _ (TS _ 28) }
-  'void'    { PT _ (TS _ 29) }
-  'while'   { PT _ (TS _ 30) }
-  '{'       { PT _ (TS _ 31) }
-  '||'      { PT _ (TS _ 32) }
-  '}'       { PT _ (TS _ 33) }
+  '.'       { PT _ (TS _ 13) }
+  '/'       { PT _ (TS _ 14) }
+  ':'       { PT _ (TS _ 15) }
+  ';'       { PT _ (TS _ 16) }
+  '<'       { PT _ (TS _ 17) }
+  '<='      { PT _ (TS _ 18) }
+  '='       { PT _ (TS _ 19) }
+  '=='      { PT _ (TS _ 20) }
+  '>'       { PT _ (TS _ 21) }
+  '>='      { PT _ (TS _ 22) }
+  '['       { PT _ (TS _ 23) }
+  '[]'      { PT _ (TS _ 24) }
+  ']'       { PT _ (TS _ 25) }
+  'boolean' { PT _ (TS _ 26) }
+  'class'   { PT _ (TS _ 27) }
+  'else'    { PT _ (TS _ 28) }
+  'extends' { PT _ (TS _ 29) }
+  'false'   { PT _ (TS _ 30) }
+  'for'     { PT _ (TS _ 31) }
+  'if'      { PT _ (TS _ 32) }
+  'int'     { PT _ (TS _ 33) }
+  'new'     { PT _ (TS _ 34) }
+  'return'  { PT _ (TS _ 35) }
+  'string'  { PT _ (TS _ 36) }
+  'true'    { PT _ (TS _ 37) }
+  'void'    { PT _ (TS _ 38) }
+  'while'   { PT _ (TS _ 39) }
+  '{'       { PT _ (TS _ 40) }
+  '||'      { PT _ (TS _ 41) }
+  '}'       { PT _ (TS _ 42) }
   L_Ident   { PT _ (TV _)    }
   L_integ   { PT _ (TI _)    }
   L_quoted  { PT _ (TL _)    }
@@ -77,12 +86,32 @@ Program
 
 TopDef :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.TopDef) }
 TopDef
+  : ClassDef { (fst $1, Grammar.Abs.TopClassDef (fst $1) (snd $1)) }
+  | FnDef { (fst $1, Grammar.Abs.TopClassFnDef (fst $1) (snd $1)) }
+
+FnDef :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.FnDef) }
+FnDef
   : Type Ident '(' ListArg ')' Block { (fst $1, Grammar.Abs.FnDef (fst $1) (snd $1) (snd $2) (snd $4) (snd $6)) }
 
 ListTopDef :: { (Grammar.Abs.BNFC'Position, [Grammar.Abs.TopDef]) }
 ListTopDef
   : TopDef { (fst $1, (:[]) (snd $1)) }
   | TopDef ListTopDef { (fst $1, (:) (snd $1) (snd $2)) }
+
+ClassMember :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.ClassMember) }
+ClassMember
+  : Type Ident ';' { (fst $1, Grammar.Abs.ClassField (fst $1) (snd $1) (snd $2)) }
+  | FnDef { (fst $1, Grammar.Abs.ClassMethod (fst $1) (snd $1)) }
+
+ClassDef :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.ClassDef) }
+ClassDef
+  : 'class' Ident '{' ListClassMember '}' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ClassDef (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $2) (snd $4)) }
+  | 'class' Ident 'extends' Ident '{' ListClassMember '}' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ClassExtDef (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $2) (snd $4) (snd $6)) }
+
+ListClassMember :: { (Grammar.Abs.BNFC'Position, [Grammar.Abs.ClassMember]) }
+ListClassMember
+  : {- empty -} { (Grammar.Abs.BNFC'NoPosition, []) }
+  | ClassMember ListClassMember { (fst $1, (:) (snd $1) (snd $2)) }
 
 Arg :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.Arg) }
 Arg
@@ -108,14 +137,15 @@ Stmt
   : ';' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Empty (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | Block { (fst $1, Grammar.Abs.BStmt (fst $1) (snd $1)) }
   | Type ListItem ';' { (fst $1, Grammar.Abs.Decl (fst $1) (snd $1) (snd $2)) }
-  | Ident '=' Expr ';' { (fst $1, Grammar.Abs.Ass (fst $1) (snd $1) (snd $3)) }
-  | Ident '++' ';' { (fst $1, Grammar.Abs.Incr (fst $1) (snd $1)) }
-  | Ident '--' ';' { (fst $1, Grammar.Abs.Decr (fst $1) (snd $1)) }
+  | Expr '=' Expr ';' { (fst $1, Grammar.Abs.Ass (fst $1) (snd $1) (snd $3)) }
+  | Expr '++' ';' { (fst $1, Grammar.Abs.Incr (fst $1) (snd $1)) }
+  | Expr '--' ';' { (fst $1, Grammar.Abs.Decr (fst $1) (snd $1)) }
   | 'return' Expr ';' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Ret (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $2)) }
   | 'return' ';' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.VRet (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | 'if' '(' Expr ')' Stmt { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Cond (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $3) (snd $5)) }
   | 'if' '(' Expr ')' Stmt 'else' Stmt { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.CondElse (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $3) (snd $5) (snd $7)) }
   | 'while' '(' Expr ')' Stmt { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.While (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $3) (snd $5)) }
+  | 'for' '(' Type Ident ':' Expr ')' Stmt { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.For (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $3) (snd $4) (snd $6) (snd $8)) }
   | Expr ';' { (fst $1, Grammar.Abs.SExp (fst $1) (snd $1)) }
 
 Item :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.Item) }
@@ -130,10 +160,12 @@ ListItem
 
 Type :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.Type) }
 Type
-  : 'int' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Int (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
+  : Ident { (fst $1, Grammar.Abs.Class (fst $1) (snd $1)) }
+  | 'int' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Int (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | 'string' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Str (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | 'boolean' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Bool (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | 'void' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.Void (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
+  | Type '[]' { (fst $1, Grammar.Abs.Array (fst $1) (snd $1)) }
 
 ListType :: { (Grammar.Abs.BNFC'Position, [Grammar.Abs.Type]) }
 ListType
@@ -143,7 +175,12 @@ ListType
 
 Expr6 :: { (Grammar.Abs.BNFC'Position, Grammar.Abs.Expr) }
 Expr6
-  : Ident { (fst $1, Grammar.Abs.EVar (fst $1) (snd $1)) }
+  : 'new' Type { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ENewObject (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $2)) }
+  | 'new' Type '[' Expr ']' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ENewArray (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1)) (snd $2) (snd $4)) }
+  | Expr6 '.' Ident { (fst $1, Grammar.Abs.EMember (fst $1) (snd $1) (snd $3)) }
+  | Expr6 '.' Ident '(' ListExpr ')' { (fst $1, Grammar.Abs.EMemberCall (fst $1) (snd $1) (snd $3) (snd $5)) }
+  | Expr6 '[' Expr ']' { (fst $1, Grammar.Abs.EArrGet (fst $1) (snd $1) (snd $3)) }
+  | Ident { (fst $1, Grammar.Abs.EVar (fst $1) (snd $1)) }
   | Integer { (fst $1, Grammar.Abs.ELitInt (fst $1) (snd $1)) }
   | 'true' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ELitTrue (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
   | 'false' { (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1), Grammar.Abs.ELitFalse (uncurry Grammar.Abs.BNFC'Position (tokenLineCol $1))) }
