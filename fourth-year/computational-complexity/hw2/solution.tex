@@ -1,0 +1,148 @@
+
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings} % For code formatting
+\usepackage{xcolor}
+% Page settings
+\geometry{a4paper, margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Computational Complexity}
+\rhead{Homework Solution}
+\cfoot{\thepage}
+
+% Title formatting
+\newcommand{\assignmentTitle}{Computational Complexity, Homework Problem 2, Fall 2024}
+\newcommand{\studentName}{Heorhii Lopatin}
+\newcommand{\studentID}{456366}
+\newcommand{\submissionDate}{\today}
+
+% Problem environment
+\newenvironment{problem}[1]{\noindent\textbf{Problem #1:} \itshape}{\par\vspace{10pt}}
+
+% Solution environment
+\newenvironment{solution}{\noindent\textbf{Solution:} \par\vspace{10pt}}{\par\vspace{10pt}}
+
+\lstset{
+    language=C, % Specify the language (use "C" for pseudocode-like formatting)
+    basicstyle=\ttfamily\small, % Code font and size
+    keywordstyle=\bfseries\color{blue}, % Keywords styling
+    commentstyle=\itshape\color{green!50!black}, % Comment styling
+    stringstyle=\color{red!60!black}, % String styling
+    numbers=left, % Line numbers on the left
+    numberstyle=\tiny\color{gray}, % Line number font and color
+    stepnumber=1, % Line numbering step
+    frame=single, % Frame around code
+    breaklines=true, % Allow line breaking
+    tabsize=4, % Tab size
+    escapeinside={(*@}{@*)}, % For escaping into LaTeX
+}
+
+% Document begins
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\assignmentTitle}}
+    \\[10pt]
+    \textbf{Name:} \studentName \hspace{1cm} \textbf{ID:} \studentID \hspace{1cm} \textbf{Date:} \submissionDate
+\end{center}
+
+\vspace{20pt}
+
+% Problem 1
+\begin{problem}{1}
+Consider a language consisting of pairs of trees \( (T_1, T_2) \) such that \( T_1 \) is of radius at most 2 and \( T_2 \) contains a subgraph isomorphic to \( T_1 \). Prove that this language belongs to the class \( \mathbf{L} \).
+
+\textit{Note:} You do not need to argue that checking input syntax (i.e., checking if the input indeed consists of two graphs \( T_1 \) and \( T_2 \)) can be done in \( \mathbf{L} \). However, observe that you need to reject inputs where \( T_1 \) and \( T_2 \) are correctly formatted graphs, but one of them is not a tree.
+\end{problem}
+
+\begin{solution}
+  We will take a few separate steps in order to show that the language is in $\mathbf{L}$.
+  \begin{enumerate}
+    \item Show that we can check that a graph is a tree in $\mathbf{L}$.
+    \item Show that we can check if a given graph is of radius at most 2 in $\mathbf{L}$.
+    \item Put it all together and show that the language is in L. 
+  \end{enumerate}
+  Assuming that the input is given the same way as in the assignment, we check that a graph is a tree by first checking that the number of edges is less than the number of vertices by one. Now we only have to check that the  the graph is connected. That can be done using an oracle for the problem of the path in a graph from vertices s to t. We apply it to every two vertices to make sure that the graph is indeed a tree. We know that the path can be checked in log space, therefore we can state if a graph is a tree in log space as well. \\
+
+  Next, stating that the graph is of radius at most two is easy, knowing  it's a tree. We check for each vertex if the number of reachable vertices from the given vertex in two steps is n. This is log space as well.
+  At last, after checking that both the graphs are trees and the first one has a center of radius at most 2, we will check the main condition. The algorithm is as follows: 
+
+For the sake of convinience, we will use a macro  fn($T$) to denote putting the graph or other input arguments on the tape and running the fn(oracle). 
+First, the lsit of oracles that we will be using: 
+\\IsTree(T : graph) - oracle for checking if a graph is a tree
+\\IsRadiusAtMostTwo(T : graph) - oracle for checking if a tree is of radius at most two
+\\IsCenterAtMostTwo(T : graph, v: vertex) - oracle for checking if the given vertex of a tree can reach all vertices in 2 steps. 
+\\NumNeighbours(T: graph, v: vertex) - oracle for counting the number of neighbours of a vertex in a graph, log space for obvious reasons 
+\\NumNeighboursWithDegree(T: graph, v: vertex, d: int) - oracle for counting the number of neighbours of a vertex with degree d in a graph, log space assuming that T is a tree( which it is in our case )
+highestDegreeNeighbour(T: graph, v: vertex) - oracle for finding the highest degree of a neighbour of a vertex in a graph, log space since T is a tree.
+\newpage
+\begin{lstlisting}
+CheckL(T1: graph, T2: graph) - 
+  if not IsTree(T1) or not IsTree(T2) then return false
+  if not IsRadiusAtMostTwo(T1) then return false
+  var x, y: vertex 
+  var demand, supply, i, n1, n2 : int
+
+  for x in T1.vertices, y in T2.vertices do
+    if not IsCenterAtMostTwo(T1, x) then continue 
+    if NumberNeighbours(T1, x) > NumberNeighbours(T2, y) then continue 
+    demand, supply, i = 0, 0, 0
+    while i < n - 1 do 
+      n1 = NumberNeighboursWithDegree(T1, x, i)
+      n2 = NumberNeighboursWithDegree(T2, y, i)
+      if n2 >= n1 then 
+        n2 -= n1 
+      else do 
+        demand += n1 - n2
+        n2 = 0 
+      if demand < n2 then 
+        n2 -= demand 
+        demand = 0
+      else do 
+        demand -= n2
+        n2 = 0
+      if i >= HighestDegreeNeighbour(T1, x) then 
+        supply += n2
+    if supply < demand then continue 
+    else do return true 
+  return false
+
+
+\end{lstlisting}
+
+In the algorithm we brute force "centers" of both graps and try to check if the given center of T2 has enough vertices of needed degrees to be a subgraph of T1 with a selected center. If it can, then the statement is true as we can remove all not needed vertices. The algorithm runs in log space as all the oracles are log space. Therefore, the language is in $\mathbf{L}$.
+\end{solution}
+
+\vspace{20pt}
+
+% Problem 2
+\begin{problem}{2}
+Consider now a language consisting of pairs of graphs \( (T, G) \) where \( T \) is a tree of radius at most 2, \( G \) is a graph, and \( T \) is isomorphic to an induced subgraph of \( G \). Prove that this language is \( \mathbf{NP} \)-complete.
+\end{problem}
+
+\begin{solution}
+  
+  The language is clearly in $\mathbf{NP}$, since this is a special case of the induced subgraph isomorphism problem. 
+  We show hardness by a reduction from the k-clique problem.\\
+  For every graph G and a clique size $k$, we will compute a log space instance $(T', G')$ s.t. the instance is in the language iff the answer to the problem is positive.\\ 
+  Let $G'$ be an inverse of $G$ with an addtional vertex connected to each other vertex. Let $T'$ be a tree consisting of a vertex and it's $k$ neighbours. We will now argue that the pair $(T', G')$ is in the language iff the answer to the problem is positive. \\ 
+
+$\Rightarrow$\\ 
+Since the pair is in the language, it means that $G'$ contains an empty induced subgraph on $k$ vertices(by removing the center vertex), and since the added vertex can't be a node in the tree (it is connected to every other vertex), invertse of G contains an empty induced subgraph on $k$ vertices, which is the same as saying that $G$ contains a clique on $k$ vertices as a subgraph. \\
+
+$\Leftarrow$\\
+$k$-clique in G implies k-empty in the inverse of G, which implies a k-star in $G'$
+
+
+\end{solution}
+
+\vspace{20pt}
+
+
+\end{document}
