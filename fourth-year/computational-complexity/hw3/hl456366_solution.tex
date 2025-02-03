@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings} % For code formatting
+\usepackage{xcolor}
+
+% Page settings
+\geometry{a4paper, margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Computational Complexity}
+\rhead{Homework Solution}
+\cfoot{\thepage}
+
+% Title formatting
+\newcommand{\assignmentTitle}{Computational Complexity, Homework Problem 3, Fall 2024}
+\newcommand{\studentName}{Heorhii Lopatin}
+\newcommand{\studentID}{456366}
+\newcommand{\submissionDate}{\today}
+
+% Problem environment
+\newenvironment{problem}[1]{\noindent\textbf{Problem #1:} \itshape}{\par\vspace{10pt}}
+
+% Solution environment
+\newenvironment{solution}{\noindent\textbf{Solution:} \par\vspace{10pt}}{\par\vspace{10pt}}
+
+% Document begins
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\assignmentTitle}}
+    \\[10pt]
+    \textbf{Name:} \studentName \hspace{1cm} \textbf{ID:} \studentID \hspace{1cm} \textbf{Date:} \submissionDate
+\end{center}
+
+\vspace{20pt}
+
+% Problem Statement
+\begin{problem}{3}
+On input, we are given nonnegative integers \( d \) and \( k \) and two sets \( A, B \subseteq \{0, 1\}^d \), each of size \( n \). We ask if there exist \( a \in A \) and \( b \in B \) such that the Hamming distance between \( a \) and \( b \) is at most \( k \).
+
+\textit{Prove that if there exists a constant \( \delta > 0 \) and an algorithm solving the problem above in time \( O(d^{100} \cdot n^{2-\delta}) \), then the Strong Exponential Time Hypothesis fails.}
+\end{problem}
+
+\vspace{20pt}
+
+% Solution placeholder
+\begin{solution}
+We will show that the orthogonal vectors problem can be reduced to this one. Given the sets $A, B$ from the orthogonal vectors problem statement, we state that  $O(A, B) = H(enc1(A), enc2(B), d)$, where $enc1$ and $enc2$ are encoding functions that will be defined later, $O$ is the orthogonal vectors problem and $H$ is the Hamming distance problem. 
+
+Define the encoding functions to work coordinate-wise on each vector on the set, expanding one bit into three bits as follows: 
+
+$$enc1(0)=(0, 1, 1), \; enc1(1)= (1, 0, 1), \; enc2(0)=(0, 0, 1), \; enc2(1)=(0, 1, 0)$$
+Now, the distance between 0 and 0 is 1,  0 and 1 is 1 as well, while distance between 1 and 1 is 3. 
+Therefore, distance between the full encodings is $d$ iff distance between each encoded coordinate is 1, meaning the dot product is 0. Since if $O$ can be solved in polynomial time on d, the SETH fails, we can't solve $H$ in $O(d^{100} \cdot n^{2-\delta})$ time. 
+% Your solution goes here.
+\end{solution}
+
+\vspace{20pt}
+
+\end{document}
