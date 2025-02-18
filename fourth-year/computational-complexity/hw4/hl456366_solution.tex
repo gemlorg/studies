@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+% Page settings
+\geometry{a4paper, margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Computational Complexity}
+\rhead{Homework Solution}
+\cfoot{\thepage}
+
+% Title formatting
+\newcommand{\assignmentTitle}{Computational Complexity, Homework Problem: Proof of Theorem 14.12}
+\newcommand{\studentName}{Heorhii Lopatin}
+\newcommand{\studentID}{456366}
+\newcommand{\submissionDate}{\today}
+
+% Problem environment
+\newenvironment{problem}[1]{\noindent\textbf{Problem #1:} \itshape}{\par\vspace{10pt}}
+
+% Solution environment
+\newenvironment{solution}{\noindent\textbf{Solution:} \par\vspace{10pt}}{\par\vspace{10pt}}
+
+% Document begins
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\assignmentTitle}}
+    \\[10pt]
+    \textbf{Name:} \studentName \hspace{1cm} \textbf{ID:} \studentID \hspace{1cm} \textbf{Date:} \submissionDate
+\end{center}
+
+\vspace{20pt}
+
+\begin{problem}{4}
+On input, we are given an integer \( n \) and an undirected graph \( G \) with vertex set \( V(G) = \{1, \ldots, n\} \times \{1, \ldots, n\} \) with the following properties:
+\begin{itemize}
+    \item For every \( 1 \leq b \leq n \), there is no edge between vertices \( \{(a, b) \mid 1 \leq a \leq n\} \).
+    \item For every \( 1 \leq b, b' \leq n \), \( b \neq b' \), and \( 1 \leq a \leq n \), there are at most \( \log_2 n \) integers \( 1 \leq a' \leq n \) such that \( (a, b)(a', b') \) is an edge of \( G \).
+\end{itemize}
+We ask if \( G \) contains a clique of size \( n \) (i.e., a set of \( n \) pairwise adjacent vertices; note that they need to be of the form \( (a_1, 1), (a_2, 2), \ldots, (a_n, n) \) for some \( 1 \leq a_1, a_2, \ldots, a_n \leq n \)).
+
+\textit{Prove that if there exists a constant \( c > 1 \) and an algorithm solving the problem above in time \( O(c^n) \), then the Exponential Time Hypothesis fails.}
+\end{problem}
+
+\vspace{20pt}
+
+\vspace{20pt}
+
+% Solution
+\begin{solution}
+It is known from the lectures, that a $2^{o(n)}$ algorithm for 3-coloring would contradict the Exponential Time Hypothesis.  Let the input be a graph $G$ on $n$ vertices. Assume that given problem $Q$ is solvable in time $O(c^k)$ with respect to the number of vertex indices. Choose $k=O( \frac{n}{log_3(log_2(n))} )$. We will show a reduction from 3-colorability of $G$ to $Q$ on $k$ vertex indices. \\ 
+This will prove that 3-colorability is solvable in $O(c^k) = O(2^{O(n log^{-1}_3(log_2(n)))}) = 2^{o(n)}$ time, which contradicts the ETH. \\
+We proceed by dividing the vertices of $G$ into $k$ parts $P_i$ each of size less than $log_3(log_2(n))$. We now insert all the possible 3-colorings of $P_i$ into the corresponding column in the input graph of $Q$. We leave all the empty vertices unattended. Note that if some $P_i$ doesn't have a valid coloring, then the whole graph doesn't have a valid 3-coloring, so we can return NO. \\
+There are at most $3^{log_3(log_2(n))} = log_2(n)$ possible colorings of $P_i$. Therefore, the number of non-empty vertices in each row is at most  $log_2(n)$, which will be important later. \\
+% We connect all of the empty vertices to all of the non-empty vertices, and we connect all empty vertices in the same row, and the row above and below. This ensures that the empty vertices don't form a clique. An empty vertex can have at most $log_2(n) +3$ neighbors, which almost satisfies the boundary of the number of vertices. Fixing this is easy, as we can simply choose a different basis for the log, however we won't do that for simplicity. \\  
+We connect the non-empty vertices in the different rows, if those colorings are valid when $G$ is restricted to the union of the those two sets of underlying vertices. Each non-empty vertex can have at most $log_2(n)$ neighbors in each row, since there are at most $log_2(n)$ non-empty vertices in each row. \\
+We now claim that the graph $G$ has a 3-coloring if and only if the answer to $Q$  is "YES". \\
+Indeed, if $G$ has a 3-coloring, then if we look at the colorings of the restrictions, they have to be valid when combined, hence there has to be a clique. \\ 
+If there is a clique in $Q$, then all the colorings in the clique are valid when combined with each other. Therefore their total union has to be valid as well, hence $G$ has a 3-coloring. \\
+The reduction is in polynomial time, therefore it is accounted for.
+
+
+\end{solution}
+
+\vspace{20pt}
+
+\end{document}
