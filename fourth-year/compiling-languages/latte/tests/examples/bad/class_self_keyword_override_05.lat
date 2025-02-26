@@ -1,0 +1,11 @@
+int main() {
+    return 0;
+}
+ 
+class self {
+    int f() {
+   
+        return 0;
+    }
+}
+

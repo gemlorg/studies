@@ -1,0 +1,4 @@
+int main() {
+    new int;
+    new void;
+}

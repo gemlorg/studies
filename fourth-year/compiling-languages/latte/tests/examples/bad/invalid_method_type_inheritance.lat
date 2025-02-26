@@ -1,0 +1,15 @@
+int main() {
+    return 1;
+}
+
+class A {
+    int f() {
+        return 1;
+    }
+}
+
+class B extends A {
+    void f() {
+        return ; 
+    }
+}

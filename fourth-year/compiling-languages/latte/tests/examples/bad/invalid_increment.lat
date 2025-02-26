@@ -1,0 +1,5 @@
+int main() {
+    boolean[] arr;
+    arr[0]--;
+    return 1;
+}

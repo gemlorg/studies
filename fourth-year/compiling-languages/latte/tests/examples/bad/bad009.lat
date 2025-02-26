@@ -1,0 +1,7 @@
+int main () {
+    f().length++;
+    return 0;
+}
+
+
+int[] f() {int[] arr = new int[5]; return arr;}

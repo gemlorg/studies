@@ -1,0 +1,8 @@
+int main() {
+    int[] a;
+    a[true] = 1;
+    return 1;
+}
+ 
+
+

@@ -1,0 +1,10 @@
+int main() {
+    return 1;
+}
+
+class A {
+    int a;
+}
+
+class B extends A {}
+class C extends D {}

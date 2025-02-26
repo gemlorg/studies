@@ -1,0 +1,10 @@
+int main() {
+    string s1 = "aaa";
+    string s2 = "bbb";
+    if (s1 != s2) {
+        printString("it works");
+    } else {
+        printString("failure");
+    }
+    return 0;
+}

@@ -1,0 +1,9 @@
+int main() {
+    return 0;
+}
+ 
+class A {
+    int a;
+    int self() {return 0;}
+}
+

@@ -1,0 +1,9 @@
+int main() {
+    A a;
+    C c;
+    a = c;
+    return 0;
+}
+
+class A {}
+class C {}

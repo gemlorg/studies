@@ -1,0 +1,66 @@
+int main() {
+    if (1 < 2) {
+        printString("1 < 2");
+    }      
+    if (1 >= 2) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+
+    if (2 <= 2) {
+        printString("2 <= 2");
+    }
+    if (2 > 2) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+
+    if (1 <= 2) {
+        printString("1 <= 2");
+    }
+    if (1 > 2) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+
+    if (1 == 1) {
+        printString("1 == 1");
+    }
+    if (1 != 1) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+    
+    if (2 >= 2) {
+        printString("2 >= 2");
+    }
+    if (2 < 2) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+ 
+    if (2 >= 1) {
+        printString("2 >= 1");
+    }
+    if (2 < 1) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+
+    if (2 > 1) {
+        printString("2 > 1");
+    }
+    if (2 <= 1) {
+        printString("wrong");
+    } else {
+        printString("ok");
+    }
+ 
+    return 0;
+}

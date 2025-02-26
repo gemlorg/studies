@@ -1,0 +1,11 @@
+int main() {
+    A a = new A;
+    a.f = 5;
+    return 1;
+}
+ 
+class A {
+    int a;
+    void f() {}
+}
+

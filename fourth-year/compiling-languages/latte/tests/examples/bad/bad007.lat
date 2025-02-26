@@ -1,0 +1,12 @@
+int main () {
+    int[] a = new int[5];
+    a[0] = 3;
+    a[4] = 5;
+
+    for(int x : a) {
+        x = 3;
+        a.length();
+    }
+
+    return 3;
+}

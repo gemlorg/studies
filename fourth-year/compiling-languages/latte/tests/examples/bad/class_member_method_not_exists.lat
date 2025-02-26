@@ -1,0 +1,10 @@
+int main() {
+    A var;
+    var.f();
+    return 1;
+}
+
+class A {
+    int a;
+}
+

@@ -1,0 +1,6 @@
+int main() {
+    cast<B, null>;
+    return 1;
+}
+
+class A {}
