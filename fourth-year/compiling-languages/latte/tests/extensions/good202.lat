@@ -1,0 +1,25 @@
+int main() {
+    A a = new A;
+    printInt(1);
+    a.s = "hello";
+    printInt(2);
+    printString(a.s);
+    a.s2 = a.s + " there!";
+    printInt(3);
+    printString(a.s2);
+    a.b = true;
+    printInt(4);
+    a.a2 = 42;
+    printInt(5);
+    return 0;
+}
+
+class A {           // offset
+    int a;          
+    string s;       // 8
+    int[] arr;      // 12
+    string s2;      // 16
+    int a2;         
+    boolean b;      
+    int[] arr2;     // 28
+}

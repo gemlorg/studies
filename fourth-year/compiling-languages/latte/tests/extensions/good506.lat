@@ -1,0 +1,4 @@
+int main() {
+    (new int[10])[4] = 42;
+    return 0;
+}

@@ -1,0 +1,30 @@
+int main() {
+    A a = new A;
+    A a2 = new A;
+    a2.s = "hello from a2";
+    a.s = "hello from a";
+    B b = new B;
+    b.a = a;
+    b.a2 = a;
+    
+    b.b = new B;
+    b.b.a = a2;
+    b.b.a2 = a;
+    
+    printString(b.a.s);
+    printString(b.a2.s);
+    printString(b.b.a.s);
+    printString(b.b.a2.s);
+    
+    return 0;
+}
+
+class A {           
+    string s;      
+}
+
+class B {
+    A a;
+    A a2;
+    B b;
+}

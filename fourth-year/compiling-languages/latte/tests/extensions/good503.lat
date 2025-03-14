@@ -1,0 +1,22 @@
+int main() {
+    newA().f();
+    return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+    string s2;
+    void f () {
+        printInt(102);
+        printInt(a);
+    }
+}
+
+A newA() {
+    A a = new A;
+    a.a = 42;
+    printInt(101);
+    return a;
+}

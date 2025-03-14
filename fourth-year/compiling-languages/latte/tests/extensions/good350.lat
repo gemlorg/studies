@@ -1,0 +1,8 @@
+int main() {
+    string s = "abcd";
+    string s2 = "abcd";
+    printString(s + s2); 
+    string s3 = s+s2;
+    
+    return 0;
+}

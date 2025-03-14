@@ -1,0 +1,11 @@
+int main() {
+    int[] arr = new int[10];
+    int i = 0;
+    while (i < 10) {
+        arr[i] = i;
+        i++;
+    }
+    printInt(arr[9]);
+    return 0;
+}
+

@@ -1,0 +1,13 @@
+int main() {
+    A a = newA();
+
+    return 0;
+}
+
+A newA() {return new A;}
+
+class A {
+    int a;
+    int b;
+    int c;
+}

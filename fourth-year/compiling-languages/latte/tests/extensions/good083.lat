@@ -1,0 +1,14 @@
+int main() {
+    int i = 0;
+    string s = "a";
+    {
+        string s1 = s;
+        printString(s1);
+        string s2 = s1;
+        printString(s2);
+    }
+    string s1 = s;
+    printString(s1);
+    return 0;
+}
+

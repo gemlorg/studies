@@ -1,0 +1,27 @@
+int main() {
+    f();            
+    //f2();
+    //f3();
+    return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+}
+
+
+A f() {
+    A a = new A;
+    return a;
+}
+
+void f2() {
+    A a = new A;
+}
+
+void f3() {
+    A a = new A;
+    return;
+}

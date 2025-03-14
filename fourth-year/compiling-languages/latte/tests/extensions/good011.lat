@@ -1,0 +1,16 @@
+int main() {
+    {
+        int[] a = new int[32];
+        int[] b = a;
+        {
+            int[] a = new int[32];
+            int[] c = new int[32];
+            {
+                int[] x = new int[32];
+                new int[32];
+                return 0;
+            }
+        }
+    }
+    return 0;
+}

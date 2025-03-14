@@ -1,0 +1,23 @@
+int main() {
+    {
+        A a = new A;
+        A b = a;
+        {
+            A a = new A;
+            A c = new A;
+            {
+                A x = new A;
+                new A;
+                x.a;
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
+
+class A {
+    int a;
+    int b;
+    string s;
+}
