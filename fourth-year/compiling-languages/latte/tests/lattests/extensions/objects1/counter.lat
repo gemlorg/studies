@@ -1,0 +1,20 @@
+int main () {
+  Counter c;
+  c = new Counter;
+  c.incr();
+  c.incr();
+  c.incr();
+  printInt(c.value());
+  return 0;
+}
+class Node {
+
+}
+class Counter {
+  int val;
+
+  void incr () {val++; return;}
+
+  int value () {return val;}
+
+}
