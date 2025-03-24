@@ -1,0 +1,173 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{amssymb}
+
+
+\usepackage{listings} % For code formatting
+\usepackage{xcolor}
+% Page settings
+
+\lstset{
+    language=C, % Specify the language (use "C" for pseudocode-like formatting)
+    basicstyle=\ttfamily\small, % Code font and size
+    keywordstyle=\bfseries\color{blue}, % Keywords styling
+    commentstyle=\itshape\color{green!50!black}, % Comment styling
+    stringstyle=\color{red!60!black}, % String styling
+    numbers=left, % Line numbers on the left
+    numberstyle=\tiny\color{gray}, % Line number font and color
+    stepnumber=1, % Line numbering step
+    frame=single, % Frame around code
+    breaklines=true, % Allow line breaking
+    tabsize=4, % Tab size
+    escapeinside={(*@}{@*)}, % For escaping into LaTeX
+}
+
+% Page setup
+\geometry{a4paper, margin=0.75in}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+
+\title{JAIO II\\ Homework 1}
+\author{Heorhii Lopatin}
+\date{Date: \today}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{Problem 1}
+
+% \subsection{Part 1: Well-quasi-order}
+\begin{enumerate}
+  \item \textbf{ Show that embedding of $\omega$-words is a well-quasi-order.}
+
+\begin{proof}
+To prove that the embedding ordering is a WQO, we have to show two things: it is a quasi-order and any infinite sequence contains a domination.
+% , meaning  $\forall S = \langle s_i \in \Sigma ^ \omega \rangle _1^\infty \exists i < j, s_i \sqsubseteq s_j$ .
+\\Each sequence $a \in \Sigma^\omega$ is trivially embedded in itself, implying that the relation is reflexive. Given $x, y, z \in \Sigma^\omega$, $x \sqsubseteq y, y \sqsubseteq z$ implies $x \sqsubseteq z$, since we can first remove characters to accomodate $y$ and afterwards remove characters to get $x$. The relation is both transitive and reflexive, and hence is a quasi-order. \\
+Each sequence has either infinitely many finite strings or infinitely many infinite strings. We will consider those cases separately. \\ 
+If the sequence has infinitely many finite strings, we can take those strings as a new sequence and show that it has to contain a domination, hence we have to prove that if the sequence only contains finite strings, it has to contain a domination. \\ 
+Let $s_1$ be the shortest string such that there is an infinite sequence starting with $s_1$ that doesn't contain a domination. Let $s_{i+1}$ be the shortest string such that there exists an infinite sequence starting with $s_1, s_2 \dots s_i$ that doesn't contain a domination. Since the empty string is not in the sequence and $|\Sigma| = 2$, there is a character such that infinitely many strings start with that character. Let $W = \langle w_{i_j} \rangle$ be the sequence of all of such strings without the first character. Consider a sequence $s_1 \dots s_{i_1 - 1}, w_{i_1}, w_{i_2}\dots$. It can't contain a domination since $|w_i| < |s_i|$. However, both $W$ and $S$ do not contain a domination,  so if the needed indices $i, j$ were to exist, $i < i_1, j \ge i_1$. $s_i \sqsubseteq w_j \implies s_i \sqsubseteq s_j$, from transitivity, contradiction. Therefore,  each such infinite sequence contains a domination. \\ 
+In case there are infinitely many infinite strings, we will again select them as our new sequence. In case there are at least two strings where both elements of the alphabet appear infinitely often, we can embed one into another and the sequence  therefore contains a domination. If the opposite holds, all but one strings are of the form $w_ia_i^\omega, w_i \in \Sigma^*, a_i \in \Sigma$. Only two elements in the alphabet, so we select infinitely many strings with the same $a_i$ as the new sequence. Now the situation is the same as in the finite strings case, since the endings $a_i^\omega$ are already embedded. 
+\end{proof}
+
+\item \textbf{ Consider the variant where only finitely many letters from $v$ can be deleted. Is the resulting relation still a well-quasi-order?} \\
+It's not WQO.
+\begin{proof}
+Counterexample: $s_i=(ab^i)^\omega$ - we have to delete letters from each cell to get the previous elements, hence infinitely many.
+% Your proof here
+\end{proof}
+
+\end {enumerate}
+\newpage
+
+\section*{Problem 2: Downward-closed sets in:w $\mathbb{N}^d$}
+\begin{enumerate}
+
+  \item \textbf{Show that any downward-closed set $X \subseteq \mathbb{N}^d$ is semilinear.} \\
+
+\begin{proof}
+  We will construct linear sets that, when summed, will give us the whole $X$. 
+  Start at $0^d$. $S = \{0 + t_{i} e_{i} [ \forall c \in \mathbb{N}\; 0 + c e_i \in X]| i \le n, t_i \in \mathbb{N}   \}$, where $e_i$ is the $i$-th basis vector and $[\; ]$ is the boolean value of the expression inside as integer. We add $S$ to the set of linear sets $M$. Next, we repeat for each coordinate where we can't increase indefinetely, by first adding 1 on this coordinate and repeating the process. We continue for how long we have to, ensuring that sets in $M$ cover all of $X$, and all of them are linear. Now, we only need to show that $M$ is finite in order to state that $X$ is semilinear. Since there are no infinite antichains in $\mathbb{N}^d$, a sequence of starting points of sets in $M$ has to have an infinite subsequence of increasing points, which is impossible since it would mean that we have been increasing at least one coordinate infinitely many times, so the sequence couldn't have been in $M$, contradiction. \\ 
+Union of all sets in $M$ is a semilinear set which is exactly $X$. 
+\end{proof}
+
+\item \textbf{ Provide an algorithm to construct a semilinear representation for the downward closure of the set of configurations reachable from an initial configuration $x \in \mathbb{N}^d$ in a VAS. }\\
+
+
+
+\textbf{Solution:}
+Let $S_x$ denote a set of vectors for each point $x$, for now empty. 
+Let $cover(x, \delta)$ mean a function that given a starging point and a set of trainsitions, returns a set of all coordinates $i_k$ , such that there is a run that is non-negative on all coordinates and positive on $i_k$. We can find that in exponential time at most. 
+% Let $x$ denote the starting point, and $\delta$ denote transitions. 
+
+\begin{lstlisting}
+points = {}
+
+find_repr(x : point, delta: set, C : set): 
+  if x in points: return 
+
+  c = cover(x, delta) 
+  C += c 
+  points += Cl(x)
+  for y in Cl(x):
+    for i in C: 
+      S_y += e_i % add i_th basis vector to S_y
+  for transition in delta: 
+    for i in c: 
+      transition[i] = 0 
+
+  for trainsition in delta: 
+    if transition != 0: 
+      find_repr(x + transition, delta, C) 
+
+C = {}
+find_repr(c, delta, C, points) 
+repr = {} 
+for point in points: 
+  repr += linear_set(point, S_point)
+
+
+\end{lstlisting}
+The semi-linear representation is in the repr variable by the end of the algorithm. The alogirthm will terminate because it takes finite time to complete one iteration of the functon, and we only call the function on starting points that are not greater than all of the previous ones. No infinite antichains once again implies we call the function finitely many times.  
+
+\end{enumerate}
+\newpage
+
+\section*{Problem 3: First-order logic over $(\mathbb{Q},\leq)$}
+
+\textbf{ Find all first-order definable total orders on $Q_3^\uparrow$, the set of increasing triples of rational numbers.} \\
+
+\textbf{Solution:}
+The claim is that every such order is a "version" of the lexical ordering(vlo), meaning we can only change which coordinates are compared first and whether to use the reversed ordering on either of the coordinates. 
+
+\begin{proof}
+  It was mentioned during the classes, that the f-o logic over $(\mathbb{Q}, \le) $ is quantifier-reducable, so we will assume this as given. \\ 
+
+We will use induction on $n$ in $Q_n^\uparrow$. \\ 
+
+For $n=1$ the statement is true as the only two orders we can come up with are $\le$ and the inverse of $\le$.\\  
+
+$n \implies n+1$\\
+For $x \in Q_{n+1}^\uparrow$ denote $x_{i_1, \dots, i_{n+1}}, i_k \in \{+, -, 0\}$ as some element of the same set that is greater, lesser or the same when looking at the respective coordinate.  Note that the changes are small enough not to mess up the ordering of the elements.  
+Let's show that any boolean formula $\phi$ representing a total ordering has to be a vlo. \\ 
+We know that if we take all points where the first coordinate is the same, the formula represents vlo from the induction hypothesis. 
+Let $A=<a_i>_2^{n+1}$ be the sequence of coordinates sorted by the importance. Let $B=<b_i>_2^{n+1}$ be the sequence of directions of increase for those coordinates, $b_i \in \{+, -\}$ and let $\tilde{b_i}$ mean the opposite direciton. 
+$\phi(x, x_{+, 0, \dots 0}) \implies b_1 = +$ and $b_1 = -$ otherwise, respectively. Now, we check if $\phi(x, x_{b_1, 0, \dots 0, \tilde{b}_i, 0, \dots 0})$ for each $i$ starting from 2, until the answer is positive. This way we know the priority of the first coordinate with respect to the other ones. Knowing the priority, the transitivity property of an ordering and the density of the rational numbers imply that we have a vlo.
+
+  % Let $\phi$ be a boolean formula that represents a certain total ordering. \\ 
+  % We know that $\phi$ fulfilles the following criterea in order to represent a total ordering: 
+  % $\phi(x, x), \phi(x, y) \land \phi(y, z) \implies \phi(x, z), \phi(x, y) \land \phi(y, x) \implies x = y, \phi(x, y) \lor \phi(y, x)$. \\ 
+
+
+\end{proof}
+\newpage
+
+\section*{Problem 4: First-order logic and arithmetic}
+
+\textbf{Consider the structures of arithmetic \((\mathbb{N}, +, \times)\) and of the free monoid $(\{0, 1\}^*, \cdot, 0, 1)$. Show that for every sentence of first-order logic \(\varphi\) of the free monoid, one can compute a sentence of first-order logic \(\psi\) of arithmetic such that \(\varphi\) is true in the free monoid if and only if \(\psi\) is true in arithmetic.}
+
+\textbf{Solution:}
+\begin{proof}
+  We will show a translation of a sentence $\varphi$ from monoid logic to arithmetic. 
+  \begin{enumerate} 
+    \item Place 1 at the beginning of each binary string, ensuring that no string starts with 0. 
+    \item Replace each binary string by a natural number that it represents in binary notation. 
+    \item Define $\forall x \forall y\; x^0 = 1, x^{y+1} = x^y \times x$
+    \item $\forall x \ge 1 \; log(x) = y \stackrel{\text{def}}{=} \exists z\; 2^y + z = x \land \forall y_1 \forall z_1 \;2^{y_1} +z_1 = x \implies \exists z_2 \;y_1 + z_2 = y$
+    \item Replace $n_1 \cdot n_2$ by $((n_1 -1)2^{log(n_2)} + n_2)$.
+  \end{enumerate}
+  Resulting sentence in the structure of the arithmetic is the same as the one in monoid logic.
+% Your proof here
+\end{proof}
+
+\end{document}
