@@ -1,0 +1,54 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+% Define theorem styles
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\renewcommand{\qedsymbol}{$\blacksquare$} % Use a black square for QED
+
+% Document title and author
+\title{Proper Completion in Workflow Nets}
+\author{Heorhii Lopattn}
+\date{\today}
+
+\begin{document}
+\newcommand{\fire}[1]{\xrightarrow{#1}}
+\newcommand{\firee}[1]{\,[#1\rangle} % For enabled and fires, if needed
+\newcommand{\marking}[1]{\mathbf{#1}} % For marking notation like [in] or [o]
+\newcommand{\placeset}{\mathcal{P}}
+\newcommand{\transitionset}{\mathcal{T}}
+\newcommand{\flowrel}{\mathcal{F}}
+\newcommand{\reachable}[2]{\mathcal{R}(#1, #2)}
+
+\maketitle
+
+
+
+\section*{Solution}
+Let $N=\langle \placeset, \transitionset, \flowrel \rangle$ be a proper workflow net with the initial marking $M_0$.
+We proceed by contradiction.
+\begin{enumerate}
+    \item  Suppose  there exists a marking $M_{bad} \in \reachable{N}{M_0}$ such that $M_{bad}(\text{out})=1$, and there is at least one other place $p_k \in \placeset \setminus \{\text{out}\}$ for which $M_{bad}(p_k) > 0$. Let $X$ represent the non-empty multiset of tokens in $\placeset \setminus \{\text{out}\}$ under $M_{bad}$.
+
+    \item Since $M_{bad}$ is reachable from $M_0$, the final marking $M_{out}$ must be reachable from $M_{bad}$. Therefore, there exists a firing sequence $\sigma$ such that $M_{bad} \fire{\sigma} M_{end}$.
+
+    \item The place 'out' has no outgoing arcs. Consequently, the token in 'out' under marking $M_{bad}$ cannot be consumed by any transition in $\sigma$. For $M_{bad}$ to transition to $M_end$, the sequence $\sigma$ must:
+    \begin{itemize}
+        \item Not add any further tokens to 'out'.
+        \item Remove all tokens from the multiset $X$.
+    \end{itemize}
+
+    \item  For the tokens in $X$ to be entirely removed by $\sigma$ without any of them being added to 'out', they must be eventually consumed by some transition that doesn't produce any tokens.
+    \item  Using the definition of a WF-net, every node must be on some path from  'in' to  'out'. Existance of a transition that doesn't produce any tokens directly contradicts that.
+    Thus, the initial assumption must be false. It follows that if $M \in \reachable{N}{M_0}$ and $M(\text{out})=1$, then $M$ must be equal to $M_{end}$.
+\end{enumerate}
+
+\end{document}
