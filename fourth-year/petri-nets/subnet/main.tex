@@ -1,0 +1,23 @@
+\documentclass{article}
+
+\title{Proof of Soundness Preservation under Place Substitution in Workflow Nets}
+\author{} % Intentionally blank
+\date{}   % Intentionally blank
+
+\begin{document}
+% \maketitle % Uncomment if a title is desired
+
+\section*{Solution}
+\textbf{Note: } The "soundness" from the notes refers to 1-soundness, but the one in the paperr instead referes to $N$-soundness for each $N$ in the first case the theorem is incorrect, so I assume that we're talking about the $N$-soundness for each $N$. \\
+Let $N_1=(P_1,T_1,F_1,i_1,o_1)$ and $N_2=(P_2,T_2,F_2,i_2,o_2)$ be sound WF-nets. Assume $P_1 \cap P_2 = \emptyset$ and $T_1 \cap T_2 = \emptyset$ (disjoint sets of nodes). Let $N'=(P',T',F',i',o')$ be the WF-net constructed by substituting place $p \in P_1$ with the entirety of $N_2$. 
+% Specifically, the set of places $P'=(P_1 \setminus \{p\}) \cup P_2$, and the set of transitions $T'=T_1 \cup T_2$. Arcs in $F_1$ originally incident to $p$ are reconnected: for any $x$ such that $(x,p) \in F_1$, we have $(x,i_2) \in F'$; for any $y$ such that $(p,y) \in F_1$, we have $(o_2,y) \in F'$. If $p \notin \{i_1,o_1\}$, then the start place $i'$ of $N'$ is $i_1$, and the end place $o'$ of $N'$ is $o_1$. (The argument holds analogously if $p = i_1$ or $p = o_1$, where $i'$ or $o'$ would be $i_2$ or $o_2$ respectively).
+
+Check that the net satisfies the definition of soundness: 
+\begin{itemize}
+\item For each token put in pin, one and only one token eventually appears in pout,
+\item When the token appears in pout, all other places are empty, and
+\item For each transition (i.e, task), it is possible to move from the initial state to a state in which this transition is enabled.
+
+The third condition is obvious from the fact that both nets are sound: for any marking, the tokens inside the subnet can be moved to the end since it's sound. And if they Are at the "out" of the subnet, we can obtain a sequence of transitions that moves them to the "out".
+
+\end{document}
