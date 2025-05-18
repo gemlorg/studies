@@ -1,65 +1,8 @@
-pub mod atomic_register_public {
-    use crate::{
-        ClientRegisterCommand, OperationSuccess, RegisterClient, SectorIdx, SectorsManager,
-        SystemRegisterCommand,
-    };
-    use std::future::Future;
-    use std::pin::Pin;
-    use std::sync::Arc;
-
-    #[async_trait::async_trait]
-    pub trait AtomicRegister: Send + Sync {
-        /// Handle a client command. After the command is completed, we expect
-        /// callback to be called. Note that completion of client command happens after
-        /// delivery of multiple system commands to the register, as the algorithm specifies.
-        ///
-        /// This function corresponds to the handlers of Read and Write events in the
-        /// (N,N)-AtomicRegister algorithm.
-        async fn client_command(
-            &mut self,
-            cmd: ClientRegisterCommand,
-            success_callback: Box<
-                dyn FnOnce(OperationSuccess) -> Pin<Box<dyn Future<Output = ()> + Send>>
-                    + Send
-                    + Sync,
-            >,
-        );
-
-        /// Handle a system command.
-        ///
-        /// This function corresponds to the handlers of READ_PROC, VALUE, WRITE_PROC
-        /// and ACK messages in the (N,N)-AtomicRegister algorithm.
-        async fn system_command(&mut self, cmd: SystemRegisterCommand);
-    }
-
-    /// Idents are numbered starting at 1 (up to the number of processes in the system).
-    /// Communication with other processes of the system is to be done by register_client.
-    /// And sectors must be stored in the sectors_manager instance.
-    ///
-    /// This function corresponds to the handlers of Init and Recovery events in the
-    /// (N,N)-AtomicRegister algorithm.
-    pub async fn build_atomic_register(
-        self_ident: u8,
-        sector_idx: SectorIdx,
-        register_client: Arc<dyn RegisterClient>,
-        sectors_manager: Arc<dyn SectorsManager>,
-        processes_count: u8,
-    ) -> Box<dyn AtomicRegister> {
-        Box::new(super::atomic_register_impl::AtomicRegisterImpl::new(
-            self_ident,
-            sector_idx,
-            register_client,
-            sectors_manager,
-            processes_count,
-        ))
-    }
-}
-
 pub(crate) mod atomic_register_impl {
     use log::debug;
     use uuid::Uuid;
 
-    use super::atomic_register_public::AtomicRegister;
+    use crate::atomic_register_public::AtomicRegister;
     use crate::{
         Broadcast, ClientRegisterCommand, ClientRegisterCommandContent, OperationReturn,
         OperationSuccess, ReadReturn, RegisterClient, SectorIdx, SectorVec, SectorsManager,
@@ -94,23 +37,23 @@ pub(crate) mod atomic_register_impl {
     struct RegisterOp(u64, u8, SectorVec);
     impl fmt::Debug for RegisterOp {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "RegisterOp({}, {}, {})", self.0, self.1, "_")
+            write!(f, "RegisterOp({}, {}, _)", self.0, self.1)
         }
     }
     impl Eq for RegisterOp {}
     impl PartialEq for RegisterOp {
         fn eq(&self, other: &Self) -> bool {
-            return (self.0, self.1) == (other.0, other.1);
+            (self.0, self.1) == (other.0, other.1)
         }
     }
     impl PartialOrd for RegisterOp {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-            return Some((self.0, self.1).cmp(&(other.0, other.1)));
+            Some((self.0, self.1).cmp(&(other.0, other.1)))
         }
     }
     impl Ord for RegisterOp {
         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-            return (self.0, self.1).cmp(&(other.0, other.1));
+            (self.0, self.1).cmp(&(other.0, other.1))
         }
     }
     pub(crate) struct AtomicRegisterImpl {
@@ -206,7 +149,6 @@ pub(crate) mod atomic_register_impl {
         //         (ts, wr, val) := (maxts + 1, rank(self), writeval);
         //         store(ts, wr, val);
         //         trigger < sbeb, Broadcast | [WRITE_PROC, op_id, maxts + 1, rank(self), writeval] >;
-
         async fn handle_value(
             &mut self,
             cmd: SystemCommandHeader,
@@ -214,7 +156,7 @@ pub(crate) mod atomic_register_impl {
             wr: u8,
             data: SectorVec,
         ) {
-            if (self.write_phase || self.op_id != cmd.msg_ident) {
+            if self.write_phase || self.op_id != cmd.msg_ident {
                 debug!(
                     "[system] id {} ignoring Value from {} ",
                     self.self_ident, cmd.process_identifier
@@ -244,8 +186,7 @@ pub(crate) mod atomic_register_impl {
                     .readlist
                     .clone()
                     .iter()
-                    .filter(|x| x.is_some())
-                    .map(|x| x.clone().unwrap())
+                    .filter_map(|x| x.clone())
                     .max()
                     .unwrap();
 
@@ -315,7 +256,6 @@ pub(crate) mod atomic_register_impl {
                 self.self_ident, cmd.process_identifier
             );
             let (ts, wr) = self.sectors_manager.read_metadata(self.sector_idx).await;
-            let data = self.sectors_manager.read_data(self.sector_idx).await;
             if (ts_other, wr_other) > (ts, wr) {
                 self.sectors_manager
                     .write(cmd.sector_idx, &(data_other.clone(), ts_other, wr_other))
@@ -349,7 +289,7 @@ pub(crate) mod atomic_register_impl {
         //         trigger < nnar, WriteReturn >;
 
         async fn handle_ack(&mut self, cmd: SystemCommandHeader) {
-            if (self.op_id != cmd.msg_ident || !self.write_phase) {
+            if self.op_id != cmd.msg_ident || !self.write_phase {
                 return;
             }
             debug!(
@@ -372,7 +312,7 @@ pub(crate) mod atomic_register_impl {
                 self.write_phase = false;
                 if self.reading {
                     self.reading = false;
-                    let mut call = self.callback.take();
+                    let call = self.callback.take();
                     self.callback = None;
                     call.unwrap()
                         .call(OperationReturn::Read(ReadReturn {
@@ -381,7 +321,7 @@ pub(crate) mod atomic_register_impl {
                         .await;
                 } else {
                     self.writing = false;
-                    let mut call = self.callback.take();
+                    let call = self.callback.take();
                     self.callback = None;
                     call.unwrap().call(OperationReturn::Write).await;
                 }

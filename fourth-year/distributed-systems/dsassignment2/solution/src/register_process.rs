@@ -1,5 +1,3 @@
-pub use crate::register_client::register_client_impl::*;
-
 pub(crate) mod register_process_impl {
     use std::collections::HashMap;
     use std::sync::Arc;
@@ -10,15 +8,16 @@ pub(crate) mod register_process_impl {
     use tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
 
     use crate::atomic_register::atomic_register_impl::CallbackType;
-    use crate::manager::sectors_manager_public;
+    use crate::atomic_register_public::build_atomic_register;
+    use crate::sectors_manager_public;
     use crate::transfer::transfer_impl::{serialize_fail, serialize_success};
     use crate::{
-        build_atomic_register, build_sectors_manager, deserialize_register_command,
-        ClientRegisterCommand, ClientRegisterCommandContent, Configuration, RegisterClient,
-        RegisterCommand, SectorIdx, StatusCode,
+        build_sectors_manager, deserialize_register_command, ClientRegisterCommand,
+        ClientRegisterCommandContent, Configuration, RegisterClient, RegisterCommand, SectorIdx,
+        StatusCode,
     };
 
-    use super::InternalCommand;
+    use crate::register_client::register_client_impl::InternalCommand;
 
     enum WorkerCommand {
         Client(
@@ -36,24 +35,20 @@ pub(crate) mod register_process_impl {
     }
     static NUM_WORKERS: usize = 50;
     static MIN_WORKERS: usize = 4;
+    type WorkerMap = HashMap<
+        SectorIdx,
+        (
+            Arc<Semaphore>,
+            tokio::sync::mpsc::UnboundedSender<WorkerCommand>,
+        ),
+    >;
     #[derive(Clone)]
     struct InstanceState {
         config: Configuration,
         sectors_manager: Arc<dyn sectors_manager_public::SectorsManager>,
         register_client: Arc<dyn RegisterClient>,
         // we create a worker for each sector id
-        worker_map: Arc<
-            Mutex<
-                HashMap<
-                    SectorIdx,
-                    (
-                        Arc<Semaphore>,
-                        tokio::sync::mpsc::UnboundedSender<WorkerCommand>,
-                    ),
-                >,
-            >,
-        >,
-        // we keep track of the worker handles to join them later
+        worker_map: Arc<Mutex<WorkerMap>>,
         worker_handles: Arc<Mutex<Vec<tokio::task::JoinHandle<()>>>>,
         n_processes: u8,
         active_workers: Arc<Semaphore>,
@@ -65,7 +60,6 @@ pub(crate) mod register_process_impl {
         ) -> Self {
             let _ = tokio::fs::create_dir(config.public.storage_dir.clone()).await;
             let sectors_manager = build_sectors_manager(config.public.storage_dir.clone()).await;
-            // let (self_tx, self_rx) = tokio::sync::mpsc::unbounded_channel();
             let register_client: Arc<dyn RegisterClient> =
                 crate::register_client::register_client_impl::build_register_client(
                     config.public.self_rank,
@@ -245,10 +239,6 @@ pub(crate) mod register_process_impl {
             writer: Arc<Mutex<tokio::net::tcp::OwnedWriteHalf>>,
             sem: Arc<Semaphore>,
         ) -> WorkerCommand {
-            // debug!(
-            //     "[worker] worker on sector {} got command: {:?}",
-            //     self.get_cmd_name(&cmd)
-            // );
             match cmd {
                 RegisterCommand::Client(cmd) => {
                     let lock = sem.clone().acquire_owned().await.unwrap();
@@ -256,7 +246,6 @@ pub(crate) mod register_process_impl {
                         "[worker {}] mutex acquired for sector {}",
                         self.config.public.self_rank, cmd.header.sector_idx
                     );
-                    // let callback = Box::new(move |mut op_cmp| Box::pin(async move {}));
                     let callback = build_callback(
                         writer.clone(),
                         lock,
@@ -346,17 +335,21 @@ pub(crate) mod register_process_impl {
         let mut cloned_state = state.clone();
 
         tokio::spawn(async move { cloned_state.start_self_connection_handler(self_rx).await });
-        // Arc::new(crate::register_client::register_client_impl::register_client());
-        // channel to each worker
-        // map sectorid -> worker, vector of handles
+        let mut handler_handles = Vec::new();
         while let Ok((stream, sock_addr)) = listener.accept().await {
             let mut cloned_state = state.clone();
             // handle?
-            tokio::spawn(async move {
+            handler_handles.push(tokio::spawn(async move {
                 cloned_state
                     .start_connection_handler(stream, sock_addr)
                     .await
-            });
+            }));
+        }
+        for handle in handler_handles {
+            handle.await.unwrap();
+        }
+        for handle in state.worker_handles.lock().await.iter_mut() {
+            handle.await.unwrap();
         }
     }
     fn build_callback(

@@ -16,7 +16,6 @@ pub(crate) mod register_client_impl {
         register_id: u8,
         self_tx: tokio::sync::mpsc::UnboundedSender<InternalCommand>,
         tcp_locations: Vec<(String, u16)>,
-        sys_hmac_key: [u8; 64],
         txs: Vec<tokio::sync::mpsc::UnboundedSender<InternalCommand>>,
     }
     impl RegisterClientImpl {
@@ -50,7 +49,6 @@ pub(crate) mod register_client_impl {
                 register_id,
                 self_tx,
                 tcp_locations,
-                sys_hmac_key,
                 txs,
             }
         }
@@ -58,7 +56,7 @@ pub(crate) mod register_client_impl {
     async fn start_connection(
         loc: (String, u16),
         mut rx: tokio::sync::mpsc::UnboundedReceiver<InternalCommand>,
-        mut sys_hmac_key: [u8; 64],
+        sys_hmac_key: [u8; 64],
         _target: usize,
         _register_id: u8,
     ) {
@@ -95,7 +93,6 @@ pub(crate) mod register_client_impl {
             }
             Err(_) => {
                 error!("Connection to {:?} failed", loc);
-                // if the connection is not established, return error
             }
         }
         debug!("[WARNING]Connection to {:?} closed", loc);

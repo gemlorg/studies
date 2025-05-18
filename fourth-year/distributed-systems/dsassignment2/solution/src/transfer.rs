@@ -1,26 +1,3 @@
-pub mod transfer_public {
-    use crate::RegisterCommand;
-    use std::io::Error;
-    use tokio::io::{AsyncRead, AsyncWrite};
-
-    pub async fn deserialize_register_command(
-        data: &mut (dyn AsyncRead + Send + Unpin),
-        hmac_system_key: &[u8; 64],
-        hmac_client_key: &[u8; 32],
-    ) -> Result<(RegisterCommand, bool), Error> {
-        super::transfer_impl::deserialize_register_command(data, hmac_system_key, hmac_client_key)
-            .await
-    }
-
-    pub async fn serialize_register_command(
-        cmd: &RegisterCommand,
-        writer: &mut (dyn AsyncWrite + Send + Unpin),
-        hmac_key: &[u8],
-    ) -> Result<(), Error> {
-        super::transfer_impl::serialize_register_command(cmd, writer, hmac_key).await
-    }
-}
-
 pub(crate) mod transfer_impl {
     static READ_CODE: u8 = 0x1;
     static WRITE_CODE: u8 = 0x2;
@@ -29,16 +6,14 @@ pub(crate) mod transfer_impl {
     static WRITE_PROC_CODE: u8 = 0x5;
     static ACK_CODE: u8 = 0x6;
 
-    use base64::write;
-    use hmac::{digest::core_api::CoreWrapper, Mac};
+    use hmac::Mac;
     use log::debug;
-    use serde::Serialize;
     use std::io::Error;
     use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
 
     use crate::{
-        ClientRegisterCommand, OperationReturn, OperationSuccess, RegisterCommand, SectorIdx,
-        SectorVec, StatusCode, SystemRegisterCommand, MAGIC_NUMBER,
+        ClientRegisterCommand, OperationReturn, OperationSuccess, RegisterCommand, SectorVec,
+        StatusCode, SystemRegisterCommand, MAGIC_NUMBER,
     };
 
     trait BinSerializable {
@@ -144,7 +119,7 @@ pub(crate) mod transfer_impl {
         hmac_system_key: &[u8; 64],
         hmac_client_key: &[u8; 32],
     ) -> Result<(RegisterCommand, bool), Error> {
-        let mut cmd: RegisterCommand;
+        let cmd: RegisterCommand;
         let mut hmac: hmac::Hmac<sha2::Sha256>;
         let mut buf = [0u8; 8];
         data.read_exact(&mut buf[0..4]).await?;
@@ -162,7 +137,7 @@ pub(crate) mod transfer_impl {
                 //request number
                 data.read_exact(&mut buf).await?;
                 hmac.update(&buf);
-                let mut request_number = u64::from_be_bytes(buf);
+                let request_number = u64::from_be_bytes(buf);
                 data.read_exact(&mut buf).await?;
                 hmac.update(&buf);
                 let sector_idx = u64::from_be_bytes(buf);
@@ -192,7 +167,7 @@ pub(crate) mod transfer_impl {
             3u8..=6u8 => {
                 hmac = hmac::Hmac::<sha2::Sha256>::new_from_slice(hmac_system_key).unwrap();
                 hmac.update(&buf);
-                let mut process_rank = buf[6];
+                let process_rank = buf[6];
                 let mut uuid_buf = [0u8; 16];
                 data.read_exact(&mut uuid_buf).await?;
                 hmac.update(&uuid_buf);

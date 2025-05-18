@@ -1,0 +1,438 @@
+   Compiling assignment-3-solution v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution)
+   Compiling assignment-3-solution v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution)
+warning: unused import: `std::hash::Hash`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/client_handler.rs:3:9
+  |
+3 warning: unused import: `std::hash::Hash`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/client_handler.rs:3:9
+  |
+3 |     use std::hash::Hash;
+  |         ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+|     use std::hash::Hash;
+  |         ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `cmp::min`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/system_handler.rs:3:9
+warning: unused import: `cmp::min`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/system_handler.rs:3:9
+  |
+3 |         cmp::min,  |
+3 |         cmp::min,
+  |         ^^^^^^^^
+
+
+  |         ^^^^^^^^
+
+warning: unused import: `hash::Hash`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:2:47
+warning: unused import: `hash::Hash`
+ --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:2:47
+  |
+2 |     use std::{cmp::min, collections::HashSet, hash::Hash, ops::RangeInclusive, time::Duration};
+  |  |
+2 |     use std::{cmp::min, collections::HashSet, hash::Hash, ops::RangeInclusive, time::Duration};
+  |                                               ^^^^^^^^^^
+
+                                               ^^^^^^^^^^
+
+warning: unused variable: `log_len`
+   --> warning: unused variable: `log_len`
+   --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/system_handler.rs:109:17
+    |
+109 |             let log_len = self.log_len();
+    /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/system_handler.rs:109:17
+    |
+109 |             let log_len = self.log_len();
+    |                 ^^^^^^^ |                 ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_log_len`
+    |help: if this is intentional, prefix it with an underscore: `_log_len`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+    = note: `#[warn(unused_variables)]` on by default
+
+
+
+warning: unused variable: `client_sessions`
+   --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:340:17
+    |
+340 | warning: unused variable: `client_sessions`
+   --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:340:17
+    |
+340 |                 client_sessions,
+    |                 ^^^^^^^^^^^^^^^ help: try ignoring the field: `client_sessions: _`
+
+                client_sessions,
+    |                 ^^^^^^^^^^^^^^^ help: try ignoring the field: `client_sessions: _`
+
+warning: method `send_append_entries` is never usedwarning: method `send_append_entries` is never used
+  --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:23:18
+   |
+15 |     pub(crate) trait Utils: Module {
+   |                      ----- method in this trait
+...
+23 |         async fn send_append_entries(&self, target: &Uuid, prev_log_index: usize, batch_end: usize);
+   |                  ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+
+  --> /Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/solution/src/utils.rs:23:18
+   |
+15 |     pub(crate) trait Utils: Module {
+   |                      ----- method in this trait
+...
+23 |         async fn send_append_entries(&self, target: &Uuid, prev_log_index: usize, batch_end: usize);
+   |                  ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+   Compiling assignment-3-test-utils v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/test-utils)
+   Compiling assignment-3-test-utils v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/test-utils)
+warning: `assignment-3-solution` (lib) generated 6 warnings (run `cargo fix --lib -p assignment-3-solution` to apply 3 suggestions)
+warning: `assignment-3-solution` (lib) generated 6 warnings (run `cargo fix --lib -p assignment-3-solution` to apply 3 suggestions)
+   Compiling assignment-3-public-tests v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/public-tests)
+   Compiling assignment-3-public-tests v0.2.0 (/Users/gemlorg/studies/fourth-year/distributed-systems/dsassignment3/public-tests)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.10s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.10s
+     Running tests/snapshots.rs (target/debug/deps/snapshots-bbfe82f2e6cbfbdc)
+     Running tests/snapshots.rs (target/debug/deps/snapshots-bbfe82f2e6cbfbdc)
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 75 has been initialized
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 75 has been initialized
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 94 has been initialized
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 94 has been initialized
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [system] Server 75 has nominated itself
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [system] Server 75 has nominated itself
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] RequestVote(RequestVoteArgs { last_log_index: 0, last_log_term: 0 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] RequestVote(RequestVoteArgs { last_log_index: 0, last_log_term: 0 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 94 has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [system] Server 94 has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [94] Handling vote, term: 1, log_len: 1, args: RequestVoteArgs { last_log_index: 0, last_log_term: 0 }
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [94] Handling vote, term: 1, log_len: 1, args: RequestVoteArgs { last_log_index: 0, last_log_term: 0 }
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] RequestVoteResponse(RequestVoteResponseArgs { vote_granted: true })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] RequestVoteResponse(RequestVoteResponseArgs { vote_granted: true })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Server has converted to leader
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Server has converted to leader
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 0, prev_log_term: 0, entries: [LogEntry { content: NoOp, term: 1, timestamp: SystemTime { tv_sec: 1737312142, tv_nsec: 395368000 } }], leader_commit: 0 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 0, prev_log_term: 0, entries: [LogEntry { content: NoOp, term: 1, timestamp: SystemTime { tv_sec: 1737312142, tv_nsec: 395368000 } }], leader_commit: 0 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 2, match_index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 2, match_index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 2, match_index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 2, match_index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 1
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [Client -> 75] RegisterClient
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [Client -> 75] RegisterClient
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [LogEntry { content: RegisterClient, term: 1, timestamp: SystemTime { tv_sec: 1737312142, tv_nsec: 441189000 } }], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 1, prev_log_term: 1, entries: [LogEntry { content: RegisterClient, term: 1, timestamp: SystemTime { tv_sec: 1737312142, tv_nsec: 441189000 } }], leader_commit: 1 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75] Sending heartbeat
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to 36c9d8dd-674b-4d4f-87c6-a7adbbebaaf7, next_index: 1, match_index: 0
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [75] Sending heartbeat to c89627c2-b2f3-40f1-bcc6-d5c32c1edbee, next_index: 3, match_index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [75 -> 94] AppendEntries(AppendEntriesArgs { prev_log_index: 2, prev_log_term: 1, entries: [], leader_commit: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::utils::raft_utils] [94] Server has converted to follower
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution] [94 -> 75] AppendEntriesResponse(AppendEntriesResponseArgs { success: true, last_verified_log_index: 2 })
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+[2025-01-19T18:42:22Z DEBUG assignment_3_solution::system_handler::message_handler] [75] Append entries response success, new match index: 2
+error: test failed, to rerun pass `--test snapshots`
+error: test failed, to rerun pass `--test snapshots`

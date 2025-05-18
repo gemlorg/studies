@@ -1,0 +1,26 @@
+[package]
+name = "lab-05"
+version = "0.2.0"
+authors = ["Filip Plata <fp371335@students.mimuw.edu.pl>", "Mateusz Banaszek <m.banaszek@mimuw.edu.pl", "Maciej Matraszek <m.matraszek@mimuw.edu.pl>"]
+edition = "2021"
+
+[dependencies]
+hmac = "0.12"
+sha2 = "0.10"
+crossbeam-channel = "0.5"
+rustls = "0.23"
+
+[dev-dependencies]
+ntest = "0.9"
+kolmogorov_smirnov = "1.1"
+aes = "0.8"
+cbc = { version = "0.1", features = ["alloc"] }
+rand = "0.8"
+rsa = "0.9"
+
+[[bin]]
+name = "lab05"
+path = "main.rs"
+
+[lints.rust]
+unsafe_code = "forbid"
