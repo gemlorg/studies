@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Some Machine Learning}{5}{0}{2}
+\beamer@sectionintoc {3}{The Deep Ritz Method}{11}{0}{3}
+\beamer@sectionintoc {4}{Theorems \& Experiments}{14}{0}{4}
