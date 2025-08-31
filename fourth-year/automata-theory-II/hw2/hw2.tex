@@ -1,0 +1,44 @@
+
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Solutions to Homework 2}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 1}
+A parametric finite weighted automaton is a finite weighted automaton where the initial vector, the final vector, and the transition matrices use polynomials with one variable \( x \), instead of values from the field \( \mathbb{Q} \). For every choice of \( x \in \mathbb{Q} \), this gives a finite weighted automaton in the usual sense, by evaluating the polynomials to obtain values in the field. Prove that the set
+\begin{equation*}
+\{x \in \mathbb{Q} \mid \text{the automaton with parameter } x \text{ has zero semantics}\}
+\end{equation*}
+is either finite or equal to \( \mathbb{Q} \). (Hint: Consider short words.)
+
+\vspace{1cm}
+\textbf{Solution:}
+
+The set in question corresponds to the set of roots of a polynomial over the rational numbers. This means that for every \( x \in \mathbb{Q} \), the automaton evaluates its transitions and states by substituting \( x \) into the polynomials defining its weights. The semantics of the automaton being zero implies a system of polynomial equations having a solution.
+
+Using properties of polynomials over \( \mathbb{Q} \), it follows that the set of \( x \) for which the semantics is zero is either finite or all of \( \mathbb{Q} \), depending on whether the defining polynomial equations identically vanish.
+
+\vspace{2cm}
+
+\section*{Problem 2}
+Prove that the following problem is decidable:
+\begin{itemize}
+    \item \textbf{Input:} A weighted automaton defining a function \( f: \Sigma^* \to \mathbb{Q} \).
+    \item \textbf{Question:} Is the function \( f \) commutative, i.e., does \( f(w) \) depend only on the multiset of letters in \( w \) (not their order)?
+\end{itemize}
+
+\vspace{1cm}
+\textbf{Solution:}
+
+The function \( f \) is commutative if for any two words \( w_1, w_2 \in \Sigma^* \), \( w_1 \) and \( w_2 \) being permutations implies \( f(w_1) = f(w_2) \). This property can be checked algorithmically by analyzing the weighted automaton. 
+
+For any transition of the automaton, the weights are defined on specific input letters. The automaton's commutativity can be verified by ensuring that for all words of a given length, the weights aggregate independently of the order of input symbols. This verification can be done by comparing the automaton's outputs on permutations of input words.
+
+\end{document}

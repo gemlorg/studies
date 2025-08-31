@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+% Define theorem styles
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+
+% Document title and author
+\title{JAIO II: Homework 3}
+\author{Heorhii Lopattn}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 1}
+\textbf{Statement:} Show that the following problem is decidable:  
+\begin{itemize}
+    \item \textbf{Input:} A deterministic register automaton, defining a language \(L \subseteq \mathcal{A}^*\).
+    \item \textbf{Question:} Does the language satisfy, for every word \(w \in \mathcal{A}^*\) and function \(\sigma : \mathcal{A} \to \mathcal{A}\), not necessarily a permutation, 
+    \[
+    w \in L \iff \sigma(w) \in L?
+    \]
+\end{itemize}
+
+\subsection*{Solution:}
+\begin{proof}
+We first show that if 
+\[
+\forall w\in\mathcal{A}^*,\,\forall\sigma:\mathcal{A}\to\mathcal{A}:\quad w\in L\iff \sigma(w)\in L,
+\]
+then membership in \(L\) depends only on the length of the word. Indeed, consider any fixed letter \(a\in \mathcal{A}\) and define the constant function \(\sigma(a')=a\) for every \(a'\in\mathcal{A}\). Then for every \(w\in \mathcal{A}^*\) we have \(\sigma(w)=a^{|w|}\). Hence,
+\[
+w\in L \iff a^{|w|}\in L.
+\]
+Thus, for every \(n\ge 0\) either all words of length \(n\) belong to \(L\) or none do. 
+
+Now we need to check if all paths of a given length are either not accepting or all accepting. In order to do that: 
+
+\begin{itemize}
+\item rename all transitions to be on the same letter, essentially restricting the input alphabet to a single letter. Now we have an NRA instead of DRA.
+\item take all possible combinations of states where not all states are accepting and not all states are rejecting. Create a disjoint union construction with as many copies of the NRA as there are combinations, identifying an accepting state in each copy as such that there is a run to all states in the respective combination (using product construction).
+\item if in this construction exists an accepting run then the original condition doesn't hold, and if there is no such run, then it holds.
+\item from exercises, the emptiness problem is PSPACE, so the original problem is decidable.
+\end{itemize}
+\end{proof}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem 2}
+\textbf{Statement:} A language of infinite words \(L \subseteq \Sigma^\omega\) is \textit{closed} if the following condition is satisfied: For every infinite word \(w = a_0a_1\ldots \in \Sigma^\omega\), if every finite prefix \(a_0a_1\ldots a_n \in \Sigma^*\) of \(w\) can be extended to an \(\omega\)-word \(a_0a_1\ldots a_n \cdot v \in L\), then \(w \in L\).
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Show that there is an \(\omega\)-regular language which is not closed.
+    \item Show that there exists a closed language which is not \(\omega\)-regular.
+    \item Show that the following problem is decidable: Given a nondeterministic Büchi automaton, decide whether the language it recognizes is closed.
+\end{enumerate}
+
+\subsection*{Solution:}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item 
+    \begin{proof}
+    Consider the language
+    \[
+    L = \{ w\in\{a,b\}^\omega \mid w \text{ contains infinitely many occurrences of } a\}.
+    \]
+    It is known that $L$ is $\omega$-regular, however it is not closed, since in a word $b^\omega$ every finite prefix can be extended to a word in $L$, however the word itself is not in $L$.
+    \end{proof}
+    
+    \item 
+    \begin{proof}
+      There are countably many $\omega$-regular languages, but uncountably many closed languages, since for each infinite word $w\in\Sigma^\omega$ there is a unique closed language $L_w$ that contains $w$ and no other word. Hence, there exists a closed language that is not $\omega$-regular by counting argument.
+          
+          
+    \end{proof}
+    
+    \item 
+    \begin{proof}
+      It would suffice to show that the closure of a $\omega$-language is $\omega$-regular. From that, we would simply check emptiness of the closure of the language, minus the original automata, which is decidable.
+  The automaton for closure can be obtained by extending the set of accepting states.
+    \end{proof}
+\end{enumerate}
+
+\end{document}
