@@ -1,0 +1,22 @@
+[project]
+name = "equilibrium-solver"
+version = "0.1.0"
+description = "Experimental equilibrium solver framework for investment games."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.5.0",
+    "pytest>=8.2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["solver"]
+
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
