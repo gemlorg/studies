@@ -1,0 +1,10 @@
+CSV_LABELS_FILENAME = "labels.csv"
+IMG_COL_NAME = "name"
+TARGET_COL_NAMES = ["squares", "circles", "up", "right", "down", "left"]
+TRIANGLE_UP_IDX = TARGET_COL_NAMES.index("up")
+TRIANGLE_DOWN_IDX = TARGET_COL_NAMES.index("down")
+TRIANGLE_LEFT_IDX = TARGET_COL_NAMES.index("left")
+TRIANGLE_RIGHT_IDX = TARGET_COL_NAMES.index("right")
+
+TRAIN_DATASET_LEN = 9000
+TOTAL_DATASET_LEN = 10000
