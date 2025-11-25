@@ -50,7 +50,7 @@ class IMGDataset(VisionDataset):
             imgs.append(tensor_img)
 
         data = torch.stack(imgs, dim=0)  # [N, 1, 28, 28]
-        logger.info("Preloaded data shape:", data.shape)
+        logger.info("Preloaded data shape: " + str(data.shape))
         targets = torch.tensor(
             labels_df[TARGET_COL_NAMES].values, dtype=torch.float32
         )  # [N, 6]
@@ -70,6 +70,7 @@ class IMGDataset(VisionDataset):
         return img, target
 
     def repr_item(self, index: int) -> None:
+        """Show the image and print the target labels."""
         img, target = self[index]
         img_np = img.squeeze(0).detach().cpu().numpy()  # [28, 28]
         plt.imshow(img_np)
@@ -82,4 +83,5 @@ class IMGDataset(VisionDataset):
         plt.show()
 
     def get_labels(self) -> pd.DataFrame:
+        """Return the labels DataFrame."""
         return self.labels

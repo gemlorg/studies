@@ -1,6 +1,7 @@
 from copy import deepcopy
+import logging
 from dnn_solver.constants import TARGET_COL_NAMES
-from dnn_solver.loss import GSNMultiTaskLoss
+from dnn_solver.loss import MultiTaskLoss
 from dnn_solver.types import (
     ClassificationMetrics,
     MultiTaskLossOutput,
@@ -15,11 +16,11 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import os
 
-# Allow custom (non-ipywidget) widgets.
 
 
 from typing import Dict, List, Optional, Tuple
 
+logger = logging.getLogger("dnn_solver")
 
 class MultiTaskTrainer:
 
@@ -40,7 +41,7 @@ class MultiTaskTrainer:
 
         self.testloader = testloader
 
-        self.criterion = GSNMultiTaskLoss(
+        self.criterion = MultiTaskLoss(
             lambda_cnt=lambda_cnt,
             use_cls_loss=use_cls_loss,
             reduction="mean",
@@ -70,8 +71,10 @@ class MultiTaskTrainer:
             lr=lr,
             weight_decay=weight_decay,
         )
+
         curr_patience = patience
         metrics: Optional[MultiTaskMetrics] = None
+
         for epoch in range(epochs):
             self.model.train()
             running_loss: MultiTaskLossOutput = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
@@ -79,6 +82,8 @@ class MultiTaskTrainer:
             sum_epoch_loss: MultiTaskLossOutput = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
             epoch_samples = 0
 
+
+            # start epoch training
             for batch_idx, (images, count_targets) in enumerate(self.trainloader):
                 images = images.to(self.device)
                 count_targets = count_targets.to(self.device)
@@ -104,7 +109,8 @@ class MultiTaskTrainer:
 
                 if (batch_idx + 1) % log_freq == 0:
                     avg_loss = running_loss.total.item() / log_freq
-                    print(
+                    logger.info(
+                        
                         f"epoch {epoch + 1:>4}, "
                         f"batch {batch_idx + 1:>5}, "
                         f"loss {avg_loss:.3f}"
@@ -120,8 +126,9 @@ class MultiTaskTrainer:
 
             metrics = self.evaluate()
             self.eval_history.append(metrics)
-            print(f"epoch {epoch + 1:>4} evaluation: loss_total={metrics.loss_total:.4f}, accuracy={metrics.classification.top1_acc:.4f}")
-            print(f"               loss_cls={metrics.loss_cls:.4f}, loss_reg={metrics.loss_reg:.4f}")
+
+            logger.info(f"epoch {epoch + 1:>4} evaluation: loss_total={metrics.loss_total:.4f}, accuracy={metrics.classification.top1_acc:.4f}")
+            logger.info(f"               loss_cls={metrics.loss_cls:.4f}, loss_reg={metrics.loss_reg:.4f}")
 
             curr_patience -= 1
             if not self.best_eval or metrics.loss_total < self.best_eval.loss_total:
@@ -136,7 +143,9 @@ class MultiTaskTrainer:
         final_metrics = self.best_eval 
         if final_metrics is None:
             raise RuntimeError("Training finished without any evaluation metrics.")
-        self._print_final_metrics(final_metrics)
+
+        print("\n=== Final (best) metrics ===")
+        print(metrics)
         return final_metrics
 
     def history(self) -> List[Tuple[MultiTaskLossOutput, MultiTaskMetrics]]:
@@ -154,6 +163,7 @@ class MultiTaskTrainer:
         train_cls = [to_float(e.cls) for e in self.train_epoch_losses]
         train_reg = [to_float(e.reg) for e in self.train_epoch_losses]
         val_totals = [to_float(m.loss_total) for m in self.eval_history]
+        # loss
         plt.figure(figsize=(8, 4))
         plt.plot(epochs, train_totals, label="train loss")
         plt.plot(epochs, val_totals, label="val loss")
@@ -170,7 +180,7 @@ class MultiTaskTrainer:
         if save_dir:
             plt.close()
 
-        # --- Accuracy curve ---
+        # accuracy
         val_acc = [m.classification.top1_acc for m in self.eval_history]
         plt.figure(figsize=(8, 4))
         plt.plot(epochs, val_acc, label="val top1 acc")
@@ -184,7 +194,7 @@ class MultiTaskTrainer:
         if save_dir:
             plt.close()
 
-        # --- RMSE curve ---
+        # rmse
         val_rmse = [m.regression.rmse_overall for m in self.eval_history]
         plt.figure(figsize=(8, 4))
         plt.plot(epochs, val_rmse, label="val RMSE")
@@ -199,30 +209,22 @@ class MultiTaskTrainer:
         if save_dir:
             plt.close()
 
-        # --- Confusion matrix for the best model ---
+        #  confusion matrix
         if self.best_eval and self.best_eval.classification.confusion_matrix is not None:
             self._plot_confusion_matrix(
                 self.best_eval.classification.confusion_matrix,
+                pair_names=self.best_eval.classification.pair_names,
                 name_suffix=name_suffix,
                 save_dir=save_dir,
             )
 
-    def _print_final_metrics(self, metrics: MultiTaskMetrics) -> None:
-        """Pretty-print the final (best) metrics."""
-        print("\n=== Final (best) metrics ===")
-        print(metrics)
-        # worst 5 pairs by accuracy (ascending), ignoring NaNs
-        pair_acc = [
-            (p, a) for p, a in metrics.classification.per_pair_acc.items()
-        ]
-        pair_acc.sort(key=lambda x: x[1])
-        worst_pairs = pair_acc[:5]
-        print("Worst pairs (acc):", {p: round(a, 4) for p, a in worst_pairs})
+
 
     def _plot_confusion_matrix(
         self,
         cm: torch.Tensor,
         *,
+        pair_names: Optional[List[str]],
         name_suffix: str,
         save_dir: Optional[str] = None,
     ) -> None:
@@ -232,9 +234,13 @@ class MultiTaskTrainer:
         vmax = min(0.5, float(cm_np.max()))
         plt.imshow(cm_np, cmap="magma", vmin=0.0, vmax=vmax if vmax > 0 else None)
         plt.colorbar()
-        plt.xlabel("Predicted configuration ID")
-        plt.ylabel("True configuration ID")
-        plt.title("Validation Confusion Matrix (row-normalized)")
+        if pair_names:
+            ticks = range(len(pair_names))
+            plt.xticks(ticks, pair_names, rotation=90)
+            plt.yticks(ticks, pair_names)
+        plt.xlabel("Predicted pair")
+        plt.ylabel("True pair")
+        plt.title("Validation Pair Confusion Matrix (row-normalized)")
         if save_dir:
             os.makedirs(save_dir, exist_ok=True)
             plt.savefig(
@@ -247,36 +253,21 @@ class MultiTaskTrainer:
 
     @torch.no_grad()
     def evaluate(self) -> MultiTaskMetrics:
-        """
-        Evaluate on the held-out testloader and return MultiTaskMetrics.
-
-        Classification:
-            - Top-1 accuracy (135-way)
-            - Macro F1-score (135-way)
-            - Per-pair accuracy aggregated by unordered shape pair
-
-        Regression (6-D counts):
-            - RMSE per class (dimension) and overall
-            - MAE per class (dimension) and overall
-        """
-        from sklearn.metrics import f1_score  # local import to keep dependencies scoped
-
         self.model.eval()
 
-        # --------- Accumulators ----------
         total_samples = 0
         sum_loss = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
 
+        # get paris of names
         pair_names = []
-        num_values = self.values_max - self.values_min + 1
         for i, name_i in enumerate(TARGET_COL_NAMES):
             for j in range(i + 1, len(TARGET_COL_NAMES)):
                 name_j = TARGET_COL_NAMES[j]
                 pair_names.append(f"{name_i}+{name_j}")
 
+        # build metric accumulators
         cls_metrics = ClassificationMetrics.accumulator(
             pair_names=pair_names,
-            num_values=num_values,
             values_min=self.values_min,
             values_max=self.values_max,
         )
@@ -292,10 +283,10 @@ class MultiTaskTrainer:
             batch_size = images.size(0)
             total_samples += batch_size
 
-            # ----- Losses -----
             loss_out = self.criterion(log_probs, counts_pred, count_targets)
             sum_loss += loss_out.scale(batch_size)
             
+            # populate metrics
             cls_metrics.add_batch(log_probs, counts_pred, count_targets)
             reg_metrics.add_batch(counts_pred, count_targets)
 
@@ -304,6 +295,7 @@ class MultiTaskTrainer:
 
         sum_loss = sum_loss.scale(1.0 / total_samples)
 
+        # return loss and metrics
         return MultiTaskMetrics(
             loss=sum_loss,
             classification=cls_metrics.aggregate(),

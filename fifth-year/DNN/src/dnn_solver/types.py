@@ -1,11 +1,12 @@
 from typing import Optional, Tuple, List
 from pydantic import BaseModel
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict
+from sklearn.metrics import confusion_matrix
 from torch import Tensor
 import torch
 
-
+# Configurations for data augmentation
 class FlipAugmentationConfig(BaseModel):
     horizontal: bool = True
     vertical: bool = True
@@ -26,14 +27,12 @@ class BrightnessContrastAugmentationConfig(BaseModel):
     contrast: float = 0.1
     probability: float = 0.3
 
-
-
-
 class DataAugmentationConfig(BaseModel):
     flip: Optional[FlipAugmentationConfig] = FlipAugmentationConfig()
     rotation: Optional[RotationAugmentationConfig] = RotationAugmentationConfig()
     gaussian_noise: Optional[GaussianNoiseAugmentationConfig] = GaussianNoiseAugmentationConfig()
     brightness_contrast: Optional[BrightnessContrastAugmentationConfig] = BrightnessContrastAugmentationConfig()
+
 
 @dataclass
 class MultiTaskLossOutput:
@@ -79,6 +78,7 @@ class MultiTaskLossOutput:
     __repr__ = __str__
 
 
+# all metrics we want to hold
 @dataclass
 class ClassificationMetrics:
 
@@ -86,29 +86,28 @@ class ClassificationMetrics:
     top1_acc: float = 0.0
     macro_f1: float = 0.0
     per_pair_acc: Dict[str, float] = None
-    # Row-normalized confusion matrix over configuration IDs.
+    # Pair-level confusion matrix, row-normalized (shape [num_pairs, num_pairs]).
     confusion_matrix: Optional[Tensor] = None
+    # Names of unordered shape pairs, aligned with confusion_matrix axes.
+    pair_names: Optional[List[str]] = None
 
     # Internal accumulators 
-    _pair_names: List[str] = None
-    _num_values: int = 0
+    _pair_names: List[str] = field(default_factory=list)
     _values_min: int = 1
     _values_max: int = 9
-    _all_true: List[Tensor] = None
-    _all_pred: List[Tensor] = None
+    _all_true: List[Tensor] = field(default_factory=list)
+    _all_pred: List[Tensor] = field(default_factory=list)
 
     @classmethod
     def accumulator(
         cls,
         pair_names: List[str],
-        num_values: int,
         values_min: int,
         values_max: int,
     ) -> "ClassificationMetrics":
         return cls(
             per_pair_acc={},
             _pair_names=pair_names,
-            _num_values=num_values,
             _values_min=values_min,
             _values_max=values_max,
             _all_true=[],
@@ -139,6 +138,7 @@ class ClassificationMetrics:
         if not self._all_true:
             raise RuntimeError("No samples accumulated for classification metrics.")
 
+        num_values = self._values_max - self._values_min + 1
         y_true_t = torch.cat(self._all_true)
         y_pred_t = torch.cat(self._all_pred)
 
@@ -148,8 +148,10 @@ class ClassificationMetrics:
         macro_f1 = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
 
         per_pair_acc: Dict[str, float] = {}
-        pair_true = (y_true_t // self._num_values)
-        pair_pred = (y_pred_t // self._num_values)
+        # class id // num_values = pair index
+        pair_true = (y_true_t // num_values)
+        pair_pred = (y_pred_t // num_values)
+
         for k, pname in enumerate(self._pair_names):
             mask = pair_true == k
             count_k = int(mask.sum().item())
@@ -158,13 +160,12 @@ class ClassificationMetrics:
             else:
                 per_pair_acc[pname] = float((pair_pred[mask] == k).float().mean().item())
 
-        # Full 135-way (or fewer) confusion matrix, row-normalized.
-        from sklearn.metrics import confusion_matrix
-        num_classes = len(self._pair_names) * self._num_values
+        # visualize which pairse are confused with which
+        num_pairs = len(self._pair_names)
         cm = confusion_matrix(
-            y_true,
-            y_pred,
-            labels=list(range(num_classes)),
+            pair_true.numpy(),
+            pair_pred.numpy(),
+            labels=list(range(num_pairs)),
             normalize="true",
         )
 
@@ -173,9 +174,11 @@ class ClassificationMetrics:
             macro_f1=macro_f1,
             per_pair_acc=per_pair_acc,
             confusion_matrix=torch.tensor(cm, dtype=torch.float32),
+            pair_names=self._pair_names,
         )
 
     def __str__(self) -> str:
+        # show 5 worst accuracy pairs
         pair_acc_items = [
             (p, a) for p, a in (self.per_pair_acc or {}).items() if not (a != a)
         ]
@@ -183,7 +186,7 @@ class ClassificationMetrics:
         worst_pairs = {p: round(a, 4) for p, a in pair_acc_items[:5]}
         return (
             f"top1={self.top1_acc:.4f}, macro_f1={self.macro_f1:.4f}, "
-            f"worst_pairs={worst_pairs}"
+            f"lowest_acc_pairs={worst_pairs}"
         )
 
     __repr__ = __str__
@@ -257,8 +260,6 @@ class RegressionMetrics:
 
 @dataclass
 class MultiTaskMetrics:
-    """Top-level container returned by `MultiTaskTrainer.evaluate`."""
-
     loss: MultiTaskLossOutput
     classification: ClassificationMetrics
     regression: RegressionMetrics
@@ -277,8 +278,8 @@ class MultiTaskMetrics:
 
     def __str__(self) -> str:
         return (
-            f"[Loss] {self.loss}; "
-            f"[Classification] {self.classification}; "
+            f"[Loss] {self.loss}; \n"
+            f"[Classification] {self.classification}; \n"
             f"[Regression] {self.regression}"
         )
 

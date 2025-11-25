@@ -5,7 +5,7 @@ from torch import Tensor
 from typing import Literal
 
 
-class GSNMultiTaskLoss(nn.Module):
+class MultiTaskLoss(nn.Module):
 
     def __init__(
         self,
@@ -15,19 +15,25 @@ class GSNMultiTaskLoss(nn.Module):
         values_min: int = 1,
         values_max: int = 9,
     ) -> None:
+        """lambda_cnt: weight for the count regression loss.
+        use_cls_loss: whether to include the classification loss term.
+        reduction: reduction method for the individual losses.
+        values_min, values_max: range of count for non-zero values for configuration ID computation.
+        """
+
         super().__init__()
-        self.lambda_cnt = float(lambda_cnt)
+        self.lambda_cnt = lambda_cnt
         self.reduction = reduction
         self.use_cls_loss = use_cls_loss
-        self.values_min = int(values_min)
-        self.values_max = int(values_max)
+        self.values_min = values_min
+        self.values_max = values_max
 
         self._cls_loss = nn.NLLLoss(reduction=reduction)
         self._reg_loss = nn.SmoothL1Loss(reduction=reduction)
 
     def forward(
         self,
-        log_probs: Tensor,  # [B, num_classes], already log-softmaxed
+        log_probs: Tensor,  # [B, num_classes]
         counts_pred: Tensor,  # [B, 6]
         count_targets: Tensor,  # [B, 6]
     ) -> MultiTaskLossOutput:
@@ -54,23 +60,15 @@ class GSNMultiTaskLoss(nn.Module):
                 f"[{self.values_min},{self.values_max}], got {log_probs.size(1)}"
             )
 
-        # 1) Compute configuration IDs from counts.
         config_ids = counts_to_config_ids(
             count_targets,
             values_min=self.values_min,
             values_max=self.values_max,
         )  # [B]
 
-        # 2) Classification loss: NLL over provided log-probs.
-        if self.use_cls_loss:
-            loss_cls = self._cls_loss(log_probs, config_ids)
-        else:
-            loss_cls = counts_pred.new_zeros(())
-
-        # 3) Regression loss over the raw counts.
+        loss_cls = self._cls_loss(log_probs, config_ids)
         loss_reg = self._reg_loss(counts_pred, count_targets)
 
-        # 4) Total multitask loss.
         loss_total = loss_cls * int(self.use_cls_loss) + self.lambda_cnt * loss_reg
 
         return MultiTaskLossOutput(total=loss_total, cls=loss_cls, reg=loss_reg)

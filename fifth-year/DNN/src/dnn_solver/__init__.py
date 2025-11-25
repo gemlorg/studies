@@ -2,12 +2,12 @@ import logging
 import sys
 from .augmentation import DataAugmentation
 from .dataset import IMGDataset
-from .loss import GSNMultiTaskLoss
-from .net import GSNMultiTaskNet
+from .loss import MultiTaskLoss
+from .net import MultiTaskNet
 from .trainer import MultiTaskTrainer
 
 
-logger = logging.getLogger("dnn-solver")
+logger = logging.getLogger("dnn_solver")
 logger.setLevel(logging.INFO)
 logger.propagate = False
 handler = logging.StreamHandler(sys.stdout)
@@ -18,7 +18,7 @@ logger.addHandler(handler)
 __all__ = [
     "DataAugmentation",
     "IMGDataset",
-    "GSNMultiTaskLoss",
-    "GSNMultiTaskNet",
+    "MultiTaskLoss",
+    "MultiTaskNet",
     "MultiTaskTrainer",
 ]

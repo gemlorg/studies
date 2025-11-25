@@ -33,33 +33,25 @@ def counts_to_config_ids(
     counts = count_targets.to(torch.long)
     B, n = counts.shape  # n should be 6
 
-    # 1. Identify which two shapes are active
-    # We use topk to get indices of the two active shapes
-    # values: [B, 2], indices: [B, 2]
+    # identify which two shapes are active
     _, indices = torch.topk(counts, k=2, dim=1)
 
-    # 2. Sort indices to ensure a < b (Canonical Pair Order)
+    # sort indices to ensure a < b (Canonical Pair Order)
     a = torch.min(indices, dim=1).values  # [B]
     b = torch.max(indices, dim=1).values  # [B]
 
-    # 3. Compute Pair Index (Combinatorial Number System)
-    # Maps unique pair (a, b) to a scalar index 0..14
+    # compute pair index in 0..14
     pair_index = a * (2 * n - a - 1) // 2 + (b - a - 1)  # [B]
+    
+    # get the count for for a 
+    v = counts[torch.arange(B), a]
 
-    # 4. Determine 'Value' based on shape 'a'
-    # FIX: We specifically take the count of shape 'a'.
-    # This distinguishes "4 A, 6 B" (val=4) from "6 A, 4 B" (val=6).
-    # We gather from the original counts tensor using index 'a'.
-    v = torch.gather(counts, 1, a.unsqueeze(1)).squeeze(1)  # [B]
-
-    # 5. Compute Offsets and Final ID
+    # compute count id
     num_values = values_max - values_min + 1
     value_offset = v - values_min  # [B]
 
-    # Sanity check for range
     valid = (value_offset >= 0) & (value_offset < num_values)
     if not torch.all(valid):
-        # Extract the invalid values for the error message
         bad_vals = v[~valid].tolist()
         raise ValueError(
             f"Found count values outside [{values_min}, {values_max}] in targets: {bad_vals}. "

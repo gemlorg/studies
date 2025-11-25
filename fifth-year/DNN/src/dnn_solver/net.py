@@ -2,7 +2,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-class GSNMultiTaskNet(nn.Module):
+class MultiTaskNet(nn.Module):
 
     def __init__(
         self, num_classes: int = 135, num_counts: int = 6, dropout_p: float = 0.3
@@ -12,19 +12,13 @@ class GSNMultiTaskNet(nn.Module):
         self.num_counts = num_counts
 
         self.backbone = nn.Sequential(
-            nn.Conv2d(1, 8, 3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(8, 16, 3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(16, 32, 3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, 3, stride=1, padding=1),
-            nn.ReLU(),
+            nn.Conv2d(1, 8, 3, stride=1, padding=1), nn.ReLU(),
+            nn.Conv2d(8, 16, 3, stride=1, padding=1), nn.ReLU(),
+            nn.Conv2d(16, 32, 3, stride=1, padding=1), nn.ReLU(),
+            nn.Conv2d(32, 64, 3, stride=1, padding=1), nn.ReLU(),
             nn.Flatten(start_dim=1),
-            nn.Linear(64 * 28 * 28, 256),
-            nn.ReLU(),
+            nn.Linear(64 * 28 * 28, 256), nn.ReLU()
         )
-
         self.head_cls = nn.Sequential(
             nn.Linear(256, 256),
             nn.ReLU(),

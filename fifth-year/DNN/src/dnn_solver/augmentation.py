@@ -102,7 +102,7 @@ class RotationAugmentation:
             angles = torch.tensor([90, 180, 270], device=img.device)
             angle = angles[torch.randint(0, len(angles), ()).item()].item()
             img = F.rotate(img, angle)
-            # update target accordingly
+            # rotate target by 90 degrees angle / 90 times. 
             while angle > 0:
                 tmp = target.clone()
                 (
@@ -120,6 +120,7 @@ class RotationAugmentation:
         return img, target
 
 
+# just a composition of all augmentations
 class DataAugmentation:
     def __init__(self, config: DataAugmentationConfig = DataAugmentationConfig()):
         self.augmentations: List[nn.Module] = []
