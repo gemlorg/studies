@@ -1,3 +1,4 @@
+import logging
 from dnn_solver.constants import (
     CSV_LABELS_FILENAME,
     IMG_COL_NAME,
@@ -10,16 +11,12 @@ from torchvision import transforms
 import os
 import pandas as pd
 from PIL import Image
-
-# Allow custom (non-ipywidget) widgets.
-
-
 from pathlib import Path
 from typing import Callable
 from torchvision.datasets.vision import VisionDataset
-
 import matplotlib.pyplot as plt
 
+logger = logging.getLogger("dnn_solver")
 
 class IMGDataset(VisionDataset):
     def __init__(
@@ -49,11 +46,11 @@ class IMGDataset(VisionDataset):
         imgs = []
         for img_path in labels_df[IMG_COL_NAME]:
             img = Image.open(os.path.join(self.root, img_path)).convert("L")
-            tensor_img = transforms.ToTensor()(img)  # [1, H, W], float32 in [0,1]
+            tensor_img = transforms.ToTensor()(img)  # [1, 28, 28]
             imgs.append(tensor_img)
-        # convert images to tensor
-        data = torch.stack(imgs, dim=0)  # [N, 1, H, W]
-        print("Preloaded data shape:", data.shape)
+
+        data = torch.stack(imgs, dim=0)  # [N, 1, 28, 28]
+        logger.info("Preloaded data shape:", data.shape)
         targets = torch.tensor(
             labels_df[TARGET_COL_NAMES].values, dtype=torch.float32
         )  # [N, 6]
@@ -65,41 +62,24 @@ class IMGDataset(VisionDataset):
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
         img = self.data[index]  # [1, 28, 28]
-        target = self.targets_raw[index]  # [num_targets], float32
+        target = self.targets_raw[index]  # [6]
 
-        # optional image transform (must work on tensors)
         if self.transform is not None and self.train:
             img, target = self.transform(img, target)
 
         return img, target
 
     def repr_item(self, index: int) -> None:
-        """
-        Debug / visualization helper:
-        - shows the image
-        - prints its labels / classes
-        Uses __getitem__, so it respects transforms / target_transforms.
-        """
-
-        img, target = self[index]  # go through the normal pipeline
-
-        img_np = img.squeeze(0).detach().cpu().numpy()  # [H, W]
+        img, target = self[index]
+        img_np = img.squeeze(0).detach().cpu().numpy()  # [28, 28]
         plt.imshow(img_np)
         plt.axis("off")
-
-        # Build a nice label string
         base_info = f"index={index}, targets: "
-
         label_str = base_info + "\n"
         for name, label in zip(TARGET_COL_NAMES, target):
             label_str += f"{name}: {label.item():.0f} "
-
-        print(label_str)
-        plt.title("Sample visualization")
+        plt.title(f"{label_str}")
         plt.show()
 
     def get_labels(self) -> pd.DataFrame:
-        """
-        Returns the labels dataframe.
-        """
         return self.labels

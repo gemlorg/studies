@@ -2,18 +2,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-
 class GSNMultiTaskNet(nn.Module):
-    """
-    Multitask model for GSN:
-      - Classification: 135 config classes -> log-probs
-      - Regression: 6 shape counts
-
-    Input:  x  [B, 1, 28, 28]
-    Output: (log_probs, counts)
-      - log_probs: [B, 135]
-      - counts:    [B, 6]
-    """
 
     def __init__(
         self, num_classes: int = 135, num_counts: int = 6, dropout_p: float = 0.3
@@ -22,7 +11,6 @@ class GSNMultiTaskNet(nn.Module):
         self.num_classes = num_classes
         self.num_counts = num_counts
 
-        # ---------- fixed backbone (do NOT change) ----------
         self.backbone = nn.Sequential(
             nn.Conv2d(1, 8, 3, stride=1, padding=1),
             nn.ReLU(),
@@ -37,7 +25,6 @@ class GSNMultiTaskNet(nn.Module):
             nn.ReLU(),
         )
 
-        # ---------- classification head: 135-way log-probs ----------
         self.head_cls = nn.Sequential(
             nn.Linear(256, 256),
             nn.ReLU(),
@@ -46,7 +33,6 @@ class GSNMultiTaskNet(nn.Module):
             nn.LogSoftmax(dim=1),
         )
 
-        # ---------- regression head: 6 counts ----------
         self.head_cnt = nn.Sequential(
             nn.Linear(256, 128),
             nn.ReLU(),
@@ -55,16 +41,7 @@ class GSNMultiTaskNet(nn.Module):
         )
 
     def forward(self, x: torch.Tensor):
-        """
-        x: [B, 1, 28, 28]
-        returns:
-          log_probs: [B, num_classes] (already log-softmaxed)
-          counts:    [B, num_counts]
-        """
         features = self.backbone(x)  # [B, 256]
-
         log_probs = self.head_cls(features)  # [B, num_classes]
-
         counts = self.head_cnt(features)  # [B, 6]
-
         return log_probs, counts

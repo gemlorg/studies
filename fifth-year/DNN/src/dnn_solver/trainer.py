@@ -55,6 +55,7 @@ class MultiTaskTrainer:
         self.best_eval: Optional[MultiTaskMetrics] = None
         self.loss_history: List[MultiTaskLossOutput] = []
         self.eval_history: List[MultiTaskMetrics] = []
+        self.train_epoch_losses: List[MultiTaskLossOutput] = []
 
     def train(
         self,
@@ -75,6 +76,8 @@ class MultiTaskTrainer:
             self.model.train()
             running_loss: MultiTaskLossOutput = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
             total_samples = 0
+            sum_epoch_loss: MultiTaskLossOutput = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
+            epoch_samples = 0
 
             for batch_idx, (images, count_targets) in enumerate(self.trainloader):
                 images = images.to(self.device)
@@ -83,19 +86,20 @@ class MultiTaskTrainer:
                 optimizer.zero_grad()
                 log_probs, counts_pred = self.model(
                     images
-                )  # model must return (cls_logits, counts_pred)
+                )
                 full_loss = self.criterion(log_probs, counts_pred, count_targets)
-                self.loss_history.append(full_loss)
+                loss_detached = full_loss.detach()
+                self.loss_history.append(loss_detached)
 
                 loss = full_loss.total
                 loss.backward()
-
                 optimizer.step()
 
-                running_loss += loss
-
+                running_loss += loss_detached
                 bs = images.size(0)
                 total_samples += bs
+                epoch_samples += bs
+                sum_epoch_loss += loss_detached.scale(bs)
 
 
                 if (batch_idx + 1) % log_freq == 0:
@@ -108,6 +112,11 @@ class MultiTaskTrainer:
                     running_loss = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
 
             # end of epoch: evaluate on test set
+            if epoch_samples > 0:
+                avg_epoch_loss = sum_epoch_loss.scale(1.0 / epoch_samples)
+                self.train_epoch_losses.append(avg_epoch_loss)
+            else:
+                self.train_epoch_losses.append(MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0))
 
             metrics = self.evaluate()
             self.eval_history.append(metrics)
@@ -131,29 +140,20 @@ class MultiTaskTrainer:
         return final_metrics
 
     def history(self) -> List[Tuple[MultiTaskLossOutput, MultiTaskMetrics]]:
-        """
-        Returns recorded training and evaluation history for downstream analysis or plotting.
-        - train_epoch_history: list of dicts with loss_total/loss_cls/loss_reg per epoch
-        - eval_history: list of MultiTaskMetrics per epoch
-        """
-        return list(zip(self.loss_history, self.eval_history))
+        return list(zip(self.train_epoch_losses, self.eval_history))
 
     def plot_learning_curves(self, save_dir: Optional[str] = None) -> None:
-        """
-        Plot training/validation losses, validation accuracy, and validation RMSE over epochs.
-        If save_dir is provided, figures are saved there; otherwise they are shown inline.
-        """
-
         if not self.eval_history:
             raise RuntimeError("No evaluation history to plot. Run train() first.")
 
         epochs = list(range(1, len(self.eval_history) + 1))
+        name_suffix = f"lambda{self.lambda_cnt}_cls{int(self.use_cls_loss)}_reg{int(self.lambda_cnt != 0)}"
 
-        # --- Loss curves ---
-        train_totals = [e.total for e in self.loss_history]
-        train_cls = [e.cls for e in self.loss_history]
-        train_reg = [e.reg for e in self.loss_history]
-        val_totals = [m.loss_total for m in self.eval_history]
+        to_float = lambda x: float(x.detach().cpu()) if hasattr(x, "detach") else float(x)
+        train_totals = [to_float(e.total) for e in self.train_epoch_losses]
+        train_cls = [to_float(e.cls) for e in self.train_epoch_losses]
+        train_reg = [to_float(e.reg) for e in self.train_epoch_losses]
+        val_totals = [to_float(m.loss_total) for m in self.eval_history]
         plt.figure(figsize=(8, 4))
         plt.plot(epochs, train_totals, label="train loss")
         plt.plot(epochs, val_totals, label="val loss")
@@ -165,10 +165,10 @@ class MultiTaskTrainer:
         plt.legend()
         if save_dir:
             os.makedirs(save_dir, exist_ok=True)
-            plt.savefig(os.path.join(save_dir, "loss_curves.png"), bbox_inches="tight")
+            plt.savefig(os.path.join(save_dir, f"loss_curves_{name_suffix}.png"), bbox_inches="tight")
+        plt.show()
+        if save_dir:
             plt.close()
-        else:
-            plt.show()
 
         # --- Accuracy curve ---
         val_acc = [m.classification.top1_acc for m in self.eval_history]
@@ -179,10 +179,10 @@ class MultiTaskTrainer:
         plt.title("Validation Accuracy")
         plt.legend()
         if save_dir:
-            plt.savefig(os.path.join(save_dir, "val_accuracy.png"), bbox_inches="tight")
+            plt.savefig(os.path.join(save_dir, f"val_accuracy_{name_suffix}.png"), bbox_inches="tight")
+        plt.show()
+        if save_dir:
             plt.close()
-        else:
-            plt.show()
 
         # --- RMSE curve ---
         val_rmse = [m.regression.rmse_overall for m in self.eval_history]
@@ -193,29 +193,23 @@ class MultiTaskTrainer:
         plt.title("Validation RMSE")
         plt.legend()
         if save_dir:
-            plt.savefig(os.path.join(save_dir, "val_rmse.png"), bbox_inches="tight")
+            os.makedirs(save_dir, exist_ok=True)
+            plt.savefig(os.path.join(save_dir, f"val_rmse_{name_suffix}.png"), bbox_inches="tight")
+        plt.show()
+        if save_dir:
             plt.close()
-        else:
-            plt.show()
 
     def _print_final_metrics(self, metrics: MultiTaskMetrics) -> None:
         """Pretty-print the final (best) metrics."""
         print("\n=== Final (best) metrics ===")
-        print(
-            f"Losses -> total: {metrics.loss_total:.4f}, "
-            f"cls: {metrics.loss_cls:.4f}, reg: {metrics.loss_reg:.4f}"
-        )
-        cls = metrics.classification
-        print(
-            f"Classification -> top1: {cls.top1_acc:.4f}, macro F1: {cls.macro_f1:.4f}"
-        )
-        reg = metrics.regression
-        print(
-            f"Regression -> RMSE overall: {reg.rmse_overall:.4f}, "
-            f"MAE overall: {reg.mae_overall:.4f}"
-        )
-        print("RMSE per class:", {k: round(v, 4) for k, v in reg.rmse_per_dim.items()})
-        print("MAE  per class:", {k: round(v, 4) for k, v in reg.mae_per_dim.items()})
+        print(metrics)
+        # worst 5 pairs by accuracy (ascending), ignoring NaNs
+        pair_acc = [
+            (p, a) for p, a in metrics.classification.per_pair_acc.items()
+        ]
+        pair_acc.sort(key=lambda x: x[1])
+        worst_pairs = pair_acc[:5]
+        print("Worst pairs (acc):", {p: round(a, 4) for p, a in worst_pairs})
 
     @torch.no_grad()
     def evaluate(self) -> MultiTaskMetrics:
@@ -235,21 +229,26 @@ class MultiTaskTrainer:
 
         self.model.eval()
 
-        num_dims = 6  # squares, circles, up, right, down, left
-        num_values = self.values_max - self.values_min + 1
-        num_pairs = num_dims * (num_dims - 1) // 2  # C(6, 2) = 15
-
-        # --------- Accumulators for losses ----------
+        # --------- Accumulators ----------
         total_samples = 0
         sum_loss = MultiTaskLossOutput(total=0.0, cls=0.0, reg=0.0)
-        sum_cls_metrics = ClassificationMetrics()
-        sum_reg_metrics = RegressionMetrics()
 
-        # --------- Classification metrics ----------
-        correct_top1 = 0
-        all_true = []  # list of 1D tensors with true config IDs
-        all_pred = []  # list of 1D tensors with predicted config IDs
+        pair_names = []
+        num_values = self.values_max - self.values_min + 1
+        for i, name_i in enumerate(TARGET_COL_NAMES):
+            for j in range(i + 1, len(TARGET_COL_NAMES)):
+                name_j = TARGET_COL_NAMES[j]
+                pair_names.append(f"{name_i}+{name_j}")
 
+        cls_metrics = ClassificationMetrics.accumulator(
+            pair_names=pair_names,
+            num_values=num_values,
+            values_min=self.values_min,
+            values_max=self.values_max,
+        )
+        reg_metrics = RegressionMetrics.accumulator(
+            target_names=TARGET_COL_NAMES, device=self.device
+        )
 
         for images, count_targets in self.testloader:
             images = images.to(self.device)
@@ -263,18 +262,16 @@ class MultiTaskTrainer:
             loss_out = self.criterion(log_probs, counts_pred, count_targets)
             sum_loss += loss_out.scale(batch_size)
             
-            sum_cls_metrics.add_batch(log_probs, counts_pred, count_targets)
-            sum_reg_metrics.add_batch(log_probs, counts_pred, count_targets)
+            cls_metrics.add_batch(log_probs, counts_pred, count_targets)
+            reg_metrics.add_batch(counts_pred, count_targets)
 
         if total_samples == 0:
             raise RuntimeError("No samples in testloader.")
 
         sum_loss = sum_loss.scale(1.0 / total_samples)
-        sum_cls_metrics.aggregate()
-        sum_reg_metrics.aggregate()
 
         return MultiTaskMetrics(
             loss=sum_loss,
-            classification=sum_cls_metrics,
-            regression=sum_reg_metrics,
+            classification=cls_metrics.aggregate(),
+            regression=reg_metrics.aggregate(),
         )

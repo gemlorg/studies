@@ -2,10 +2,6 @@ from dnn_solver.types import MultiTaskLossOutput
 from dnn_solver.utils import counts_to_config_ids
 import torch.nn as nn
 from torch import Tensor
-
-# Allow custom (non-ipywidget) widgets.
-
-
 from typing import Literal
 
 
