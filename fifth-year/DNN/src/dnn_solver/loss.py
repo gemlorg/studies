@@ -1,7 +1,6 @@
 from dnn_solver.types import MultiTaskLossOutput
 from dnn_solver.utils import counts_to_config_ids
 import torch.nn as nn
-import torch.nn.functional as F
 from torch import Tensor
 
 # Allow custom (non-ipywidget) widgets.
@@ -37,8 +36,8 @@ class GSNMultiTaskLoss(nn.Module):
         lambda_cnt: float = 1.0,
         use_cls_loss: bool = True,
         reduction: Literal["mean", "sum", "none"] = "mean",
-        values_min: int = 2,
-        values_max: int = 8,
+        values_min: int = 1,
+        values_max: int = 9,
     ) -> None:
         super().__init__()
         self.lambda_cnt = float(lambda_cnt)
@@ -52,7 +51,7 @@ class GSNMultiTaskLoss(nn.Module):
 
     def forward(
         self,
-        cls_logits: Tensor,  # [B, 1]
+        log_probs: Tensor,  # [B, num_classes], already log-softmaxed
         counts_pred: Tensor,  # [B, 6]
         count_targets: Tensor,  # [B, 6]
     ) -> MultiTaskLossOutput:
@@ -60,8 +59,8 @@ class GSNMultiTaskLoss(nn.Module):
         Compute multitask loss.
 
         Args:
-            cls_logits:
-                Raw (un-normalized) scores from classification head, shape [B, C].
+            log_probs:
+                Log-probabilities from classification head, shape [B, C].
             counts_pred:
                 Predicted counts from regression head, shape [B, 6].
             count_targets:
@@ -75,13 +74,23 @@ class GSNMultiTaskLoss(nn.Module):
             raise ValueError(
                 f"Expected count_targets of shape [B, 6], got {tuple(count_targets.shape)}"
             )
-        if cls_logits.ndim != 2 or cls_logits.size(1) != 105:
+        if log_probs.ndim != 2:
             raise ValueError(
-                f"Expected cls_logits of shape [B, 105], got {tuple(cls_logits.shape)}"
+                f"Expected log_probs of shape [B, C], got {tuple(log_probs.shape)}"
             )
         if counts_pred.ndim != 2 or counts_pred.size(1) != 6:
             raise ValueError(
                 f"Expected counts_pred of shape [B, 6], got {tuple(counts_pred.shape)}"
+            )
+
+        # Compute how many config classes we expect for the chosen value range.
+        num_dims = count_targets.size(1)
+        num_pairs = num_dims * (num_dims - 1) // 2
+        expected_num_classes = num_pairs * (self.values_max - self.values_min + 1)
+        if log_probs.size(1) != expected_num_classes:
+            raise ValueError(
+                f"Expected log_probs second dim {expected_num_classes} for value range "
+                f"[{self.values_min},{self.values_max}], got {log_probs.size(1)}"
             )
 
         # 1) Compute configuration IDs from counts.
@@ -91,14 +100,16 @@ class GSNMultiTaskLoss(nn.Module):
             values_max=self.values_max,
         )  # [B]
 
-        # 2) Classification loss: NLL over log-softmaxed logits.
-        log_probs = F.log_softmax(cls_logits, dim=1)  # [B, num_classes]
-        loss_cls = self._cls_loss(log_probs, config_ids)
+        # 2) Classification loss: NLL over provided log-probs.
+        if self.use_cls_loss:
+            loss_cls = self._cls_loss(log_probs, config_ids)
+        else:
+            loss_cls = counts_pred.new_zeros(())
 
         # 3) Regression loss over the raw counts.
         loss_reg = self._reg_loss(counts_pred, count_targets)
 
         # 4) Total multitask loss.
-        loss_total = loss_cls  + self.lambda_cnt * loss_reg
+        loss_total = loss_cls * int(self.use_cls_loss) + self.lambda_cnt * loss_reg
 
         return MultiTaskLossOutput(total=loss_total, cls=loss_cls, reg=loss_reg)

@@ -7,8 +7,8 @@ from torch import Tensor
 def counts_to_config_ids(
     count_targets: Tensor,
     *,
-    values_min: int = 2,  # Updated default to match dataset (1-9)
-    values_max: int = 8,  # Updated default to match dataset (1-9)
+    values_min: int = 1,
+    values_max: int = 9,
 ) -> Tensor:
     """
     Map per-sample 6D counts -> scalar configuration IDs.

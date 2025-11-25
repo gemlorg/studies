@@ -41,6 +41,35 @@ class MultiTaskLossOutput:
     cls: Tensor
     reg: Tensor
 
+    def __add__(self, other: object) -> "MultiTaskLossOutput":
+        """
+        Support elementwise addition so callers can accumulate losses without
+        manually constructing dicts. Non-MultiTaskLossOutput operands return
+        NotImplemented to allow Python to fall back to other __radd__.
+        """
+        if not isinstance(other, MultiTaskLossOutput):
+            return NotImplemented
+        return MultiTaskLossOutput(
+            total=self.total + other.total,
+            cls=self.cls + other.cls,
+            reg=self.reg + other.reg,
+        )
+
+    def __radd__(self, other: object) -> "MultiTaskLossOutput":
+        """
+        Allow use with built-ins like sum(); treat 0 as the neutral element.
+        """
+        if other == 0:
+            return self
+        return self.__add__(other)
+    def scale(self, factor: float) -> "MultiTaskLossOutput":
+        """Scale all loss components by the given factor."""
+        return MultiTaskLossOutput(
+            total=self.total * factor,
+            cls=self.cls * factor,
+            reg=self.reg * factor,
+        )
+
 
 @dataclass
 class ClassificationMetrics:
@@ -65,8 +94,6 @@ class RegressionMetrics:
 class MultiTaskMetrics:
     """Top-level container returned by `MultiTaskTrainer.evaluate`."""
 
-    loss_total: float
-    loss_cls: float
-    loss_reg: float
+    loss: MultiTaskLossOutput
     classification: ClassificationMetrics
     regression: RegressionMetrics
