@@ -147,7 +147,7 @@ class MultiTaskTrainer:
             raise RuntimeError("No evaluation history to plot. Run train() first.")
 
         epochs = list(range(1, len(self.eval_history) + 1))
-        name_suffix = f"lambda{self.lambda_cnt}_cls{int(self.use_cls_loss)}_reg{int(self.lambda_cnt != 0)}"
+        name_suffix = f"lambda{self.lambda_cnt}_cls{int(self.use_cls_loss)}"
 
         to_float = lambda x: float(x.detach().cpu()) if hasattr(x, "detach") else float(x)
         train_totals = [to_float(e.total) for e in self.train_epoch_losses]
@@ -199,6 +199,14 @@ class MultiTaskTrainer:
         if save_dir:
             plt.close()
 
+        # --- Confusion matrix for the best model ---
+        if self.best_eval and self.best_eval.classification.confusion_matrix is not None:
+            self._plot_confusion_matrix(
+                self.best_eval.classification.confusion_matrix,
+                name_suffix=name_suffix,
+                save_dir=save_dir,
+            )
+
     def _print_final_metrics(self, metrics: MultiTaskMetrics) -> None:
         """Pretty-print the final (best) metrics."""
         print("\n=== Final (best) metrics ===")
@@ -210,6 +218,32 @@ class MultiTaskTrainer:
         pair_acc.sort(key=lambda x: x[1])
         worst_pairs = pair_acc[:5]
         print("Worst pairs (acc):", {p: round(a, 4) for p, a in worst_pairs})
+
+    def _plot_confusion_matrix(
+        self,
+        cm: torch.Tensor,
+        *,
+        name_suffix: str,
+        save_dir: Optional[str] = None,
+    ) -> None:
+        """Plot and optionally save the row-normalized confusion matrix."""
+        cm_np = cm.detach().cpu().numpy()
+        plt.figure(figsize=(8, 6))
+        vmax = min(0.5, float(cm_np.max()))
+        plt.imshow(cm_np, cmap="magma", vmin=0.0, vmax=vmax if vmax > 0 else None)
+        plt.colorbar()
+        plt.xlabel("Predicted configuration ID")
+        plt.ylabel("True configuration ID")
+        plt.title("Validation Confusion Matrix (row-normalized)")
+        if save_dir:
+            os.makedirs(save_dir, exist_ok=True)
+            plt.savefig(
+                os.path.join(save_dir, f"confusion_matrix_{name_suffix}.png"),
+                bbox_inches="tight",
+            )
+        plt.show()
+        if save_dir:
+            plt.close()
 
     @torch.no_grad()
     def evaluate(self) -> MultiTaskMetrics:

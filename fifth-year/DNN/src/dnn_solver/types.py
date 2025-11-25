@@ -22,15 +22,11 @@ class GaussianNoiseAugmentationConfig(BaseModel):
     probability: float = 0.3
 
 class BrightnessContrastAugmentationConfig(BaseModel):
-    brightness: float = 0.1  # factor sampled from [1 - b, 1 + b]
-    contrast: float = 0.1    # factor sampled from [1 - c, 1 + c]
+    brightness: float = 0.1
+    contrast: float = 0.1
     probability: float = 0.3
 
 
-class RandomDeleteAugmentationConfig(BaseModel):
-    probability: float = 0.3
-    scale: Tuple[float, float] = (0.02, 0.1)
-    ratio: Tuple[float, float] = (0.3, 3.3)
 
 
 class DataAugmentationConfig(BaseModel):
@@ -38,7 +34,6 @@ class DataAugmentationConfig(BaseModel):
     rotation: Optional[RotationAugmentationConfig] = RotationAugmentationConfig()
     gaussian_noise: Optional[GaussianNoiseAugmentationConfig] = GaussianNoiseAugmentationConfig()
     brightness_contrast: Optional[BrightnessContrastAugmentationConfig] = BrightnessContrastAugmentationConfig()
-    random_delete: Optional[RandomDeleteAugmentationConfig] = RandomDeleteAugmentationConfig()
 
 @dataclass
 class MultiTaskLossOutput:
@@ -91,16 +86,14 @@ class ClassificationMetrics:
     top1_acc: float = 0.0
     macro_f1: float = 0.0
     per_pair_acc: Dict[str, float] = None
+    # Row-normalized confusion matrix over configuration IDs.
+    confusion_matrix: Optional[Tensor] = None
 
     # Internal accumulators 
     _pair_names: List[str] = None
     _num_values: int = 0
     _values_min: int = 1
     _values_max: int = 9
-    _correct_top1: int = 0
-    _total_samples: int = 0
-    _pair_correct: List[int] = None
-    _pair_count: List[int] = None
     _all_true: List[Tensor] = None
     _all_pred: List[Tensor] = None
 
@@ -118,10 +111,6 @@ class ClassificationMetrics:
             _num_values=num_values,
             _values_min=values_min,
             _values_max=values_max,
-            _correct_top1=0,
-            _total_samples=0,
-            _pair_correct=[0 for _ in pair_names],
-            _pair_count=[0 for _ in pair_names],
             _all_true=[],
             _all_pred=[],
         )
@@ -134,9 +123,6 @@ class ClassificationMetrics:
     ) -> None:
         from dnn_solver.utils import counts_to_config_ids
 
-        batch_size = count_targets.size(0)
-        self._total_samples += batch_size
-
         config_ids = counts_to_config_ids(
             count_targets,
             values_min=self._values_min,
@@ -144,42 +130,49 @@ class ClassificationMetrics:
         )  # [B]
         preds = log_probs.argmax(dim=1)  # [B]
 
-        self._correct_top1 += int((preds == config_ids).sum().item())
         self._all_true.append(config_ids.detach().cpu())
         self._all_pred.append(preds.detach().cpu())
-
-        pair_true = (config_ids // self._num_values).detach().cpu()  # [B]
-        pair_pred = (preds // self._num_values).detach().cpu()  # [B]
-        for k in range(len(self._pair_names)):
-            mask_k = pair_true == k
-            n_k = int(mask_k.sum().item())
-            if n_k == 0:
-                continue
-            self._pair_count[k] += n_k
-            self._pair_correct[k] += int((pair_pred[mask_k] == k).sum().item())
 
     def aggregate(self) -> "ClassificationMetrics":
         from sklearn.metrics import f1_score
 
-        if self._total_samples == 0:
+        if not self._all_true:
             raise RuntimeError("No samples accumulated for classification metrics.")
 
-        acc_top1 = float(self._correct_top1 / self._total_samples)
-        y_true = torch.cat(self._all_true).numpy()
-        y_pred = torch.cat(self._all_pred).numpy()
+        y_true_t = torch.cat(self._all_true)
+        y_pred_t = torch.cat(self._all_pred)
+
+        acc_top1 = float((y_true_t == y_pred_t).float().mean().item())
+        y_true = y_true_t.numpy()
+        y_pred = y_pred_t.numpy()
         macro_f1 = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
 
         per_pair_acc: Dict[str, float] = {}
+        pair_true = (y_true_t // self._num_values)
+        pair_pred = (y_pred_t // self._num_values)
         for k, pname in enumerate(self._pair_names):
-            if self._pair_count[k] > 0:
-                per_pair_acc[pname] = float(self._pair_correct[k] / self._pair_count[k])
-            else:
+            mask = pair_true == k
+            count_k = int(mask.sum().item())
+            if count_k == 0:
                 per_pair_acc[pname] = float("nan")
+            else:
+                per_pair_acc[pname] = float((pair_pred[mask] == k).float().mean().item())
+
+        # Full 135-way (or fewer) confusion matrix, row-normalized.
+        from sklearn.metrics import confusion_matrix
+        num_classes = len(self._pair_names) * self._num_values
+        cm = confusion_matrix(
+            y_true,
+            y_pred,
+            labels=list(range(num_classes)),
+            normalize="true",
+        )
 
         return ClassificationMetrics(
             top1_acc=acc_top1,
             macro_f1=macro_f1,
             per_pair_acc=per_pair_acc,
+            confusion_matrix=torch.tensor(cm, dtype=torch.float32),
         )
 
     def __str__(self) -> str:
@@ -206,36 +199,35 @@ class RegressionMetrics:
     mae_per_dim: Dict[str, float] = None
 
     # Internal accumulators
-    _sum_sq_err: Tensor = None
-    _sum_abs_err: Tensor = None
-    _total_samples: int = 0
     _target_names: List[str] = None
+    _preds: List[Tensor] = None
+    _targets: List[Tensor] = None
 
     @classmethod
     def accumulator(cls, target_names: List[str], device: torch.device) -> "RegressionMetrics":
-        num_dims = len(target_names)
         return cls(
             rmse_per_dim={},
             mae_per_dim={},
-            _sum_sq_err=torch.zeros(num_dims, device=device),
-            _sum_abs_err=torch.zeros(num_dims, device=device),
-            _total_samples=0,
             _target_names=target_names,
+            _preds=[],
+            _targets=[],
         )
 
     def add_batch(self, counts_pred: Tensor, count_targets: Tensor) -> None:
-        diff = counts_pred - count_targets  # [B, 6]
-        self._sum_sq_err += (diff ** 2).sum(dim=0)
-        self._sum_abs_err += diff.abs().sum(dim=0)
-        self._total_samples += counts_pred.size(0)
+        self._preds.append(counts_pred.detach().cpu())
+        self._targets.append(count_targets.detach().cpu())
 
     def aggregate(self) -> "RegressionMetrics":
-        if self._total_samples == 0:
+        if not self._preds:
             raise RuntimeError("No samples accumulated for regression metrics.")
-        rmse_per_dim = torch.sqrt(self._sum_sq_err / self._total_samples)
-        mae_per_dim = self._sum_abs_err / self._total_samples
 
-        rmse_overall = float(torch.sqrt((self._sum_sq_err / self._total_samples).mean()).item())
+        preds = torch.cat(self._preds)
+        targets = torch.cat(self._targets)
+        diff = preds - targets
+        rmse_per_dim = torch.sqrt((diff ** 2).mean(dim=0))
+        mae_per_dim = diff.abs().mean(dim=0)
+
+        rmse_overall = float(rmse_per_dim.mean().item())
         mae_overall = float(mae_per_dim.mean().item())
 
         rmse_per_dim_dict = {

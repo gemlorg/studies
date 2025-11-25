@@ -6,26 +6,6 @@ from typing import Literal
 
 
 class GSNMultiTaskLoss(nn.Module):
-    """
-    Multitask loss for Graph ShapeNet-style counting.
-
-    - Classification head predicts a configuration over shape/count patterns.
-    - Regression head predicts the 6 raw counts.
-    - The ground-truth labels are ONLY the 6D counts; configuration IDs are
-      computed internally from those counts.
-
-    Args
-    ----
-    lambda_cnt:
-        Weight for the regression (count) loss term.
-    reduction:
-        Reduction applied to individual NLL and SmoothL1 losses.
-        One of {"mean", "sum", "none"}.
-    values_min:
-        Minimum non-zero count value used in the configuration encoding.
-    values_max:
-        Maximum non-zero count value used in the configuration encoding.
-    """
 
     def __init__(
         self,
@@ -51,21 +31,6 @@ class GSNMultiTaskLoss(nn.Module):
         counts_pred: Tensor,  # [B, 6]
         count_targets: Tensor,  # [B, 6]
     ) -> MultiTaskLossOutput:
-        """
-        Compute multitask loss.
-
-        Args:
-            log_probs:
-                Log-probabilities from classification head, shape [B, C].
-            counts_pred:
-                Predicted counts from regression head, shape [B, 6].
-            count_targets:
-                Ground-truth counts, shape [B, 6].
-
-        Returns:
-            MultiTaskLossOutput with total / cls / reg components.
-            You typically do: `loss = criterion(...).total`
-        """
         if count_targets.ndim != 2 or count_targets.size(1) != 6:
             raise ValueError(
                 f"Expected count_targets of shape [B, 6], got {tuple(count_targets.shape)}"

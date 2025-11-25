@@ -48,45 +48,6 @@ class BrightnessContrastAugmentation:
         return img, target
 
 
-class RandomDeleteAugmentation:
-    """
-    Random erasing of a small rectangle.
-    """
-
-    def __init__(
-        self,
-        probability: float = 0.3,
-        scale: Tuple[float, float] = (0.02, 0.1),
-        ratio: Tuple[float, float] = (0.3, 3.3),
-    ):
-        self.probability = probability
-        self.scale = scale
-        self.ratio = ratio
-
-    def __call__(
-        self, img: torch.Tensor, target: torch.Tensor
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
-        if torch.rand(()) >= self.probability:
-            return img, target
-
-        _, h, w = img.shape
-        area = h * w
-        target_area = float(torch.empty(()).uniform_(self.scale[0], self.scale[1])) * area
-        log_ratio = (math.log(self.ratio[0]), math.log(self.ratio[1]))
-        aspect = math.exp(float(torch.empty(()).uniform_(log_ratio[0], log_ratio[1])))
-
-        erase_h = int(round(math.sqrt(target_area * aspect)))
-        erase_w = int(round(math.sqrt(target_area / aspect)))
-
-        if erase_h < 1 or erase_w < 1 or erase_h >= h or erase_w >= w:
-            return img, target
-
-        top = int(torch.randint(0, h - erase_h + 1, ()).item())
-        left = int(torch.randint(0, w - erase_w + 1, ()).item())
-        img = img.clone()
-        img[:, top : top + erase_h, left : left + erase_w] = 0.0
-        return img, target
-
 
 class FlipAugmentation:
     def __init__(
@@ -188,14 +149,6 @@ class DataAugmentation:
                     brightness=config.brightness_contrast.brightness,
                     contrast=config.brightness_contrast.contrast,
                     probability=config.brightness_contrast.probability,
-                )
-            )
-        if config.random_delete:
-            self.augmentations.append(
-                RandomDeleteAugmentation(
-                    probability=config.random_delete.probability,
-                    scale=config.random_delete.scale,
-                    ratio=config.random_delete.ratio,
                 )
             )
 
