@@ -59,17 +59,34 @@ The reason head_cnt has a smaller dropout probability is that it's already very 
 - **Exp B.2 (multitask)**: λ_cnt=1, continue training the model from B but with multitasking
 - **Exp C (multitask)**: λ_cnt=1, both losses active (best run).
 
-## Results (validation)
+## Results 
 
-**Experiment summary**
+**Experiment Results**
 
-| setting | λ_cnt | cls loss | val loss_total | top-1 acc | macro F1 | RMSE overall | MAE overall |  |
-| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Exp A: cls-only | 0.0 | on | 4.6556 | 0.0110 | 0.0002 | 3.1087 | 1.6667 |  |
-| Exp B: reg-only | 1.0 | off | 0.1937 | 0.0110 | 0.0000 | n/a | n/a | |
-| Exp B.2: multitask | 1.0 | on | 0.1290 | 0.4950| 0.4414 | 0.5306 |0.2907  | |
-| Exp C: multitask | 1.0 | on | 1.5892 | 0.4870 | 0.4548 | 0.6341 | 0.3540 |  |
-
+Exp. A: 
+```
+[Loss] loss_total=4.6562, loss_cls=4.6562, loss_reg=1.5000; 
+[Classification] top1=0.0110, macro_f1=0.0002, lowest_acc_pairs={'squares+up': 0.0, 'squares+right': 0.0, 'squares+down': 0.0, 'squares+left': 0.0, 'circles+up': 0.0}; 
+[Regression] rmse_overall=3.1087, mae_overall=1.6667, rmse_per_dim={'squares': 3.0966, 'circles': 3.0976, 'up': 3.1672, 'right': 3.1826, 'down': 3.0674, 'left': 3.0406}, mae_per_dim={'squares': 1.651, 'circles': 1.659, 'up': 1.719, 'right': 1.701, 'down': 1.631, 'left': 1.639}
+```
+Exp. B:
+```
+[Loss] loss_total=0.1451, loss_cls=4.6540, loss_reg=0.1451; 
+[Classification] top1=0.0110, macro_f1=0.0002, lowest_acc_pairs={'squares+up': 0.0, 'squares+right': 0.0, 'squares+down': 0.0, 'squares+left': 0.0, 'circles+up': 0.0}; 
+[Regression] rmse_overall=0.5854, mae_overall=0.3169, rmse_per_dim={'squares': 0.4799, 'circles': 0.4689, 'up': 0.6091, 'right': 0.7107, 'down': 0.6228, 'left': 0.6209}, mae_per_dim={'squares': 0.2768, 'circles': 0.2586, 'up': 0.3418, 'right': 0.3624, 'down': 0.3283, 'left': 0.3333}
+```
+Exp. B.2:
+```
+[Loss] loss_total=1.4216, loss_cls=1.2905, loss_reg=0.1312; 
+[Classification] top1=0.4950, macro_f1=0.4636, lowest_acc_pairs={'squares+up': 0.9143, 'squares+down': 0.9219, 'right+left': 0.9242, 'up+left': 0.9385, 'right+down': 0.9516}; 
+[Regression] rmse_overall=0.5514, mae_overall=0.3025, rmse_per_dim={'squares': 0.4646, 'circles': 0.4573, 'up': 0.6348, 'right': 0.5767, 'down': 0.5467, 'left': 0.6282}, mae_per_dim={'squares': 0.2559, 'circles': 0.2564, 'up': 0.3385, 'right': 0.3241, 'down': 0.2909, 'left': 0.3493}
+```
+Exp. C:
+```
+[Loss] loss_total=1.3758, loss_cls=1.2271, loss_reg=0.1487; 
+[Classification] top1=0.5110, macro_f1=0.4827, lowest_acc_pairs={'right+down': 0.9032, 'up+left': 0.9077, 'squares+left': 0.9275, 'down+left': 0.9333, 'squares+right': 0.9365}; 
+[Regression] rmse_overall=0.5938, mae_overall=0.3348, rmse_per_dim={'squares': 0.4989, 'circles': 0.6135, 'up': 0.5868, 'right': 0.6206, 'down': 0.5914, 'left': 0.6515}, mae_per_dim={'squares': 0.2879, 'circles': 0.3605, 'up': 0.3156, 'right': 0.3439, 'down': 0.3374, 'left': 0.3637}
+```
 
 **Per-shape regression metrics (Exp C, best model)**
 
@@ -109,4 +126,8 @@ I find the results conclusive:
 - The regression works well by itself, and doesn't really need classification. 
 - When combined, the regression part allows for much easier training of the classification part.
 - The best result was achieved when combining the only-regression loss with the multiclass clasification afterwards. 
-- What's interesting is that MRSE stayed above 0.5 the entire time, which would imply that the accuracy gotten from rounding the regression outputs wouldn't be better if not worse than the classification results. 
+- What's interesting is that MRSE stayed above 0.5 the entire time, which would imply that the accuracy gotten from rounding the regression outputs wouldn't be better if not worse than the classification results.
+
+Per class results observation (because I dont know what to do with them):
+- Some shape pairs were most confusing than others, squares + up were confused with up+down.
+- Triangle left and triangle right were the hardest to regress.
