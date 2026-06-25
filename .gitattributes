@@ -1,4 +1,10 @@
 *.css linguist-detectable=false
 *.html linguist-detectable=false
 *.ipynb linguist-detectable=false
+# TeX family (incl. .ins = Instant-language test files, misdetected as TeX)
 *.tex linguist-detectable=false
+*.ins linguist-detectable=false
+*.cls linguist-detectable=false
+*.bib linguist-detectable=false
+*.toc linguist-detectable=false
+*.aux linguist-detectable=false
