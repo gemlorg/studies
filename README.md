@@ -1,5 +1,20 @@
-# Studies at MIMUW 
+# Studies at MIMUW
 
-This repo contains the code for the assignments i had to complete in 2021-24 while studying at the University of Warsaw. It is important to mention that some of the projects where group projects and were completed with the help of my colleagues. All of the assignment descriptions were borrowed from the university website and translated. 
+Code and projects from my Computer Science studies at the University of Warsaw
+(MIMUW), 2021–2026 — undergraduate (years 1–3) and graduate (years 4–5).
 
-<strong> Please feel free to copy and use the code presented here however you like. <strong>
+Some of these were group projects completed together with colleagues. Assignment
+descriptions are borrowed from the university course pages and, where needed,
+translated.
+
+## Layout
+
+The repository is organised by year, then by course:
+
+- **first-year** — introduction to programming, object-oriented programming, individual programming project
+- **second-year** — algorithms and data structures, computer networks, databases, GPU programming, operating systems, software engineering, web applications
+- **third-year** — concurrent programming, computer networks security, Haskell, introduction to ML, languages and paradigms, numerical methods seminar, team programming project
+- **fourth-year** — automata theory II, compiling languages, computational complexity, distributed systems, internet engineering (online grocery shop), Petri nets
+- **fifth-year** — automata, logic and games, deep neural networks
+
+Please feel free to copy and use any of the code here however you like.
