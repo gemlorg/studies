@@ -21,3 +21,7 @@ There were three large assignments:
 - [`assignment-1-converter/`](assignment-1-converter/) — the AArch64 → x86-64 object-file converter.
 - [`assignment-2-compressor/`](assignment-2-compressor/) — the BPF compressibility analyzer (kernel patch).
 - [`assignment-3-acceldev/`](assignment-3-acceldev/) — the `acceldev` PCI driver.
+
+Each folder keeps the original submission's `README.md` and an `ASSIGNMENT.md` with the assignment
+statement from the course website. Assignment 2 shipped its solution notes as `description.txt`
+rather than a README.
