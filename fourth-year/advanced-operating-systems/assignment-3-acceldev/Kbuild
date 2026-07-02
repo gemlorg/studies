@@ -1,0 +1,2 @@
+obj-m := acceldev.o
+acceldev-objs := acceldev_buffer.o acceldev_driver.o acceldev_fops.o acceldev_ioctl.o acceldev_pci.o acceldev_utils.o acceldev_cmds.o acceldev_executor.o

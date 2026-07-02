@@ -14,7 +14,7 @@ The repository is organised by year, then by course:
 - **first-year** — introduction to programming, object-oriented programming, individual programming project
 - **second-year** — algorithms and data structures, computer networks, databases, GPU programming, operating systems, software engineering, web applications
 - **third-year** — concurrent programming, computer networks security, Haskell, introduction to ML, languages and paradigms, numerical methods seminar, team programming project
-- **fourth-year** — automata theory II, compiling languages, computational complexity, distributed systems, internet engineering (online grocery shop), Petri nets
+- **fourth-year** — advanced operating systems, automata theory II, compiling languages, computational complexity, distributed systems, internet engineering (online grocery shop), Petri nets
 - **fifth-year** — automata, logic and games, deep neural networks
 
 Please feel free to copy and use any of the code here however you like.
