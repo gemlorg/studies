@@ -1,0 +1,235 @@
+--- File: ./data-x64.c ---
+#include <stdio.h>
+
+extern long long buf[];
+extern long long size;
+extern int check(void);
+
+int real_main(void) {
+	for (long long i = 0; i < size; i++)
+		buf[i] = i;
+	if (check() != 0)
+		return -1;
+	printf("OK\n");
+	return 0;
+}
+
+--- File: ./recurse-x64.c ---
+#include <stdio.h>
+#define MAXDEPTH 4
+extern int r_aarch64(int, int*);
+
+int is_16_aligned(int* ptr) {
+	return !(((long) ptr) & 0xf);
+}
+
+int r_x86_64(int depth) {
+	int test __attribute__((aligned(16)));
+
+	if (depth == MAXDEPTH) {
+		return 0;
+	} else
+		return r_aarch64(depth + 1, &test);
+}
+
+int real_main(void) {
+	if(r_x86_64(0) != 0)
+		return -1;
+
+	printf("OK\n");
+	return 0;
+}
+
+--- File: ./data-relocation-x64.c ---
+#include <stdio.h>
+
+int answer = 3;
+
+extern int set_answer(void);
+
+int real_main(void) {
+	set_answer();
+	if (answer != 42)
+		return -1;
+	printf("OK\n");
+	return 0;
+}
+
+--- File: ./multiargs-aarch64.c ---
+#include "multiargs.h"
+extern void validate_neg(long, long, long long, long long);
+extern void validate(int, long, long long, unsigned int, unsigned long, unsigned long long);
+extern void validate_ptr(void*);
+
+// This function returns int, because GCC seems to insert a nop before the epilogue of a void function
+int check(void) {
+	validate_neg(L1, -L1, L1, -L1);
+	validate_ptr((void*) (1L<<31));
+	validate(I1, L1, LL1, U1, UL1, ULL1);
+	return 0;
+}
+
+--- File: ./rodata-aarch64.c ---
+const long long answer = 42;
+
+--- File: ./rodata-x64.c ---
+#include <stdio.h>
+
+extern long long answer;
+
+int real_main(void) {
+	if (answer != 42)
+		return -1;
+	printf("OK\n");
+	return 0;
+}
+
+--- File: ./data-relocation-aarch64.c ---
+extern int answer;
+int* answer_ptr = &answer;
+
+int set_answer(void) {
+    *answer_ptr = 42;
+    return 0;
+}
+
+--- File: ./loop-x64.c ---
+#include <stdio.h>
+
+extern int fib(int);
+
+int real_main(void) {
+	if (fib(10) != 55)
+		return -1;
+	printf("OK\n");
+	return 0;
+}
+
+--- File: ./common.c ---
+extern int real_main(void);
+
+int main(void) {
+	return real_main();
+}
+
+--- File: ./loop-aarch64.c ---
+int fib(int n) {
+	int a = 0;
+	int b = 1;
+    int i = 0;
+	while (i < n) {
+        int tmp = a + b;
+        a = b;
+        b = tmp;
+
+        tmp = i;
+        i = tmp + 1;
+	}
+	return a;
+}
+
+--- File: ./multifunc-aarch64.c ---
+// int add_numbers(int a, int b) { return a + b; }
+
+int subtract_numbers(int x, int y) {
+  int result = x - y;
+  return result;
+}
+
+--- File: ./multifunc-x64.c ---
+#include <stdio.h>
+
+// extern int add_numbers(int, int);
+extern int subtract_numbers(int, int);
+
+int real_main(void) {
+  // int sum_res = add_numbers(25, 17);
+  int sub_res = subtract_numbers(50, 8);
+
+  // if (sum_res != 42) {
+  //   printf("got sum: %d", sum_res);
+  //   return -1;
+  // }
+
+  if (sub_res != 42) {
+    printf("got diff %d", sub_res);
+    return -1;
+  }
+
+  printf("OK\n");
+  return 0;
+}
+
+--- File: ./recurse-aarch64.c ---
+extern int r_x86_64(int);
+extern int is_16_aligned(int*);
+
+int r_aarch64(int depth, int *verify) {
+	int test __attribute__((aligned(16)));
+	if (is_16_aligned(verify) != 1)
+		return 1;
+
+	/* just pass */
+	return r_x86_64(depth);
+}
+
+--- File: ./multiargs-x64.c ---
+#include "multiargs.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+void validate_neg(long a, long na, long long b, long long nb) {
+	if (a != L1 || na != -L1 || b != L1 || nb != -L1)
+		exit(-1);
+}
+
+void validate_ptr(void *p) {
+	if (p != (void*) (1L << 31))
+		exit(1);
+}
+
+void validate(int i1, long l1, long long ll1,
+		unsigned int ui1, unsigned long ul1, unsigned long long ull1) {
+	if (i1 == I1 && l1 == L1 && ll1 == LL1 && ui1 == U1 && ul1 == UL1 && ull1 == ULL1)
+		printf("OK\n");
+	else
+		exit(-1);
+}
+
+extern void check(void);
+
+int real_main(void) {
+	check();
+	return 0;
+}
+
+--- File: ./data-aarch64.c ---
+long long buf[13];
+long long size = 13;
+
+int check(void) {
+  long long i = 0;
+  long long tmp1 = 0;
+  long long tmp2 = 0;
+  while (i < size) {
+    long long offset = i;
+    tmp1 = offset;
+    tmp2 = tmp1 + offset;
+    offset = tmp2;
+    tmp1 = offset;
+    tmp2 = tmp1 + offset;
+    offset = tmp2;
+    tmp1 = offset;
+    tmp2 = tmp1 + offset;
+    offset = tmp2;
+
+    long long *buf_tmp = buf;
+    long long *elem = (long long *)(((char *)buf_tmp) + offset);
+    if (*elem != i)
+      return -1;
+    tmp1 = i + 1;
+    i = tmp1;
+  }
+  return 0;
+}
+

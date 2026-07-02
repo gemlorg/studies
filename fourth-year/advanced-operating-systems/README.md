@@ -18,6 +18,6 @@ There were three large assignments:
 
 ## Contents
 
-- [`assignment-3-acceldev/`](assignment-3-acceldev/) — the `acceldev` PCI driver (assignment 3).
-
-Assignments 1 and 2 are not included here.
+- [`assignment-1-converter/`](assignment-1-converter/) — the AArch64 → x86-64 object-file converter.
+- [`assignment-2-compressor/`](assignment-2-compressor/) — the BPF compressibility analyzer (kernel patch).
+- [`assignment-3-acceldev/`](assignment-3-acceldev/) — the `acceldev` PCI driver.

@@ -1,0 +1,825 @@
+From 98486bf802bd6d55488985a3c0be55c897e783b4 Mon Sep 17 00:00:00 2001
+From: lgemlorg <heorhii.lopatin@dotdata.com>
+Date: Sun, 11 May 2025 17:34:02 +0200
+Subject: [PATCH] add compressor
+
+---
+ arch/x86/entry/syscalls/syscall_64.tbl |   4 +-
+ fs/file_table.c                        |   3 +
+ fs/open.c                              |  21 +++
+ fs/read_write.c                        |  94 ++++++++++
+ include/linux/bpf.h                    |   2 +
+ include/linux/bpf_compressor.h         |  35 ++++
+ include/linux/bpf_types.h              |   2 +
+ include/linux/compressor_hook_defs.h   |  18 ++
+ include/linux/fs.h                     |   3 +
+ include/linux/syscalls.h               |   2 +
+ include/uapi/asm-generic/unistd.h      |   7 +-
+ include/uapi/linux/bpf.h               |   4 +
+ kernel/bpf/Makefile                    |   1 +
+ kernel/bpf/bpf_compressor.c            | 242 +++++++++++++++++++++++++
+ kernel/bpf/syscall.c                   |  13 +-
+ kernel/bpf/trampoline.c                |  10 +-
+ kernel/bpf/verifier.c                  |  17 +-
+ 17 files changed, 471 insertions(+), 7 deletions(-)
+ create mode 100644 include/linux/bpf_compressor.h
+ create mode 100644 include/linux/compressor_hook_defs.h
+ create mode 100644 kernel/bpf/bpf_compressor.c
+
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 7093ee21c..e9ed62703 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -385,7 +385,9 @@
+ 459	common	lsm_get_self_attr	sys_lsm_get_self_attr
+ 460	common	lsm_set_self_attr	sys_lsm_set_self_attr
+ 461	common	lsm_list_modules	sys_lsm_list_modules
+-462 	common  mseal			sys_mseal
++462 common  mseal			sys_mseal
++463 common  get_compression_stats sys_get_compression_stats
++464 common  reset_compression_stats sys_reset_compression_stats
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/fs/file_table.c b/fs/file_table.c
+index eed5ffad9..bb62d746c 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -167,6 +167,9 @@ static int init_file(struct file *f, int flags, const struct cred *cred)
+ 	mutex_init(&f->f_pos_lock);
+ 	f->f_flags = flags;
+ 	f->f_mode = OPEN_FMODE(flags);
++	f->f_do_compress = false;
++	f->f_bcompressed = 0;
++	f->f_bwritten = 0;
+ 	/* f->f_version: 0 */
+ 
+ 	/*
+diff --git a/fs/open.c b/fs/open.c
+index 5da4df2f9..e30973828 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -33,6 +33,7 @@
+ #include <linux/compat.h>
+ #include <linux/mnt_idmapping.h>
+ #include <linux/filelock.h>
++#include <linux/bpf_compressor.h>
+ 
+ #include "internal.h"
+ 
+@@ -1396,6 +1397,23 @@ struct file *file_open_root(const struct path *root,
+ }
+ EXPORT_SYMBOL(file_open_root);
+ 
++#ifdef CONFIG_BPF_SYSCALL
++static void do_compressor_decide(struct file *f)
++{
++	struct compress_ctx_kern ctx;
++	int decision;
++
++	ctx.buf = NULL;
++	ctx.ctx.uid = current_uid();
++	ctx.ctx.gid = current_gid();
++
++	decision = bpf_compressor_decide(&ctx.ctx);
++	spin_lock(&f->f_lock);
++	f->f_do_compress = decision > 0;
++	spin_unlock(&f->f_lock);
++}
++#endif
++
+ static long do_sys_openat2(int dfd, const char __user *filename,
+ 			   struct open_how *how)
+ {
+@@ -1418,6 +1436,9 @@ static long do_sys_openat2(int dfd, const char __user *filename,
+ 			fd = PTR_ERR(f);
+ 		} else {
+ 			fd_install(fd, f);
++#ifdef CONFIG_BPF_SYSCALL
++			do_compressor_decide(f);
++#endif
+ 		}
+ 	}
+ 	putname(tmp);
+diff --git a/fs/read_write.c b/fs/read_write.c
+index befec0b5c..d55cf7c88 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -20,6 +20,7 @@
+ #include <linux/compat.h>
+ #include <linux/mount.h>
+ #include <linux/fs.h>
++#include <linux/bpf_compressor.h>
+ #include "internal.h"
+ 
+ #include <linux/uaccess.h>
+@@ -660,6 +661,49 @@ ssize_t kernel_write(struct file *file, const void *buf, size_t count,
+ }
+ EXPORT_SYMBOL(kernel_write);
+ 
++#ifdef CONFIG_BPF_SYSCALL
++inline ssize_t do_compressor_verify_write(struct file *file, const char __user *buf, size_t count, loff_t *pos, ssize_t bytes_written) 
++{
++	struct compress_ctx_kern ctx;
++	ssize_t ret = 0;
++	void *kbuf;
++
++	if (bytes_written < 0)
++		return bytes_written;
++
++	kbuf = kvmalloc(count, GFP_KERNEL);
++	if (!kbuf) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (unlikely(copy_from_user(kbuf, buf, count))) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ctx.buf = kbuf;
++	ctx.ctx.offset = *pos - bytes_written;
++	ctx.ctx.size = count;
++	ret = bpf_compressor_verify(&(ctx.ctx));
++	if (ret < 0) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++cleanup:
++	kvfree(ctx.buf);
++out:
++	spin_lock(&file->f_lock);
++	if (bytes_written > 0) 
++		file->f_bwritten += bytes_written;
++	if (ret > 0) 
++		file->f_bcompressed += ret;
++	spin_unlock(&file->f_lock);
++
++	return ret < 0 ? ret : bytes_written;
++}
++#endif
++
+ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_t *pos)
+ {
+ 	ssize_t ret;
+@@ -688,6 +732,11 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+ 		add_wchar(current, ret);
+ 	}
+ 	inc_syscw(current);
++
++#ifdef CONFIG_BPF_SYSCALL
++	if (file->f_do_compress)
++		ret = do_compressor_verify_write(file, buf, count, pos, ret);
++#endif
+ 	file_end_write(file);
+ 	return ret;
+ }
+@@ -1032,12 +1081,49 @@ static ssize_t vfs_readv(struct file *file, const struct iovec __user *vec,
+ 	return ret;
+ }
+ 
++
++
++#ifdef CONFIG_BPF_SYSCALL
++static ssize_t do_loop_compressor_verify_writev(struct file *file, struct iov_iter *iter,
++		loff_t *ppos, ssize_t bytes_written)
++{
++	ssize_t ret = 0;
++	ssize_t nr = 0;
++	const char __user *buf;
++	ssize_t count;
++	ssize_t curr_bytes_written;
++	loff_t curr_pos = *ppos - bytes_written;
++	
++	if (bytes_written < 0)
++		return bytes_written;
++
++	while (iov_iter_count(iter)) {
++		buf = iter_iov_addr(iter);
++		count = iter_iov_len(iter);
++		curr_bytes_written = min(bytes_written, count);
++		bytes_written -= curr_bytes_written;
++		curr_pos += curr_bytes_written;
++		nr = do_compressor_verify_write(file, buf, count, &curr_pos, curr_bytes_written);
++		ret += nr;
++		if (nr != iter_iov_len(iter))
++			break;
++		iov_iter_advance(iter, nr);
++	}
++	if (nr < 0)
++		return nr;
++	return ret;
++}
++#endif
++
+ static ssize_t vfs_writev(struct file *file, const struct iovec __user *vec,
+ 			  unsigned long vlen, loff_t *pos, rwf_t flags)
+ {
+ 	struct iovec iovstack[UIO_FASTIOV];
+ 	struct iovec *iov = iovstack;
+ 	struct iov_iter iter;
++#ifdef CONFIG_BPF_SYSCALL
++	struct iov_iter bpf_iter;
++#endif
+ 	size_t tot_len;
+ 	ssize_t ret = 0;
+ 
+@@ -1054,6 +1140,10 @@ static ssize_t vfs_writev(struct file *file, const struct iovec __user *vec,
+ 	tot_len = iov_iter_count(&iter);
+ 	if (!tot_len)
+ 		goto out;
++	
++#ifdef CONFIG_BPF_SYSCALL
++	bpf_iter = iter;
++#endif
+ 
+ 	ret = rw_verify_area(WRITE, file, pos, tot_len);
+ 	if (ret < 0)
+@@ -1064,6 +1154,10 @@ static ssize_t vfs_writev(struct file *file, const struct iovec __user *vec,
+ 		ret = do_iter_readv_writev(file, &iter, pos, WRITE, flags);
+ 	else
+ 		ret = do_loop_readv_writev(file, &iter, pos, WRITE, flags);
++#ifdef CONFIG_BPF_SYSCALL
++	if (file->f_do_compress)
++		ret = do_loop_compressor_verify_writev(file, &bpf_iter, pos, ret);
++#endif
+ 	if (ret > 0)
+ 		fsnotify_modify(file);
+ 	file_end_write(file);
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index a7af13f55..c5f75e63d 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -3292,6 +3292,8 @@ extern const struct bpf_func_proto bpf_get_retval_proto;
+ extern const struct bpf_func_proto bpf_user_ringbuf_drain_proto;
+ extern const struct bpf_func_proto bpf_cgrp_storage_get_proto;
+ extern const struct bpf_func_proto bpf_cgrp_storage_delete_proto;
++extern const struct bpf_func_proto bpf_copy_from_buffer_proto;
++extern const struct bpf_func_proto bpf_lzo_compress_proto;
+ 
+ const struct bpf_func_proto *tracing_prog_func_proto(
+   enum bpf_func_id func_id, const struct bpf_prog *prog);
+diff --git a/include/linux/bpf_compressor.h b/include/linux/bpf_compressor.h
+new file mode 100644
+index 000000000..e9bdf59d2
+--- /dev/null
++++ b/include/linux/bpf_compressor.h
+@@ -0,0 +1,35 @@
++#ifndef _BPF_COMPRESSOR_H
++#define _BPF_COMPRESSOR_H
++
++#include <linux/types.h>
++#include <linux/sched.h>
++#include <linux/uidgid.h>
++#include <linux/bpf.h>
++#include <linux/bpf_verifier.h>
++
++struct compress_ctx {
++    union {
++        struct {
++            loff_t offset;
++            size_t size;
++        };
++        struct {
++            kuid_t uid;
++            kgid_t gid;
++        };
++    };
++};
++struct compress_ctx_kern {
++        void *buf;
++        struct compress_ctx ctx;
++};
++
++#define COMPRESSOR_HOOK(RET, DEFAULT, NAME, ...) \
++    RET bpf_compressor_##NAME(__VA_ARGS__);
++#include <linux/compressor_hook_defs.h>
++#undef COMPRESSOR_HOOK
++
++int bpf_compressor_verify_prog(struct bpf_verifier_log *vlog,
++			const struct bpf_prog *prog);
++
++#endif /* _BPF_COMPRESSOR_H */
+diff --git a/include/linux/bpf_types.h b/include/linux/bpf_types.h
+index fa78f49d4..aa2c9da7e 100644
+--- a/include/linux/bpf_types.h
++++ b/include/linux/bpf_types.h
+@@ -83,6 +83,8 @@ BPF_PROG_TYPE(BPF_PROG_TYPE_SYSCALL, bpf_syscall,
+ BPF_PROG_TYPE(BPF_PROG_TYPE_NETFILTER, netfilter,
+ 	      struct bpf_nf_ctx, struct bpf_nf_ctx)
+ #endif
++BPF_PROG_TYPE(BPF_PROG_TYPE_COMPRESSOR, compressor, 
++	      void *, void *)
+ 
+ BPF_MAP_TYPE(BPF_MAP_TYPE_ARRAY, array_map_ops)
+ BPF_MAP_TYPE(BPF_MAP_TYPE_PERCPU_ARRAY, percpu_array_map_ops)
+diff --git a/include/linux/compressor_hook_defs.h b/include/linux/compressor_hook_defs.h
+new file mode 100644
+index 000000000..a28a0f887
+--- /dev/null
++++ b/include/linux/compressor_hook_defs.h
+@@ -0,0 +1,18 @@
++
++/*
++ * The macro COMPRESSOR_HOOK is used to define the data structures required by
++ * the LSM framework using the pattern:
++ *
++ *	COMPRESSOR_HOOK(<return_type>, <default_value>, <hook_name>, args...)
++ *
++ * struct security_hook_heads {
++ *   #define COMPRESSOR_HOOK(RET, DEFAULT, NAME, ...) struct hlist_head NAME;
++ *   #include <linux/compressor_hook_defs.h>
++ *   #undef COMPRESSOR_HOOK
++ * };
++ */
++
++
++COMPRESSOR_HOOK(int, 0, decide, struct compress_ctx *ctx)
++COMPRESSOR_HOOK(int, 0, verify, struct compress_ctx *ctx) 
++
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 4b5cad44a..f7f6e0b8f 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1049,6 +1049,9 @@ struct file {
+ 		u64			f_pipe;
+ 	};
+ 	loff_t				f_pos;
++	bool				f_do_compress;
++	size_t				f_bwritten;
++	size_t				f_bcompressed;
+ #ifdef CONFIG_SECURITY
+ 	void				*f_security;
+ #endif
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 575810492..eb002faed 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -822,6 +822,8 @@ asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+ 			unsigned long prot, unsigned long pgoff,
+ 			unsigned long flags);
+ asmlinkage long sys_mseal(unsigned long start, size_t len, unsigned long flags);
++asmlinkage long sys_get_compression_stats(int fd, size_t __user * bytes_written, size_t __user * bytes_after_compression);
++asmlinkage long sys_reset_compression_stats(int fd);
+ asmlinkage long sys_mbind(unsigned long start, unsigned long len,
+ 				unsigned long mode,
+ 				const unsigned long __user *nmask,
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 5bf6148ca..910dba55a 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -841,8 +841,13 @@ __SYSCALL(__NR_lsm_list_modules, sys_lsm_list_modules)
+ #define __NR_mseal 462
+ __SYSCALL(__NR_mseal, sys_mseal)
+ 
++#define __NR_get_compression_stats 463
++__SYSCALL(__NR_get_compression_stats, sys_get_compression_stats)
++#define __NR_reset_compression_stats 464
++__SYSCALL(__NR_reset_compression_stats, sys_reset_compression_stats)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 463
++#define __NR_syscalls 465
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 4a939c90d..5e021496f 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -1055,6 +1055,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_SK_LOOKUP,
+ 	BPF_PROG_TYPE_SYSCALL, /* a program that can execute syscalls */
+ 	BPF_PROG_TYPE_NETFILTER,
++	BPF_PROG_TYPE_COMPRESSOR,
+ 	__MAX_BPF_PROG_TYPE
+ };
+ 
+@@ -1116,6 +1117,7 @@ enum bpf_attach_type {
+ 	BPF_NETKIT_PRIMARY,
+ 	BPF_NETKIT_PEER,
+ 	BPF_TRACE_KPROBE_SESSION,
++	BPF_COMPRESSOR,
+ 	__MAX_BPF_ATTACH_TYPE
+ };
+ 
+@@ -6010,6 +6012,8 @@ union bpf_attr {
+ 	FN(user_ringbuf_drain, 209, ##ctx)		\
+ 	FN(cgrp_storage_get, 210, ##ctx)		\
+ 	FN(cgrp_storage_delete, 211, ##ctx)		\
++	FN(copy_from_buffer, 212, ##ctx)		\
++	FN(lzo_compress, 213, ##ctx)		\
+ 	/* */
+ 
+ /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that don't
+diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+index 9b9c151b5..41735187f 100644
+--- a/kernel/bpf/Makefile
++++ b/kernel/bpf/Makefile
+@@ -52,3 +52,4 @@ obj-$(CONFIG_BPF_PRELOAD) += preload/
+ obj-$(CONFIG_BPF_SYSCALL) += relo_core.o
+ obj-$(CONFIG_BPF_SYSCALL) += btf_iter.o
+ obj-$(CONFIG_BPF_SYSCALL) += btf_relocate.o
++obj-$(CONFIG_BPF_SYSCALL) += bpf_compressor.o
+diff --git a/kernel/bpf/bpf_compressor.c b/kernel/bpf/bpf_compressor.c
+new file mode 100644
+index 000000000..816dcdf54
+--- /dev/null
++++ b/kernel/bpf/bpf_compressor.c
+@@ -0,0 +1,242 @@
++#include <linux/bpf.h>
++#include <linux/types.h>
++#include <linux/bpf_compressor.h>
++#include <linux/syscalls.h>
++#include <linux/file.h>
++#include <linux/filter.h>
++#include <linux/lzo.h>
++
++//The bound is arbitrary. My assumption is that for the purpose of 
++//this assignment it will be sifficient.
++#define MAX_LZO_COMPRESS_INPUT_SIZE (10 * 1024 * 1024) // 10 MiB
++
++#define COMPRESSOR_HOOK(RET, DEFAULT, NAME, ...)	\
++noinline RET bpf_compressor_##NAME(__VA_ARGS__)	\
++{						\
++	return DEFAULT;				\
++}
++#include <linux/compressor_hook_defs.h>
++#undef COMPRESSOR_HOOK
++
++
++#define COMPRESSOR_HOOK(RET, DEFAULT, NAME, ...) BTF_ID(func, bpf_compressor_##NAME)
++BTF_SET_START(bpf_compressor_hooks)
++#include <linux/compressor_hook_defs.h>
++#undef COMPRESSOR_HOOK
++BTF_SET_END(bpf_compressor_hooks)
++
++
++static const struct bpf_func_proto *
++bpf_compressor_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
++{
++	switch(func_id) {
++        case BPF_FUNC_get_current_uid_gid:
++		return &bpf_get_current_uid_gid_proto;
++	case BPF_FUNC_get_current_pid_tgid:
++		return &bpf_get_current_pid_tgid_proto;
++	case BPF_FUNC_copy_from_buffer:
++		return &bpf_copy_from_buffer_proto;
++	case BPF_FUNC_lzo_compress:
++		return &bpf_lzo_compress_proto;
++	default:
++		return bpf_base_func_proto(func_id, prog);
++	}
++
++
++}
++static bool bpf_compressor_is_valid_access(int off, int size,
++					  enum bpf_access_type type,
++					  const struct bpf_prog *prog,
++					  struct bpf_insn_access_aux *info)
++{
++	if (type != BPF_READ)
++		return false;
++	if (off < 0 || size < 0|| off + size > sizeof(struct compress_ctx))
++		return false;
++
++
++	return true;
++}
++
++int bpf_compressor_verify_prog(struct bpf_verifier_log *vlog,
++			const struct bpf_prog *prog)
++{
++	u32 btf_id = prog->aux->attach_btf_id;
++	const char *func_name = prog->aux->attach_func_name;
++
++	if (!prog->gpl_compatible) {
++		bpf_log(vlog,
++			"COMPRESSOR programs must have a GPL compatible license\n");
++		return -EINVAL;
++	}
++
++
++	if (!btf_id_set_contains(&bpf_compressor_hooks, btf_id)) {
++		bpf_log(vlog, "attach_btf_id %u points to wrong type name %s\n",
++			btf_id, func_name);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++const struct bpf_prog_ops compressor_prog_ops = {
++};
++
++const struct bpf_verifier_ops compressor_verifier_ops = {
++
++	.get_func_proto = bpf_compressor_func_proto,
++	.is_valid_access = bpf_compressor_is_valid_access,
++};
++
++SYSCALL_DEFINE3(get_compression_stats, int, fd, size_t __user *, bytes_written, size_t __user *, bytes_after_compression)
++{
++	struct file *f;
++	int retval = 0;
++	int err = 0;
++	size_t bwritten, bcompressed;
++
++	f = fd_file(fdget(fd));
++	if (!f)
++		return -EBADF;
++	spin_lock(&f->f_lock);
++	if (!f->f_do_compress) {
++		retval = -EINVAL;
++		goto cleanup;
++	}
++	bwritten = f->f_bwritten;
++	bcompressed = f->f_bcompressed;
++
++cleanup:
++	spin_unlock(&f->f_lock);
++	if(retval >= 0) {
++		err = copy_to_user(bytes_written, &bwritten, sizeof(size_t));
++		if(err)
++			return err;
++		err = copy_to_user(bytes_after_compression, &bcompressed, sizeof(size_t));
++		if(err)
++			return err;
++	}
++	return retval;
++}
++
++SYSCALL_DEFINE1(reset_compression_stats, int, fd)
++{
++	struct file *f;
++	int retval = 0;
++
++	f = fd_file(fdget(fd));
++	if (!f)
++		return -EBADF;
++	spin_lock(&f->f_lock);
++	if (!f->f_do_compress) {
++		retval = -EINVAL;
++		goto cleanup;
++	}
++	f->f_bwritten = 0;
++	f->f_bcompressed = 0;
++
++cleanup:
++	spin_unlock(&f->f_lock);
++	return retval;
++}
++
++static bool compressor_helper_proto_allowed(const struct bpf_prog *prog)
++{
++	return prog->type == BPF_PROG_TYPE_COMPRESSOR &&
++	       prog->expected_attach_type == BPF_COMPRESSOR;
++}
++
++BPF_CALL_4(bpf_copy_from_buffer,struct compress_ctx *, _ctx, unsigned long, offset, void *, ptr, unsigned long, size)
++{
++	size_t len;
++	int err;
++
++	struct compress_ctx_kern *ctx =
++		container_of(_ctx, struct compress_ctx_kern, ctx);
++	if (offset > ctx->ctx.size)
++	       return -EINVAL;
++	len = min(ctx->ctx.size - offset, size);
++	err =  copy_from_user(ptr, ctx->buf + offset, len);
++	return err < 0 ? err : 0;
++}
++
++const struct bpf_func_proto bpf_copy_from_buffer_proto = {
++    .func = bpf_copy_from_buffer,
++    .gpl_only = false,
++    .ret_type = RET_INTEGER,
++    .arg1_type = ARG_PTR_TO_CTX,
++    .arg2_type = ARG_ANYTHING,
++    .arg3_type = ARG_PTR_TO_MEM,
++    .arg4_type = ARG_CONST_SIZE,
++    .allowed = compressor_helper_proto_allowed,
++};
++
++//I believe not the assignment nor the tests actually specify what
++//needs to be done with the compressed data. 
++//Since the "copy from buffer" function makes no sense if the 
++//compressed data is not put back in, I am assuming that the compressed 
++//data needs to be put into the original buffer.
++BPF_CALL_1(bpf_lzo_compress, void *, _ctx)
++{
++	struct compress_ctx_kern *ctx;
++	char *out_kbuf = NULL;
++	void *workspace = NULL;
++	char *in_kbuf = NULL;
++	size_t in_len;
++	unsigned long out_len_ul;
++	int ret = 0;
++
++	ctx = container_of(_ctx, struct compress_ctx_kern, ctx);
++	if (!ctx) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	in_kbuf = ctx->buf;
++	in_len = ctx->ctx.size;
++	if (!in_kbuf) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	if(!in_len) {
++		ret = 0; 
++		goto cleanup;
++	}
++
++	if (in_len > MAX_LZO_COMPRESS_INPUT_SIZE)
++		return -EFBIG;
++	workspace = kvmalloc(LZO1X_MEM_COMPRESS, GFP_KERNEL);
++	if (!workspace) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++	out_len_ul = lzo1x_worst_compress(in_len);
++	out_kbuf = kvmalloc(out_len_ul, GFP_KERNEL);
++	if (!out_kbuf) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++	
++	if (lzo1x_1_compress(ctx->buf, in_len, 
++		out_kbuf, &out_len_ul,
++		 workspace) != LZO_E_OK) {
++		ret = -EINVAL; 
++		goto cleanup;
++	}
++
++	ctx->buf = out_kbuf;
++	ctx->ctx.size = out_len_ul;
++	ret = (int)out_len_ul;
++
++cleanup:
++	kvfree(workspace);
++	kvfree(in_kbuf);
++	return ret;
++}
++
++const struct bpf_func_proto bpf_lzo_compress_proto = {
++    .func = bpf_lzo_compress,
++    .gpl_only = false,
++    .ret_type = RET_INTEGER,
++    .arg1_type = ARG_PTR_TO_CTX,
++    .allowed = compressor_helper_proto_allowed,
++};
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 368ae8d23..ad40a6d59 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2490,6 +2490,7 @@ bpf_prog_load_check_attach(enum bpf_prog_type prog_type,
+ 		case BPF_PROG_TYPE_LSM:
+ 		case BPF_PROG_TYPE_STRUCT_OPS:
+ 		case BPF_PROG_TYPE_EXT:
++		case BPF_PROG_TYPE_COMPRESSOR:
+ 			break;
+ 		default:
+ 			return -EINVAL;
+@@ -3320,6 +3321,12 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 			goto out_put_prog;
+ 		}
+ 		break;
++	case BPF_PROG_TYPE_COMPRESSOR:
++		if(prog->expected_attach_type != BPF_COMPRESSOR) {
++			err = -EINVAL;
++			goto out_put_prog;
++		}
++		break;
+ 	default:
+ 		err = -EINVAL;
+ 		goto out_put_prog;
+@@ -3394,7 +3401,8 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+ 		 * re-attach in separate code path.
+ 		 */
+ 		if (prog->type != BPF_PROG_TYPE_TRACING &&
+-		    prog->type != BPF_PROG_TYPE_LSM) {
++		    prog->type != BPF_PROG_TYPE_LSM && 
++		    prog->type != BPF_PROG_TYPE_COMPRESSOR) {
+ 			err = -EINVAL;
+ 			goto out_unlock;
+ 		}
+@@ -3817,6 +3825,7 @@ static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
+ 	case BPF_PROG_TYPE_TRACING:
+ 	case BPF_PROG_TYPE_EXT:
+ 	case BPF_PROG_TYPE_LSM:
++	case BPF_PROG_TYPE_COMPRESSOR:
+ 		if (user_tp_name)
+ 			/* The attach point for this category of programs
+ 			 * should be specified via btf_id during program load.
+@@ -3964,6 +3973,8 @@ attach_type_to_prog_type(enum bpf_attach_type attach_type)
+ 	case BPF_NETKIT_PRIMARY:
+ 	case BPF_NETKIT_PEER:
+ 		return BPF_PROG_TYPE_SCHED_CLS;
++	case BPF_COMPRESSOR:
++		return BPF_PROG_TYPE_COMPRESSOR;
+ 	default:
+ 		return BPF_PROG_TYPE_UNSPEC;
+ 	}
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index ecdd26605..5524aa718 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -523,6 +523,8 @@ static enum bpf_tramp_prog_type bpf_attach_type_to_tramp(struct bpf_prog *prog)
+ 			return BPF_TRAMP_FEXIT;
+ 		else
+ 			return BPF_TRAMP_MODIFY_RETURN;
++	case BPF_COMPRESSOR:
++		return BPF_TRAMP_REPLACE;
+ 	default:
+ 		return BPF_TRAMP_REPLACE;
+ 	}
+@@ -530,6 +532,8 @@ static enum bpf_tramp_prog_type bpf_attach_type_to_tramp(struct bpf_prog *prog)
+ 
+ static int bpf_freplace_check_tgt_prog(struct bpf_prog *tgt_prog)
+ {
++	if(!tgt_prog)
++		return 0;
+ 	struct bpf_prog_aux *aux = tgt_prog->aux;
+ 
+ 	guard(mutex)(&aux->ext_mutex);
+@@ -623,8 +627,10 @@ static int __bpf_trampoline_unlink_prog(struct bpf_tramp_link *link,
+ 		err = bpf_arch_text_poke(tr->func.addr, BPF_MOD_JUMP,
+ 					 tr->extension_prog->bpf_func, NULL);
+ 		tr->extension_prog = NULL;
+-		guard(mutex)(&tgt_prog->aux->ext_mutex);
+-		tgt_prog->aux->is_extended = false;
++		if (tgt_prog) {
++			guard(mutex)(&tgt_prog->aux->ext_mutex);
++			tgt_prog->aux->is_extended = false;
++		}
+ 		return err;
+ 	}
+ 	hlist_del_init(&link->tramp_hlist);
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 4c486a0bf..fbf11a481 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -3,6 +3,8 @@
+  * Copyright (c) 2016 Facebook
+  * Copyright (c) 2018 Covalent IO, Inc. http://covalent.io
+  */
++#include "linux/bpf.h"
++#include "linux/bpf_compressor.h"
+ #include <uapi/linux/btf.h>
+ #include <linux/bpf-cgroup.h>
+ #include <linux/kernel.h>
+@@ -22087,6 +22089,8 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 	case BPF_LSM_CGROUP:
+ 	case BPF_TRACE_FENTRY:
+ 	case BPF_TRACE_FEXIT:
++	case BPF_COMPRESSOR:
++
+ 		if (!btf_type_is_func(t)) {
+ 			bpf_log(log, "attach_btf_id %u is not a function\n",
+ 				btf_id);
+@@ -22164,6 +22168,9 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 				if (bpf_lsm_is_sleepable_hook(btf_id))
+ 					ret = 0;
+ 				break;
++			case BPF_PROG_TYPE_COMPRESSOR:
++				ret = 0;
++				break;
+ 			default:
+ 				break;
+ 			}
+@@ -22232,7 +22239,8 @@ static bool can_be_sleepable(struct bpf_prog *prog)
+ 	}
+ 	return prog->type == BPF_PROG_TYPE_LSM ||
+ 	       prog->type == BPF_PROG_TYPE_KPROBE /* only for uprobes */ ||
+-	       prog->type == BPF_PROG_TYPE_STRUCT_OPS;
++	       prog->type == BPF_PROG_TYPE_STRUCT_OPS ||
++	       prog->type == BPF_PROG_TYPE_COMPRESSOR;
+ }
+ 
+ static int check_attach_btf_id(struct bpf_verifier_env *env)
+@@ -22254,7 +22262,7 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 	}
+ 
+ 	if (prog->sleepable && !can_be_sleepable(prog)) {
+-		verbose(env, "Only fentry/fexit/fmod_ret, lsm, iter, uprobe, and struct_ops programs can be sleepable\n");
++		verbose(env, "Only fentry/fexit/fmod_ret, lsm, iter, uprobe, compressor, and struct_ops programs can be sleepable\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -22302,6 +22310,11 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 		ret = bpf_lsm_verify_prog(&env->log, prog);
+ 		if (ret < 0)
+ 			return ret;
++	} else if (prog->type == BPF_PROG_TYPE_COMPRESSOR) {
++		ret = bpf_compressor_verify_prog(&env->log, prog);
++		if (ret < 0)
++			return ret;
++
+ 	} else if (prog->type == BPF_PROG_TYPE_TRACING &&
+ 		   btf_id_set_contains(&btf_id_deny, btf_id)) {
+ 		return -EINVAL;
+-- 
+2.43.0
+
